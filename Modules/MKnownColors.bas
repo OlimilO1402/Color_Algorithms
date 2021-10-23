@@ -221,11 +221,13 @@ Public Enum X11KnownColor
     Yellow = &HFF00FFFF             '
     YellowGreen = &HFF32CD9A        '
 End Enum
+
 Private Type TNamedColor
     Name   As String
     X11Col As X11KnownColor
     'Color  As ColorRGBA
 End Type
+
 Private m_Arr() As TNamedColor
 Private m_Count As Long
 

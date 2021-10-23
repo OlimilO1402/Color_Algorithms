@@ -1,11 +1,10 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form Form1 
    Caption         =   "Form1"
-   ClientHeight    =   2415
+   ClientHeight    =   3015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   10935
+   ClientWidth     =   12630
    BeginProperty Font 
       Name            =   "Consolas"
       Size            =   9
@@ -16,24 +15,54 @@ Begin VB.Form Form1
       Strikethrough   =   0   'False
    EndProperty
    LinkTopic       =   "Form2"
-   ScaleHeight     =   2415
-   ScaleWidth      =   10935
+   ScaleHeight     =   3015
+   ScaleWidth      =   12630
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.PictureBox PBColor 
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   1575
+      Left            =   120
+      ScaleHeight     =   167.23
+      ScaleMode       =   0  'Benutzerdefiniert
+      ScaleWidth      =   120.012
+      TabIndex        =   2
+      Top             =   120
+      Width           =   1575
+   End
+   Begin VB.PictureBox PbPicture 
+      Height          =   1575
+      Left            =   120
+      Picture         =   "Form1.frx":0000
+      ScaleHeight     =   101
+      ScaleMode       =   3  'Pixel
+      ScaleWidth      =   101
+      TabIndex        =   68
+      Top             =   120
+      Width           =   1575
+   End
    Begin VB.CommandButton BtnOnOff 
       Caption         =   "on/off"
       Height          =   375
       Left            =   120
       TabIndex        =   67
-      Top             =   1920
-      Width           =   1335
+      Top             =   2520
+      Width           =   1575
    End
    Begin VB.Timer Timer1 
       Left            =   0
-      Top             =   480
+      Top             =   0
    End
    Begin VB.ComboBox CBValues 
       Height          =   330
-      Left            =   480
+      Left            =   720
       TabIndex        =   66
       Text            =   "Combo2"
       Top             =   480
@@ -41,7 +70,7 @@ Begin VB.Form Form1
    End
    Begin VB.ComboBox CBValuesf 
       Height          =   330
-      Left            =   480
+      Left            =   720
       TabIndex        =   65
       Text            =   "Combo2"
       Top             =   120
@@ -61,19 +90,19 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   7920
+      Left            =   9120
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   55
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.CommandButton BtnSetHSV 
          Caption         =   "Set  HSV"
          Height          =   375
          Left            =   0
          TabIndex        =   60
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.TextBox TBHSV_A 
          Alignment       =   1  'Rechts
@@ -158,19 +187,19 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   9480
+      Left            =   10920
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   45
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.CommandButton BtnSetXYZ 
          Caption         =   "Set  XYZ"
          Height          =   375
          Left            =   0
          TabIndex        =   50
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.TextBox TBXYZ_A 
          Alignment       =   1  'Rechts
@@ -255,12 +284,12 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   6360
+      Left            =   7320
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   15
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.TextBox TBHSL_H 
          Alignment       =   1  'Rechts
          Height          =   315
@@ -299,7 +328,7 @@ Begin VB.Form Form1
          Left            =   0
          TabIndex        =   36
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.Label Label10 
          AutoSize        =   -1  'True
@@ -352,19 +381,19 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   3240
+      Left            =   3720
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   14
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.CommandButton BtnSetRGBAf 
          Caption         =   "Set RGBAf"
          Height          =   375
          Left            =   0
          TabIndex        =   31
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.TextBox TBRGBAf_A 
          Alignment       =   1  'Rechts
@@ -449,12 +478,12 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   1680
+      Left            =   1920
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   13
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.TextBox TBCMYK_Y 
          Alignment       =   1  'Rechts
          Height          =   315
@@ -477,7 +506,7 @@ Begin VB.Form Form1
          Left            =   0
          TabIndex        =   17
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.TextBox TBCMYK_A 
          Alignment       =   1  'Rechts
@@ -563,19 +592,19 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   4800
+      Left            =   5520
       ScaleHeight     =   2295
-      ScaleWidth      =   1455
+      ScaleWidth      =   1575
       TabIndex        =   3
       Top             =   120
-      Width           =   1455
+      Width           =   1575
       Begin VB.CommandButton BtnSetRGBA 
          Caption         =   "Set RGBA"
          Height          =   375
          Left            =   0
          TabIndex        =   8
          Top             =   1800
-         Width           =   1335
+         Width           =   1575
       End
       Begin VB.TextBox TBRGBA_A 
          Alignment       =   1  'Rechts
@@ -646,38 +675,13 @@ Begin VB.Form Form1
          Width           =   210
       End
    End
-   Begin MSComDlg.CommonDialog ColorPicker 
-      Left            =   0
-      Top             =   0
-      _ExtentX        =   847
-      _ExtentY        =   847
-      _Version        =   393216
-   End
-   Begin VB.PictureBox Picture1 
-      BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   975
-      Left            =   120
-      ScaleHeight     =   915
-      ScaleWidth      =   1275
-      TabIndex        =   2
-      Top             =   120
-      Width           =   1335
-   End
    Begin VB.TextBox TBLngColor 
       Alignment       =   1  'Rechts
       Height          =   330
       Left            =   120
       TabIndex        =   1
-      Top             =   1200
-      Width           =   1335
+      Top             =   1800
+      Width           =   1575
    End
    Begin VB.ComboBox CmbColorNames 
       BeginProperty Font 
@@ -693,8 +697,8 @@ Begin VB.Form Form1
       Left            =   120
       TabIndex        =   0
       Text            =   "Combo1"
-      Top             =   1560
-      Width           =   1335
+      Top             =   2160
+      Width           =   1575
    End
 End
 Attribute VB_Name = "Form1"
@@ -705,10 +709,11 @@ Attribute VB_Exposed = False
 Option Explicit
 ' Hier wird alles von und nach CMYK konvertiert
 Private m_CMYK As CMYK
-
 Private m_TBBack  As TextBox
 Private m_PnlHwnd As Long
 Private m_Btn     As CommandButton
+Private m_CPicker As ColorDialog
+Private m_APB     As AlphaPB
 
 Private Sub TBLngColor_LostFocus()
     Dim LC As LngColor: LC = MColor.LngColor_ParseWebHex(TBLngColor.Text)
@@ -718,9 +723,9 @@ End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
-    Picture1.BackColor = c
-    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
+    Dim C As Long: C = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
+    PBColor.BackColor = C
+    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(C)))
     UpdateView
 End Sub
 
@@ -734,18 +739,22 @@ Private Sub BtnOnOff_Click()
 End Sub
 
 Private Sub Form_Load()
+    Set m_CPicker = New ColorDialog
+    Set m_APB = New AlphaPB: m_APB.New_ Me.PBColor, Me.PbPicture
     Timer1.Interval = 50
     Timer1.Enabled = False
     FillCmbMouseScrollf CBValuesf
     FillCmbMouseScroll CBValues
     HideCBValues
     MKnownColors.X11KnownColor_ToCB CmbColorNames
-    Picture1.BackColor = vbCyan
-    m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(Picture1.BackColor)))
+    PBColor.BackColor = vbCyan
+    m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
     UpdateView
 End Sub
 
 Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
+    
+    
     
     MColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
     
@@ -754,13 +763,17 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     
     Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
     MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
-        
+    
+    'Todo: here reparieren!!!
+    'siehe Projekt: C:\Users\olimi\OneDrive\Documents\VB\Class Color\Transparenz\alphablending
+    m_APB.Alpha = 255 - RGBA.A 'vsAlphaBlend.Value
+    
     Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
     TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
         
     RGBA.A = 0
     LCol = MColor.RGBA_ToLngColor(RGBA)
-    Picture1.BackColor = LCol.Value
+    PBColor.BackColor = LCol.Value
     
     Dim HSL As HSL: HSL = RGBAf_ToHSL(RGBAf)
     MColor.HSL_ToView TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, HSL
@@ -824,8 +837,8 @@ End Sub
 
 Private Sub CmbColorNames_Click()
     If CmbColorNames.Text = "" Then Exit Sub
-    Picture1.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
-    Dim LngColor As LngColor: LngColor.Value = Picture1.BackColor
+    PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
+    Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
     m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
     UpdateView True
 End Sub
@@ -847,12 +860,12 @@ Private Sub FillCmbMouseScroll(Cmb As ComboBox)
     Next
 End Sub
 
-Private Sub Picture1_Click()
+Private Sub PBColor_Click()
 Try: On Error GoTo Catch
-    ColorPicker.Color = Picture1.BackColor
-    ColorPicker.ShowColor
-    Picture1.BackColor = ColorPicker.Color
-    UpdateView
+    m_CPicker.Color = PBColor.BackColor
+    If m_CPicker.ShowDialog = vbCancel Then Exit Sub
+    PBColor.BackColor = m_CPicker.Color
+    'UpdateView
 Catch:
 End Sub
 
