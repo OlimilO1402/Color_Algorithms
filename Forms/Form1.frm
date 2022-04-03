@@ -18,6 +18,23 @@ Begin VB.Form Form1
    ScaleHeight     =   3015
    ScaleWidth      =   12630
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.PictureBox Picture1 
+      Height          =   375
+      Left            =   4560
+      ScaleHeight     =   315
+      ScaleWidth      =   1635
+      TabIndex        =   70
+      Top             =   2520
+      Width           =   1695
+   End
+   Begin VB.CommandButton Command1 
+      Caption         =   "Test RAL-Farben"
+      Height          =   375
+      Left            =   1920
+      TabIndex        =   69
+      Top             =   2520
+      Width           =   2535
+   End
    Begin VB.PictureBox PBColor 
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -714,6 +731,15 @@ Private m_PnlHwnd As Long
 Private m_Btn     As CommandButton
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
+
+Private Sub Command1_Click()
+    Dim RXYZ As XYZ: RXYZ = MColor.XYZ(80, 1, 24)
+    Dim fcol As RGBAf: fcol = MColor.XYZ_ToRGBAf(RXYZ)
+    'CIEL*a*b
+    'https://de.wikipedia.org/wiki/Lab-Farbraum
+    'picture1.Backcolor =
+    
+End Sub
 
 Private Sub TBLngColor_LostFocus()
     Dim LC As LngColor: LC = MColor.LngColor_ParseWebHex(TBLngColor.Text)

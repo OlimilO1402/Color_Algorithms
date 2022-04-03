@@ -663,7 +663,9 @@ End Function
 '        b: limitValue(b, 0, 1)
 '    };
 '},
-
+Public Function XYZ(ByVal aX As Single, ByVal aY As Single, ByVal yZ As Single) As XYZ
+    With XYZ: .X = aX: .Y = aY: .Z = az: .A = 1: End With
+End Function
 Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
     Dim X As Single: X = this.X
     Dim Y As Single: Y = this.Y

@@ -1,11 +1,12 @@
 Type=Exe
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\Windows\SysWOW64\stdole2.tlb#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\SysWow64\stdole2.tlb#OLE Automation
 Form=Forms\Form1.frm
 Module=MColor; Modules\MColor.bas
 Module=MKnownColors; Modules\MKnownColors.bas
 Module=MMain; Modules\MMain.bas
 Class=ColorDialog; ..\Win_Dialogs\Classes\ColorDialog.cls
 Class=AlphaPB; Classes\AlphaPB.cls
+Module=MRALColors; Modules\MRALColors.bas
 ResFile32="Resources\MyRes.res"
 Startup="Sub Main"
 HelpFile=""
