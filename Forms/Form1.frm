@@ -18,6 +18,23 @@ Begin VB.Form Form1
    ScaleHeight     =   3015
    ScaleWidth      =   12630
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.ComboBox CmbRALClassic 
+      BeginProperty Font 
+         Name            =   "Consolas"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   315
+      Left            =   6360
+      TabIndex        =   71
+      Text            =   "Combo1"
+      Top             =   2520
+      Width           =   2655
+   End
    Begin VB.PictureBox Picture1 
       Height          =   375
       Left            =   4560
@@ -732,9 +749,18 @@ Private m_Btn     As CommandButton
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
 
+Private Sub CmbRALClassic_Click()
+    If CmbRALClassic.Text = "" Then Exit Sub
+    Dim ralcol As Long: ralcol = MRALColors.RALClassic_Parse(CmbRALClassic.Text)
+    PBColor.BackColor = ralcol
+    Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
+    m_CMYK = mColor.RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(mColor.LngColor_ToRGBA(LngColor)))
+    UpdateView True
+End Sub
+
 Private Sub Command1_Click()
-    Dim RXYZ As XYZ: RXYZ = MColor.XYZ(80, 1, 24)
-    Dim fcol As RGBAf: fcol = MColor.XYZ_ToRGBAf(RXYZ)
+    Dim RXYZ As XYZ: RXYZ = mColor.XYZ(80, 1, 24)
+    Dim fcol As RGBAf: fcol = mColor.XYZ_ToRGBAf(RXYZ)
     'CIEL*a*b
     'https://de.wikipedia.org/wiki/Lab-Farbraum
     'picture1.Backcolor =
@@ -742,16 +768,16 @@ Private Sub Command1_Click()
 End Sub
 
 Private Sub TBLngColor_LostFocus()
-    Dim LC As LngColor: LC = MColor.LngColor_ParseWebHex(TBLngColor.Text)
+    Dim LC As LngColor: LC = mColor.LngColor_ParseWebHex(TBLngColor.Text)
     m_CMYK = LngColor_ToCMYK(LC)
     UpdateView
 End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim C As Long: C = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
-    PBColor.BackColor = C
-    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(C)))
+    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
+    PBColor.BackColor = c
+    m_CMYK = RGBAf_ToCMYK(mColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
 End Sub
 
@@ -773,6 +799,7 @@ Private Sub Form_Load()
     FillCmbMouseScroll CBValues
     HideCBValues
     MKnownColors.X11KnownColor_ToCB CmbColorNames
+    MRALColors.RALClassic_ToListBox CmbRALClassic
     PBColor.BackColor = vbCyan
     m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
     UpdateView
@@ -782,33 +809,33 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     
     
     
-    MColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
+    mColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
     
-    Dim RGBAf As RGBAf:   RGBAf = MColor.CMYK_ToRGBAf(m_CMYK)
-    MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
+    Dim RGBAf As RGBAf:   RGBAf = mColor.CMYK_ToRGBAf(m_CMYK)
+    mColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
-    Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
-    MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
+    Dim RGBA  As RGBA:     RGBA = mColor.RGBAf_ToRGBA(RGBAf)
+    mColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
     'Todo: here reparieren!!!
     'siehe Projekt: C:\Users\olimi\OneDrive\Documents\VB\Class Color\Transparenz\alphablending
     m_APB.Alpha = 255 - RGBA.A 'vsAlphaBlend.Value
     
-    Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
-    TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
-        
+    Dim LCol  As LngColor: LCol = mColor.RGBA_ToLngColor(RGBA)
+    TBLngColor.Text = mColor.LngColor_ToWebHex(LCol)
+    
     RGBA.A = 0
-    LCol = MColor.RGBA_ToLngColor(RGBA)
+    LCol = mColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
     
     Dim HSL As HSL: HSL = RGBAf_ToHSL(RGBAf)
-    MColor.HSL_ToView TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, HSL
+    mColor.HSL_ToView TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, HSL
 
     Dim HSV As HSV: HSV = RGBAf_ToHSV(RGBAf)
-    MColor.HSV_ToView TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, HSV
+    mColor.HSV_ToView TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, HSV
     
     Dim XYZ As XYZ: XYZ = RGBAf_ToXYZ(RGBAf)
-    MColor.XYZ_ToView TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, XYZ
+    mColor.XYZ_ToView TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, XYZ
     
     If Not bNoUpdataColorName Then
         Dim xn As String: xn = MKnownColors.NameFromColor(LCol.Value)
@@ -822,42 +849,42 @@ End Sub
 
 Private Sub BtnSetCMYK_Click()
     Dim sErr As String
-    If Not MColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not mColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrMsg sErr: Exit Sub
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBAf_Click()
     Dim RGBAf As RGBAf, sErr As String
-    If Not MColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not mColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrMsg sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(RGBAf)
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBA_Click()
     Dim RGBA As RGBA, sErr As String
-    If Not MColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(RGBA))
+    If Not mColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(RGBA))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSL_Click()
     Dim HSL As HSL, sErr As String
-    If Not MColor.HSL_Read(HSL, TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(MColor.HSL_ToRGBAf(HSL))
+    If Not mColor.HSL_Read(HSL, TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(mColor.HSL_ToRGBAf(HSL))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSV_Click()
     Dim HSV As HSV, sErr As String
-    If Not MColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(MColor.HSV_ToRGBAf(HSV))
+    If Not mColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(mColor.HSV_ToRGBAf(HSV))
     UpdateView
 End Sub
 
 Private Sub BtnSetXYZ_Click()
     Dim XYZ As XYZ, sErr As String
-    If Not MColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(MColor.XYZ_ToRGBAf(XYZ))
+    If Not mColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(mColor.XYZ_ToRGBAf(XYZ))
     UpdateView
 End Sub
 
@@ -865,23 +892,23 @@ Private Sub CmbColorNames_Click()
     If CmbColorNames.Text = "" Then Exit Sub
     PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
-    m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
+    m_CMYK = mColor.RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(mColor.LngColor_ToRGBA(LngColor)))
     UpdateView True
 End Sub
 Private Sub FillCmbMouseScrollf(Cmb As ComboBox)
     Dim i As Long
     Cmb.Clear
-    Dim N As Long: N = 256
-    Dim fact As Double: fact = 1 / N
-    For i = N To 0 Step -1
+    Dim n As Long: n = 256
+    Dim fact As Double: fact = 1 / n
+    For i = n To 0 Step -1
         Cmb.AddItem Format(i * fact, "0.###")
     Next
 End Sub
 Private Sub FillCmbMouseScroll(Cmb As ComboBox)
     'CBValues
     Dim i As Long
-    Dim N As Long: N = 255
-    For i = N To 0 Step -1
+    Dim n As Long: n = 255
+    For i = n To 0 Step -1
         Cmb.AddItem i
     Next
 End Sub
@@ -943,9 +970,9 @@ Private Sub SetTB(TB As TextBox, CB As ComboBox, Btn As CommandButton, ByVal pnl
     Set m_Btn = Btn
     SetParent CB.hwnd, pnlHwnd
     CB.Move m_TBBack.Left, m_TBBack.Top
-    Dim N As Single: N = 256
-    If f = 1 Then N = 255
-    CB.ListIndex = N - (f * CSng(m_TBBack.Text))
+    Dim n As Single: n = 256
+    If f = 1 Then n = 255
+    CB.ListIndex = n - (f * CSng(m_TBBack.Text))
     CB.ZOrder 0
 End Sub
 
