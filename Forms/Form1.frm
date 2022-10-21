@@ -1,10 +1,10 @@
 VERSION 5.00
-Begin VB.Form Form1 
-   Caption         =   "Form1"
+Begin VB.Form FMain 
+   Caption         =   "Color Algorithms"
    ClientHeight    =   3015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   12630
+   ClientWidth     =   13095
    BeginProperty Font 
       Name            =   "Consolas"
       Size            =   9
@@ -14,81 +14,44 @@ Begin VB.Form Form1
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
+   Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form2"
    ScaleHeight     =   3015
-   ScaleWidth      =   12630
+   ScaleWidth      =   13095
    StartUpPosition =   3  'Windows-Standard
    Begin VB.ComboBox CmbRALClassic 
       BeginProperty Font 
-         Name            =   "Consolas"
-         Size            =   8.25
+         Name            =   "Tahoma"
+         Size            =   9
          Charset         =   0
          Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   315
-      Left            =   6360
-      TabIndex        =   71
+      Height          =   330
+      Left            =   2880
+      TabIndex        =   69
       Text            =   "Combo1"
       Top             =   2520
-      Width           =   2655
-   End
-   Begin VB.PictureBox Picture1 
-      Height          =   375
-      Left            =   4560
-      ScaleHeight     =   315
-      ScaleWidth      =   1635
-      TabIndex        =   70
-      Top             =   2520
-      Width           =   1695
-   End
-   Begin VB.CommandButton Command1 
-      Caption         =   "Test RAL-Farben"
-      Height          =   375
-      Left            =   1920
-      TabIndex        =   69
-      Top             =   2520
-      Width           =   2535
-   End
-   Begin VB.PictureBox PBColor 
-      BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   1575
-      Left            =   120
-      ScaleHeight     =   167.23
-      ScaleMode       =   0  'Benutzerdefiniert
-      ScaleWidth      =   120.012
-      TabIndex        =   2
-      Top             =   120
-      Width           =   1575
-   End
-   Begin VB.PictureBox PbPicture 
-      Height          =   1575
-      Left            =   120
-      Picture         =   "Form1.frx":0000
-      ScaleHeight     =   101
-      ScaleMode       =   3  'Pixel
-      ScaleWidth      =   101
-      TabIndex        =   68
-      Top             =   120
-      Width           =   1575
+      Width           =   2895
    End
    Begin VB.CommandButton BtnOnOff 
       Caption         =   "on/off"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   375
       Left            =   120
       TabIndex        =   67
       Top             =   2520
-      Width           =   1575
+      Width           =   2055
    End
    Begin VB.Timer Timer1 
       Left            =   0
@@ -124,7 +87,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   9120
+      Left            =   9600
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   55
@@ -132,6 +95,15 @@ Begin VB.Form Form1
       Width           =   1575
       Begin VB.CommandButton BtnSetHSV 
          Caption         =   "Set  HSV"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   60
@@ -173,38 +145,74 @@ Begin VB.Form Form1
       Begin VB.Label Label17 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   64
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label16 
          AutoSize        =   -1  'True
          Caption         =   "V:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   63
          Top             =   720
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label15 
          AutoSize        =   -1  'True
          Caption         =   "S:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   62
          Top             =   360
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label14 
          AutoSize        =   -1  'True
          Caption         =   "H:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   61
          Top             =   0
-         Width           =   210
+         Width           =   180
       End
    End
    Begin VB.PictureBox PnlXYZ 
@@ -221,7 +229,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   10920
+      Left            =   11400
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   45
@@ -229,6 +237,15 @@ Begin VB.Form Form1
       Width           =   1575
       Begin VB.CommandButton BtnSetXYZ 
          Caption         =   "Set  XYZ"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   50
@@ -270,38 +287,74 @@ Begin VB.Form Form1
       Begin VB.Label Label23 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   54
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label24 
          AutoSize        =   -1  'True
          Caption         =   "Z:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   53
          Top             =   720
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label25 
          AutoSize        =   -1  'True
          Caption         =   "Y:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   52
          Top             =   360
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label26 
          AutoSize        =   -1  'True
          Caption         =   "X:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   51
          Top             =   0
-         Width           =   210
+         Width           =   165
       End
    End
    Begin VB.PictureBox PnlHSL 
@@ -318,7 +371,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   7320
+      Left            =   7800
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   15
@@ -358,6 +411,15 @@ Begin VB.Form Form1
       End
       Begin VB.CommandButton BtnSetHSL 
          Caption         =   "Set  HSL"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   36
@@ -367,38 +429,74 @@ Begin VB.Form Form1
       Begin VB.Label Label10 
          AutoSize        =   -1  'True
          Caption         =   "H:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   44
          Top             =   0
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label11 
          AutoSize        =   -1  'True
          Caption         =   "S:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   43
          Top             =   360
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label12 
          AutoSize        =   -1  'True
          Caption         =   "L:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   42
          Top             =   720
-         Width           =   210
+         Width           =   150
       End
       Begin VB.Label Label13 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   41
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
    End
    Begin VB.PictureBox PnlRGBAf 
@@ -415,7 +513,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   3720
+      Left            =   4200
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   14
@@ -423,6 +521,15 @@ Begin VB.Form Form1
       Width           =   1575
       Begin VB.CommandButton BtnSetRGBAf 
          Caption         =   "Set RGBAf"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   31
@@ -464,38 +571,74 @@ Begin VB.Form Form1
       Begin VB.Label Label4 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   35
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label3 
          AutoSize        =   -1  'True
          Caption         =   "B:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   34
          Top             =   720
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label2 
          AutoSize        =   -1  'True
          Caption         =   "G:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   33
          Top             =   360
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          Caption         =   "R:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   32
          Top             =   0
-         Width           =   210
+         Width           =   165
       End
    End
    Begin VB.PictureBox PnlCMYK 
@@ -512,7 +655,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   1920
+      Left            =   2400
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   13
@@ -536,6 +679,15 @@ Begin VB.Form Form1
       End
       Begin VB.CommandButton BtnSetCMYK 
          Caption         =   "Set CMYKA"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   17
@@ -569,47 +721,92 @@ Begin VB.Form Form1
       Begin VB.Label Label22 
          AutoSize        =   -1  'True
          Caption         =   "C:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   26
          Top             =   0
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label21 
          AutoSize        =   -1  'True
          Caption         =   "M:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   25
          Top             =   360
-         Width           =   210
+         Width           =   195
       End
       Begin VB.Label Label20 
          AutoSize        =   -1  'True
          Caption         =   "Y:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   24
          Top             =   720
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label19 
          AutoSize        =   -1  'True
          Caption         =   "K:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   23
          Top             =   1080
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label5 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   22
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
    End
    Begin VB.PictureBox PnlRGBA 
@@ -626,7 +823,7 @@ Begin VB.Form Form1
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   2295
-      Left            =   5520
+      Left            =   6000
       ScaleHeight     =   2295
       ScaleWidth      =   1575
       TabIndex        =   3
@@ -634,6 +831,15 @@ Begin VB.Form Form1
       Width           =   1575
       Begin VB.CommandButton BtnSetRGBA 
          Caption         =   "Set RGBA"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Left            =   0
          TabIndex        =   8
@@ -675,38 +881,74 @@ Begin VB.Form Form1
       Begin VB.Label Label6 
          AutoSize        =   -1  'True
          Caption         =   "A:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   12
          Top             =   1440
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label7 
          AutoSize        =   -1  'True
          Caption         =   "B:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   11
          Top             =   720
-         Width           =   210
+         Width           =   165
       End
       Begin VB.Label Label8 
          AutoSize        =   -1  'True
          Caption         =   "G:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   10
          Top             =   360
-         Width           =   210
+         Width           =   180
       End
       Begin VB.Label Label9 
          AutoSize        =   -1  'True
          Caption         =   "R:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   210
          Left            =   0
          TabIndex        =   9
          Top             =   0
-         Width           =   210
+         Width           =   165
       End
    End
    Begin VB.TextBox TBLngColor 
@@ -715,11 +957,28 @@ Begin VB.Form Form1
       Left            =   120
       TabIndex        =   1
       Top             =   1800
-      Width           =   1575
+      Width           =   2055
    End
    Begin VB.ComboBox CmbColorNames 
       BeginProperty Font 
-         Name            =   "Consolas"
+         Name            =   "Tahoma"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   330
+      Left            =   120
+      TabIndex        =   0
+      Text            =   "Combo1"
+      Top             =   2160
+      Width           =   2055
+   End
+   Begin VB.PictureBox PBColor 
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
          Size            =   8.25
          Charset         =   0
          Weight          =   400
@@ -727,15 +986,46 @@ Begin VB.Form Form1
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   315
-      Left            =   120
-      TabIndex        =   0
-      Text            =   "Combo1"
-      Top             =   2160
+      Height          =   1575
+      Left            =   360
+      ScaleHeight     =   167.23
+      ScaleMode       =   0  'Benutzerdefiniert
+      ScaleWidth      =   120.012
+      TabIndex        =   2
+      Top             =   120
       Width           =   1575
    End
+   Begin VB.PictureBox PbPicture 
+      Height          =   1575
+      Left            =   360
+      Picture         =   "Form1.frx":1782
+      ScaleHeight     =   101
+      ScaleMode       =   3  'Pixel
+      ScaleWidth      =   101
+      TabIndex        =   68
+      Top             =   120
+      Width           =   1575
+   End
+   Begin VB.Label LblRALColors 
+      AutoSize        =   -1  'True
+      Caption         =   "RAL:"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   210
+      Left            =   2400
+      TabIndex        =   70
+      Top             =   2520
+      Width           =   375
+   End
 End
-Attribute VB_Name = "Form1"
+Attribute VB_Name = "FMain"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -754,21 +1044,12 @@ Private Sub CmbRALClassic_Click()
     Dim ralcol As Long: ralcol = MRALColors.RALClassic_Parse(CmbRALClassic.Text)
     PBColor.BackColor = ralcol
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
-    m_CMYK = mColor.RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(mColor.LngColor_ToRGBA(LngColor)))
+    m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
     UpdateView True
 End Sub
 
-Private Sub Command1_Click()
-    Dim RXYZ As XYZ: RXYZ = mColor.XYZ(80, 1, 24)
-    Dim fcol As RGBAf: fcol = mColor.XYZ_ToRGBAf(RXYZ)
-    'CIEL*a*b
-    'https://de.wikipedia.org/wiki/Lab-Farbraum
-    'picture1.Backcolor =
-    
-End Sub
-
 Private Sub TBLngColor_LostFocus()
-    Dim LC As LngColor: LC = mColor.LngColor_ParseWebHex(TBLngColor.Text)
+    Dim LC As LngColor: LC = MColor.LngColor_ParseWebHex(TBLngColor.Text)
     m_CMYK = LngColor_ToCMYK(LC)
     UpdateView
 End Sub
@@ -777,7 +1058,7 @@ Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
     Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
     PBColor.BackColor = c
-    m_CMYK = RGBAf_ToCMYK(mColor.LngColor_ToRGBAf(LngColor(c)))
+    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
 End Sub
 
@@ -793,6 +1074,7 @@ End Sub
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
     Set m_APB = New AlphaPB: m_APB.New_ Me.PBColor, Me.PbPicture
+    Me.Caption = "Color Algorithms v" & App.Major & "." & App.Minor & "." & App.Revision
     Timer1.Interval = 50
     Timer1.Enabled = False
     FillCmbMouseScrollf CBValuesf
@@ -802,45 +1084,46 @@ Private Sub Form_Load()
     MRALColors.RALClassic_ToListBox CmbRALClassic
     PBColor.BackColor = vbCyan
     m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
+    SetToolTipText GetControls("TextBox")
     UpdateView
 End Sub
 
 Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     
+    MColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
     
+    Dim RGBAf As RGBAf:   RGBAf = MColor.CMYK_ToRGBAf(m_CMYK)
+    MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
-    mColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
+    Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
+    m_APB.Alpha = 255 - RGBA.a
+    MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
-    Dim RGBAf As RGBAf:   RGBAf = mColor.CMYK_ToRGBAf(m_CMYK)
-    mColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
+    Dim alp As Single: alp = RGBA.a
     
-    Dim RGBA  As RGBA:     RGBA = mColor.RGBAf_ToRGBA(RGBAf)
-    mColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
+    Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
+    TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
     
-    'Todo: here reparieren!!!
-    'siehe Projekt: C:\Users\olimi\OneDrive\Documents\VB\Class Color\Transparenz\alphablending
-    m_APB.Alpha = 255 - RGBA.A 'vsAlphaBlend.Value
-    
-    Dim LCol  As LngColor: LCol = mColor.RGBA_ToLngColor(RGBA)
-    TBLngColor.Text = mColor.LngColor_ToWebHex(LCol)
-    
-    RGBA.A = 0
-    LCol = mColor.RGBA_ToLngColor(RGBA)
+    RGBA.a = 0
+    LCol = MColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
     
     Dim HSL As HSL: HSL = RGBAf_ToHSL(RGBAf)
-    mColor.HSL_ToView TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, HSL
-
+    MColor.HSL_ToView TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, HSL
+    
     Dim HSV As HSV: HSV = RGBAf_ToHSV(RGBAf)
-    mColor.HSV_ToView TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, HSV
+    MColor.HSV_ToView TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, HSV
     
     Dim XYZ As XYZ: XYZ = RGBAf_ToXYZ(RGBAf)
-    mColor.XYZ_ToView TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, XYZ
+    MColor.XYZ_ToView TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, XYZ
     
     If Not bNoUpdataColorName Then
         Dim xn As String: xn = MKnownColors.NameFromColor(LCol.Value)
         If Len(xn) Then CmbColorNames.Text = xn
     End If
+    
+    m_APB.Alpha = 255 - alp
+    
 End Sub
 
 Private Sub ErrMsg(sErr As String)
@@ -849,42 +1132,42 @@ End Sub
 
 Private Sub BtnSetCMYK_Click()
     Dim sErr As String
-    If Not mColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrMsg sErr: Exit Sub
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBAf_Click()
     Dim RGBAf As RGBAf, sErr As String
-    If Not mColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrMsg sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(RGBAf)
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBA_Click()
     Dim RGBA As RGBA, sErr As String
-    If Not mColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(RGBA))
+    If Not MColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(RGBA))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSL_Click()
     Dim HSL As HSL, sErr As String
-    If Not mColor.HSL_Read(HSL, TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(mColor.HSL_ToRGBAf(HSL))
+    If Not MColor.HSL_Read(HSL, TBHSL_H, TBHSL_S, TBHSL_L, TBHSL_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(MColor.HSL_ToRGBAf(HSL))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSV_Click()
     Dim HSV As HSV, sErr As String
-    If Not mColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(mColor.HSV_ToRGBAf(HSV))
+    If Not MColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(MColor.HSV_ToRGBAf(HSV))
     UpdateView
 End Sub
 
 Private Sub BtnSetXYZ_Click()
     Dim XYZ As XYZ, sErr As String
-    If Not mColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrMsg sErr: Exit Sub
-    m_CMYK = RGBAf_ToCMYK(mColor.XYZ_ToRGBAf(XYZ))
+    If Not MColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrMsg sErr: Exit Sub
+    m_CMYK = RGBAf_ToCMYK(MColor.XYZ_ToRGBAf(XYZ))
     UpdateView
 End Sub
 
@@ -892,7 +1175,7 @@ Private Sub CmbColorNames_Click()
     If CmbColorNames.Text = "" Then Exit Sub
     PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
-    m_CMYK = mColor.RGBAf_ToCMYK(mColor.RGBA_ToRGBAf(mColor.LngColor_ToRGBA(LngColor)))
+    m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
     UpdateView True
 End Sub
 Private Sub FillCmbMouseScrollf(Cmb As ComboBox)
@@ -959,10 +1242,10 @@ Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, CBValuesf, BtnSetHSV, PnlHSV.hwn
 Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
 Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
 
-'Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-'Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-'Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-'Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
 
 
 Private Sub SetTB(TB As TextBox, CB As ComboBox, Btn As CommandButton, ByVal pnlHwnd As Long, ByVal f As Single)
@@ -1001,3 +1284,53 @@ Private Sub CBValues_Click()
     m_Btn.Value = True
 End Sub
 
+'the following is for creating tooltiptexts
+Function GetControls(OfType As String) As Collection
+    Dim ctrl: Set GetControls = New Collection
+    For Each ctrl In Me.Controls
+        If TypeName(ctrl) = OfType Then GetControls.Add ctrl
+    Next
+End Function
+
+Sub SetToolTipText(Ctrls As Collection)
+    Dim ttt As Collection: Set ttt = ColAddText(Array("A", "Alpha", "R", "Red", "G", "Green", "B", "Blue", "C", "Cyan", "M", "Magenta", "YL", "Yellow", "K", "Black", "H", "Hue", "S", "Saturation", "L", "Luminance", "V", "Value", "X", "X", "Y", "Y", "Z", "Z"))
+    Dim nam As String
+    Dim ctrl 'As VBControlExtender
+    For Each ctrl In Ctrls
+        nam = ctrl.Name
+        If Len(nam) < 10 Then
+            ctrl.ToolTipText = "Change the " & CreateToolTipText(nam, ttt) & ". Doubleclick for using the mousewheel."
+        End If
+    Next
+End Sub
+
+Function ColAddText(arr) As Collection
+    Set ColAddText = New Collection
+    Dim i As Long
+    For i = 0 To UBound(arr) Step 2
+        ColAddText.Add arr(i + 1), arr(i)
+    Next
+End Function
+
+Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
+    nam = Mid(nam, 3) 'f.i.: "HSV_H"
+    Dim sa() As String: sa = Split(nam, "_")
+    Dim u As Long: u = UBound(sa)
+    If u = 1 Then
+        Dim s As String ': s = "Change the "
+        Dim c_1 As String: c_1 = sa(0)
+        Dim c_2 As String: c_2 = sa(1)
+        If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
+        s = s & ttt.Item(c_2) & "-value of "
+        Dim c11 As String: c11 = Mid(c_1, 1, 1)
+        Dim c12 As String: c12 = Mid(c_1, 2, 1)
+        Dim c13 As String: c13 = Mid(c_1, 3, 1)
+        If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
+        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        If Len(c_1) > 3 Then
+            Dim c14 As String: c14 = Mid(c_1, 4, 1)
+            s = s & ", " & ttt.Item(c14)
+        End If
+        CreateToolTipText = s & ")"
+    End If
+End Function

@@ -3,5 +3,5 @@ Option Explicit
 
 Sub Main()
     MColor.Init
-    Form1.Show
+    FMain.Show
 End Sub
