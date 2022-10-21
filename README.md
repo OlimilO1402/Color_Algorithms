@@ -10,5 +10,6 @@ Project started around mid.2017.
 This is a Collection of different algorithms for encoding a color-value.  
 RGB, RGB-float, CMYK, HSL, HSV, XYZ and alpha channel for transparency.  
 X11-knowncolors and RAL-classic colors are also included.  
+Select any color from your screen, click the button on/off, move your mouse, and press enter to select the color.  
 
 ![ColorAlgos Image](Resources/ColorAlgos.png "ColorAlgos Image")
