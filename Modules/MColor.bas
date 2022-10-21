@@ -478,6 +478,7 @@ Function RGBAf_ToXYZ(this As RGBAf) As XYZ
         .X = R * M.X(0) + G * M.X(1) + B * M.X(2)
         .Y = R * M.Y(0) + G * M.Y(1) + B * M.Y(2)
         .Z = R * M.Z(0) + G * M.Z(1) + B * M.Z(2)
+        .a = this.a
     End With
 End Function
 

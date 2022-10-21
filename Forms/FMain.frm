@@ -14,7 +14,7 @@ Begin VB.Form FMain
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "Form1.frx":0000
+   Icon            =   "FMain.frx":0000
    LinkTopic       =   "Form2"
    ScaleHeight     =   3015
    ScaleWidth      =   13095
