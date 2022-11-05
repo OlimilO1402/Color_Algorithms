@@ -1,6 +1,6 @@
 Attribute VB_Name = "MRALColors"
 Option Explicit
-
+'https://de.wikipedia.org/wiki/RAL-Farbe
 Public Enum RALClassic
     'RAL-1X Gelb und Beige
     RAL_1000_Grünbeige = &H88BACD
