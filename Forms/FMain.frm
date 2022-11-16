@@ -998,7 +998,7 @@ Begin VB.Form FMain
    Begin VB.PictureBox PbPicture 
       Height          =   1575
       Left            =   360
-      Picture         =   "Form1.frx":1782
+      Picture         =   "FMain.frx":1782
       ScaleHeight     =   101
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   101

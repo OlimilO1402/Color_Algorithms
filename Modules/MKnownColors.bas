@@ -1,5 +1,7 @@
 Attribute VB_Name = "MKnownColors"
 Option Explicit
+'https://en.wikipedia.org/wiki/X11_color_names
+
 'Public Enum SystemColor
 '    ActiveBorder = &H8000000A            '   -2147483638
 '    ActiveCaption = &H80000002           '   -2147483646
@@ -37,7 +39,7 @@ Option Explicit
 'End Enum
 '
 
-Public Enum SystemColor 'aka SystemColorConstants
+Public Enum SystemColor 'aka VBRUN.SystemColorConstants
     ActiveBorder = -2147483638
     ActiveCaption = -2147483646
     ActiveCaptionText = -2147483639
