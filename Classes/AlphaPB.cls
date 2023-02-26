@@ -20,7 +20,7 @@ Private Declare Function AlphaBlend Lib "msimg32" ( _
     ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal widthSrc As Long, ByVal heightSrc As Long, _
     ByVal blendFunct As Long) As Boolean
     
-Private Declare Sub RtlMoveMemory Lib "kernel32" (ByRef Dst As Any, ByRef Src As Any, ByVal BytLen As Long)
+Private Declare Sub RtlMoveMemory Lib "kernel32" (ByRef Dst As Any, ByRef src As Any, ByVal BytLen As Long)
 
 Private Type CtrlRECT
     Left   As Long
@@ -75,7 +75,7 @@ Private Sub Prepare(Rect As CtrlRECT, aPB As PictureBox)
     End With
 End Sub
 
-Private Sub UpdateView()
+Public Sub UpdateView()
     'Dim lngBlend As Long
     'RtlMoveMemory lngBlend, m_BlFnc, 4
     mForePB.Cls
