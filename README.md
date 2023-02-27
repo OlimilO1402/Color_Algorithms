@@ -3,7 +3,7 @@
 
 [![GitHub](https://img.shields.io/github/license/OlimilO1402/Color_Algorithms?style=plastic)](https://github.com/OlimilO1402/Color_Algorithms/blob/master/LICENSE) 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/OlimilO1402/Color_Algorithms?style=plastic)](https://github.com/OlimilO1402/Color_Algorithms/releases/latest)
-[![Github All Releases](https://img.shields.io/github/downloads/OlimilO1402/Color_Algorithms/total.svg)](https://github.com/OlimilO1402/Color_Algorithms/releases/download/v2023.2.26/ColorAlgos_v2023.2.26.zip)
+[![Github All Releases](https://img.shields.io/github/downloads/OlimilO1402/Color_Algorithms/total.svg)](https://github.com/OlimilO1402/Color_Algorithms/releases/download/v2023.2.27/ColorAlgos_v2023.2.27.zip)
 ![GitHub followers](https://img.shields.io/github/followers/OlimilO1402?style=social)
 
 Project started around mid.2017.  
