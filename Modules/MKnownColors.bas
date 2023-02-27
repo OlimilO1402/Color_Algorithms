@@ -151,7 +151,7 @@ Public Enum X11KnownColor
     YellowGreen = &HFF32CD9A        '
 End Enum
 
-Private Type TNamedColor
+Public Type TNamedColor
     Name   As String
     X11Col As X11KnownColor
     'Color  As ColorRGBA
@@ -176,6 +176,21 @@ Public Function X11KnownColor_Contains(ByVal aColor As Long) As Boolean
         If X11KnownColor_Contains Then Exit Function
     Next
 End Function
+
+Public Function X11KnownColor_ClosestColorTo(ByVal aColor As Long) As TNamedColor
+    Dim i As Long, i_minEd As Long, edi As Double
+    Dim lc As LngColor: lc = LngColor(aColor)
+    Dim ed0 As Double: ed0 = LngColor_EuclidRMean(LngColor((&HFFFFFF And m_Arr(0).X11Col)), lc)
+    For i = 1 To m_Count - 1
+        edi = LngColor_EuclidRMean(LngColor((&HFFFFFF And m_Arr(i).X11Col)), lc)
+        If edi < ed0 Then
+            i_minEd = i
+            ed0 = edi
+        End If
+    Next
+    X11KnownColor_ClosestColorTo = m_Arr(i_minEd)
+End Function
+
 'Public Property Get ColorByName(aName As String) As Color
 '    If m_Count = 0 Then X11KnownColor_Init
 '    Dim i As Long

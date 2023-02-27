@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form FMain 
    Caption         =   "Color Algorithms"
-   ClientHeight    =   3015
+   ClientHeight    =   3375
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   14895
@@ -16,9 +16,27 @@ Begin VB.Form FMain
    EndProperty
    Icon            =   "FMain.frx":0000
    LinkTopic       =   "Form2"
-   ScaleHeight     =   3015
+   ScaleHeight     =   3375
    ScaleWidth      =   14895
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.PictureBox PBClosestRALColor 
+      Height          =   375
+      Left            =   5520
+      ScaleHeight     =   315
+      ScaleWidth      =   315
+      TabIndex        =   86
+      Top             =   2880
+      Width           =   375
+   End
+   Begin VB.PictureBox PBClosestKnownColor 
+      Height          =   375
+      Left            =   1920
+      ScaleHeight     =   315
+      ScaleWidth      =   315
+      TabIndex        =   85
+      Top             =   2880
+      Width           =   375
+   End
    Begin VB.ComboBox CmbSysColor 
       Height          =   345
       Left            =   6840
@@ -173,7 +191,7 @@ Begin VB.Form FMain
       Height          =   375
       Left            =   120
       TabIndex        =   67
-      Top             =   2520
+      Top             =   2040
       Width           =   2055
    End
    Begin VB.Timer Timer1 
@@ -1052,7 +1070,7 @@ Begin VB.Form FMain
       Height          =   330
       Left            =   120
       TabIndex        =   1
-      Top             =   1800
+      Top             =   1680
       Width           =   2055
    End
    Begin VB.ComboBox CmbColorNames 
@@ -1060,7 +1078,7 @@ Begin VB.Form FMain
       Left            =   120
       TabIndex        =   0
       Text            =   "Combo1"
-      Top             =   2160
+      Top             =   2520
       Width           =   2055
    End
    Begin VB.PictureBox PBColor 
@@ -1101,6 +1119,22 @@ Begin VB.Form FMain
       TabIndex        =   68
       Top             =   120
       Width           =   1575
+   End
+   Begin VB.Label LblClosestRALColor 
+      Caption         =   " "
+      Height          =   375
+      Left            =   2880
+      TabIndex        =   84
+      Top             =   2880
+      Width           =   2655
+   End
+   Begin VB.Label LblClosestKnownColor 
+      Caption         =   " "
+      Height          =   375
+      Left            =   120
+      TabIndex        =   83
+      Top             =   2880
+      Width           =   1815
    End
    Begin VB.Label LblSysColors 
       AutoSize        =   -1  'True
@@ -1156,17 +1190,27 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub TBLngColor_LostFocus()
-    Dim LC As LngColor: LC = MColor.LngColor_ParseWebHex(TBLngColor.Text)
-    m_CMYK = LngColor_ToCMYK(LC)
+    Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.Text)
+    m_CMYK = LngColor_ToCMYK(lc)
     UpdateView
 End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim C As Long: C = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
-    PBColor.BackColor = C
-    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(C)))
+    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
+    PBColor.BackColor = c
+    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
+    
+    'get closest color from knowncolors list:
+    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
+    LblClosestKnownColor.Caption = nc.Name
+    PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
+    
+    'get closest color from RAL-colors list:
+    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(c)
+    LblClosestRALColor.Caption = "RAL_" & rc.RALNr & "_" & rc.Name
+    PBClosestRALColor.BackColor = rc.RALCol
 End Sub
 
 Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long
@@ -1281,8 +1325,8 @@ End Sub
 
 Private Sub CmbRALClassic_Click()
     If CmbRALClassic.Text = "" Then Exit Sub
-    Dim ralcol As Long: ralcol = MRALColors.RALClassic_Parse(CmbRALClassic.Text)
-    PBColor.BackColor = ralcol
+    Dim RALCol As Long: RALCol = MRALColors.RALClassic_Parse(CmbRALClassic.Text)
+    PBColor.BackColor = RALCol
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
     m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
     UpdateView True

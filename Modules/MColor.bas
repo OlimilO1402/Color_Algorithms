@@ -57,7 +57,7 @@ Public Type RGBAf
     A As Single '0..1
 End Type
 Public Type CMYK
-    C As Single '0..1
+    c As Single '0..1
     M As Single '0..1
     Y As Single '0..1
     K As Single '0..1
@@ -194,6 +194,11 @@ End Function
 Public Function LngColor(ByVal aColor As Long) As LngColor
     LngColor.Value = aColor
 End Function
+
+Public Function LngColor_EuclidRMean(this As LngColor, other As LngColor) As Double
+    LngColor_EuclidRMean = RGBA_EuclidRMean(LngColor_ToRGBA(this), LngColor_ToRGBA(other))
+End Function
+
 Public Function LngColor_ToRGBA(this As LngColor) As RGBA
     LSet LngColor_ToRGBA = this
 End Function
@@ -239,6 +244,15 @@ Public Function RGBA_Read(this_out As RGBA, TB_R As TextBox, TB_G As TextBox, TB
 End Function
 Public Function RGBA_ToView(TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, TB_A As TextBox, this As RGBA)
     With this: TB_R.Text = .R: TB_G.Text = .G: TB_B.Text = .B: TB_A.Text = .A: End With
+End Function
+
+'https://en.wikipedia.org/wiki/Color_difference
+Public Function RGBA_EuclidRMean(this As RGBA, other As RGBA) As Double
+    Dim dR As Double: dR = CDbl(this.R) - CDbl(other.R)
+    Dim dG As Double: dG = CDbl(this.G) - CDbl(other.G)
+    Dim dB As Double: dB = CDbl(this.B) - CDbl(other.B)
+    Dim sR As Double: sR = 0.5 * (CDbl(this.R) + CDbl(other.R))
+    RGBA_EuclidRMean = Math.Sqr((2 + sR / 256#) * dR * dR + 4 * dG * dG + (2 + (255# - sR) / 256) * dB * dB)
 End Function
 
 Public Function RGBA_ToARGB(this As RGBA) As ARGB
@@ -404,6 +418,14 @@ Public Function RGBAf_ToView(TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, 
     End With
 End Function
 
+Public Function RGBAf_EuclidRMean(this As RGBAf, other As RGBAf) As Double
+    Dim dR As Double: dR = this.R - other.R
+    Dim dG As Double: dG = this.G - other.G
+    Dim dB As Double: dB = this.B - other.B
+    Dim sR As Double: sR = 0.5 * (this.R + other.R)
+    RGBAf_EuclidRMean = Math.Sqr((2 + sR / 256) * dR * dR + 4 * dG * dG + (2 + (255 - sR) / 256) * dB * dB)
+End Function
+
 Public Function RGBAf_ToRGBA(this As RGBAf) As RGBA
     With this
         RGBAf_ToRGBA.R = CByte(.R * 255)
@@ -416,13 +438,13 @@ End Function
 Public Function RGBAf_ToCMYK(this As RGBAf) As CMYK
     With RGBAf_ToCMYK
         .A = this.A
-        .C = 1 - this.R
+        .c = 1 - this.R
         .M = 1 - this.G
         .Y = 1 - this.B
-        .K = MinS3(.C, .M, .Y)
+        .K = MinS3(.c, .M, .Y)
         If .K = 1 Then Exit Function
         Dim kf As Single: kf = 1 - .K
-        .C = ((.C - .K) / kf)
+        .c = ((.c - .K) / kf)
         .M = ((.M - .K) / kf)
         .Y = ((.Y - .K) / kf)
     End With
@@ -531,14 +553,14 @@ End Function
 '    K As Single '0..1
 '    A As Single '0..1
 'End Type
-Public Function CMYK(ByVal C As Single, ByVal M As Single, ByVal Y As Single, ByVal K As Single, ByVal A As Single) As CMYK
-    With CMYK: .C = C: .M = M: .Y = Y: .K = K: .A = A: End With
+Public Function CMYK(ByVal c As Single, ByVal M As Single, ByVal Y As Single, ByVal K As Single, ByVal A As Single) As CMYK
+    With CMYK: .c = c: .M = M: .Y = Y: .K = K: .A = A: End With
 End Function
 
 Public Function CMYK_Read(this_out As CMYK, TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, TB_K As TextBox, TB_A As TextBox, err_out As String) As Boolean
     Dim V As Single, S As String
     With this_out
-        S = TB_C.Text: If FloatS_TryParse(S, V) Then .C = V Else err_out = S: Exit Function
+        S = TB_C.Text: If FloatS_TryParse(S, V) Then .c = V Else err_out = S: Exit Function
         S = TB_M.Text: If FloatS_TryParse(S, V) Then .M = V Else err_out = S: Exit Function
         S = TB_Y.Text: If FloatS_TryParse(S, V) Then .Y = V Else err_out = S: Exit Function
         S = TB_K.Text: If FloatS_TryParse(S, V) Then .K = V Else err_out = S: Exit Function
@@ -548,7 +570,7 @@ Public Function CMYK_Read(this_out As CMYK, TB_C As TextBox, TB_M As TextBox, TB
 End Function
 Public Function CMYK_ToView(TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, TB_K As TextBox, TB_A As TextBox, this As CMYK)
     With this
-        TB_C.Text = Format(.C, "0.#####")
+        TB_C.Text = Format(.c, "0.#####")
         TB_M.Text = Format(.M, "0.#####")
         TB_Y.Text = Format(.Y, "0.#####")
         TB_K.Text = Format(.K, "0.#####")
@@ -556,10 +578,18 @@ Public Function CMYK_ToView(TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, T
     End With
 End Function
 
+Public Function CMYK_Euclidean(this As CMYK, other As CMYK) As Double
+    Dim dC As Double: dC = this.c - other.c
+    Dim dM As Double: dM = this.M - other.M
+    Dim dY As Double: dY = this.Y - other.Y
+    Dim dK As Double: dK = this.K - other.K
+    CMYK_Euclidean = Math.Sqr(dC * dC + dM * dM + dY * dY + dK * dK)
+End Function
+
 Public Function CMYK_ToRGBAf(this As CMYK) As RGBAf
     With this
         Dim kf As Single: kf = 1 - .K
-        CMYK_ToRGBAf.R = 1 - MinS(1, .C * kf + .K)
+        CMYK_ToRGBAf.R = 1 - MinS(1, .c * kf + .K)
         CMYK_ToRGBAf.G = 1 - MinS(1, .M * kf + .K)
         CMYK_ToRGBAf.B = 1 - MinS(1, .Y * kf + .K)
         CMYK_ToRGBAf.A = .A
@@ -607,6 +637,11 @@ Public Function HSLA_ToView(TBHSLA_H As TextBox, TBHSLA_S As TextBox, TBHSLA_L A
         TBHSLA_A.Text = .A
     End With
 End Function
+
+Public Function HSLA_Euclidean(this As HSLA, other As HSLA) As Double
+
+End Function
+
 Public Function HSLA_ToHSLAf(this As HSLA) As HSLAf
     With HSLA_ToHSLAf
         .H = this.H / 240
@@ -763,6 +798,32 @@ End Function
 Public Function XYZ(ByVal aX As Single, ByVal aY As Single, ByVal aZ As Single) As XYZ
     With XYZ: .X = aX: .Y = aY: .Z = aZ: .A = 1: End With
 End Function
+Public Function XYZ_Read(this_out As XYZ, TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, err_out As String) As Boolean
+    Dim V As Single, S As String
+    With this_out
+        S = TB_X.Text: If FloatS_TryParse(S, V) Then .X = V Else err_out = S: Exit Function
+        S = TB_Y.Text: If FloatS_TryParse(S, V) Then .Y = V Else err_out = S: Exit Function
+        S = TB_Z.Text: If FloatS_TryParse(S, V) Then .Z = V Else err_out = S: Exit Function
+        S = TB_A.Text: If FloatS_TryParse(S, V) Then .A = V Else err_out = S: Exit Function
+    End With
+    XYZ_Read = True
+End Function
+Public Function XYZ_ToView(TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, this As XYZ)
+    With this
+        TB_X.Text = Format(.X, "0.#####")
+        TB_Y.Text = Format(.Y, "0.#####")
+        TB_Z.Text = Format(.Z, "0.#####")
+        TB_A.Text = Format(.A, "0.#####")
+    End With
+End Function
+
+Public Function XYZ_Euclidean(this As XYZ, other As XYZ) As Double
+    Dim dX As Double: dX = this.X - other.X
+    Dim dY As Double: dY = this.Y - other.Y
+    Dim dZ As Double: dZ = this.Z - other.Z
+    XYZ_Euclidean = Math.Sqr(dX * dX + dY * dY + dZ * dZ)
+End Function
+
 Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
     Dim X As Single: X = this.X
     Dim Y As Single: Y = this.Y
@@ -785,22 +846,4 @@ Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
     End With
 End Function
 
-Public Function XYZ_Read(this_out As XYZ, TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim V As Single, S As String
-    With this_out
-        S = TB_X.Text: If FloatS_TryParse(S, V) Then .X = V Else err_out = S: Exit Function
-        S = TB_Y.Text: If FloatS_TryParse(S, V) Then .Y = V Else err_out = S: Exit Function
-        S = TB_Z.Text: If FloatS_TryParse(S, V) Then .Z = V Else err_out = S: Exit Function
-        S = TB_A.Text: If FloatS_TryParse(S, V) Then .A = V Else err_out = S: Exit Function
-    End With
-    XYZ_Read = True
-End Function
-Public Function XYZ_ToView(TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, this As XYZ)
-    With this
-        TB_X.Text = Format(.X, "0.#####")
-        TB_Y.Text = Format(.Y, "0.#####")
-        TB_Z.Text = Format(.Z, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
-    End With
-End Function
 
