@@ -1009,237 +1009,246 @@ End Function
 
 Public Function RALClassic_NumToColor(ByVal num As Long) As RALClassic
     If m_Count = 0 Then RALClassicColor_Init
-    Dim c As RALClassic
+    Dim C As RALClassic
     Select Case num
     
-    Case 1000: c = RAL_1000_Grünbeige
-    Case 1001: c = RAL_1001_Beige
-    Case 1002: c = RAL_1002_Sandgelb
-    Case 1003: c = RAL_1003_Signalgelb
-    Case 1004: c = RAL_1004_Goldgelb
-    Case 1005: c = RAL_1005_Honiggelb
-    Case 1006: c = RAL_1006_Maisgelb
-    Case 1007: c = RAL_1007_Narzissengelb
-    Case 1011: c = RAL_1011_Braunbeige
-    Case 1012: c = RAL_1012_Zitronengelb
-    Case 1013: c = RAL_1013_Perlweiß
-    Case 1014: c = RAL_1014_Elfenbein
-    Case 1015: c = RAL_1015_Hellelfenbein
-    Case 1016: c = RAL_1016_Schwefelgelb
-    Case 1017: c = RAL_1017_Safrangelb
-    Case 1018: c = RAL_1018_Zinkgelb
-    Case 1019: c = RAL_1019_Graubeige
-    Case 1020: c = RAL_1020_Olivgelb
-    Case 1021: c = RAL_1021_Rapsgelb
-    Case 1023: c = RAL_1023_Verkehrsgelb
-    Case 1024: c = RAL_1024_Ockergelb
-    Case 1026: c = RAL_1026_Leuchtgelb
-    Case 1027: c = RAL_1027_Currygelb
-    Case 1028: c = RAL_1028_Melonengelb
-    Case 1032: c = RAL_1032_Ginstergelb
-    Case 1033: c = RAL_1033_Dahliengelb
-    Case 1034: c = RAL_1034_Pastellgelb
-    Case 1035: c = RAL_1035_Perlbeige
-    Case 1036: c = RAL_1036_Perlgold
-    Case 1037: c = RAL_1037_Sonnengelb
+    Case 1000: C = RAL_1000_Grünbeige
+    Case 1001: C = RAL_1001_Beige
+    Case 1002: C = RAL_1002_Sandgelb
+    Case 1003: C = RAL_1003_Signalgelb
+    Case 1004: C = RAL_1004_Goldgelb
+    Case 1005: C = RAL_1005_Honiggelb
+    Case 1006: C = RAL_1006_Maisgelb
+    Case 1007: C = RAL_1007_Narzissengelb
+    Case 1011: C = RAL_1011_Braunbeige
+    Case 1012: C = RAL_1012_Zitronengelb
+    Case 1013: C = RAL_1013_Perlweiß
+    Case 1014: C = RAL_1014_Elfenbein
+    Case 1015: C = RAL_1015_Hellelfenbein
+    Case 1016: C = RAL_1016_Schwefelgelb
+    Case 1017: C = RAL_1017_Safrangelb
+    Case 1018: C = RAL_1018_Zinkgelb
+    Case 1019: C = RAL_1019_Graubeige
+    Case 1020: C = RAL_1020_Olivgelb
+    Case 1021: C = RAL_1021_Rapsgelb
+    Case 1023: C = RAL_1023_Verkehrsgelb
+    Case 1024: C = RAL_1024_Ockergelb
+    Case 1026: C = RAL_1026_Leuchtgelb
+    Case 1027: C = RAL_1027_Currygelb
+    Case 1028: C = RAL_1028_Melonengelb
+    Case 1032: C = RAL_1032_Ginstergelb
+    Case 1033: C = RAL_1033_Dahliengelb
+    Case 1034: C = RAL_1034_Pastellgelb
+    Case 1035: C = RAL_1035_Perlbeige
+    Case 1036: C = RAL_1036_Perlgold
+    Case 1037: C = RAL_1037_Sonnengelb
     
-    Case 2000: c = RAL_2000_Gelborange
-    Case 2001: c = RAL_2001_Rotorange
-    Case 2002: c = RAL_2002_Blutorange
-    Case 2003: c = RAL_2003_Pastellorange
-    Case 2004: c = RAL_2004_Reinorange
-    Case 2005: c = RAL_2005_Leuchtorange
-    Case 2007: c = RAL_2007_Leuchthellorange
-    Case 2008: c = RAL_2008_Hellrotorange
-    Case 2009: c = RAL_2009_Verkehrsorange
-    Case 2010: c = RAL_2010_Signalorange
-    Case 2011: c = RAL_2011_Tieforange
-    Case 2012: c = RAL_2012_Lachsorange
-    Case 2013: c = RAL_2013_Perlorange
-    Case 2017: c = RAL_2017_RALOrange
+    Case 2000: C = RAL_2000_Gelborange
+    Case 2001: C = RAL_2001_Rotorange
+    Case 2002: C = RAL_2002_Blutorange
+    Case 2003: C = RAL_2003_Pastellorange
+    Case 2004: C = RAL_2004_Reinorange
+    Case 2005: C = RAL_2005_Leuchtorange
+    Case 2007: C = RAL_2007_Leuchthellorange
+    Case 2008: C = RAL_2008_Hellrotorange
+    Case 2009: C = RAL_2009_Verkehrsorange
+    Case 2010: C = RAL_2010_Signalorange
+    Case 2011: C = RAL_2011_Tieforange
+    Case 2012: C = RAL_2012_Lachsorange
+    Case 2013: C = RAL_2013_Perlorange
+    Case 2017: C = RAL_2017_RALOrange
     
-    Case 3000: c = RAL_3000_Feuerrot
-    Case 3001: c = RAL_3001_Signalrot
-    Case 3002: c = RAL_3002_Karminrot
-    Case 3003: c = RAL_3003_Rubinrot
-    Case 3004: c = RAL_3004_Purpurrot
-    Case 3005: c = RAL_3005_Weinrot
-    Case 3007: c = RAL_3007_Schwarzrot
-    Case 3009: c = RAL_3009_Oxidrot
-    Case 3011: c = RAL_3011_Braunrot
-    Case 3012: c = RAL_3012_Beigerot
-    Case 3013: c = RAL_3013_Tomatenrot
-    Case 3014: c = RAL_3014_Altrosa
-    Case 3015: c = RAL_3015_Hellrosa
-    Case 3016: c = RAL_3016_Korallenrot
-    Case 3017: c = RAL_3017_Rosé
-    Case 3018: c = RAL_3018_Erdbeerrot
-    Case 3020: c = RAL_3020_Verkehrsrot
-    Case 3022: c = RAL_3022_Lachsrot
-    Case 3024: c = RAL_3024_Leuchtrot
-    Case 3026: c = RAL_3026_Leuchthellrot
-    Case 3027: c = RAL_3027_Himbeerrot
-    Case 3028: c = RAL_3028_Reinrot
-    Case 3031: c = RAL_3031_Orientrot
-    Case 3032: c = RAL_3032_Perlrubinrot
-    Case 3033: c = RAL_3033_Perlrosa
+    Case 3000: C = RAL_3000_Feuerrot
+    Case 3001: C = RAL_3001_Signalrot
+    Case 3002: C = RAL_3002_Karminrot
+    Case 3003: C = RAL_3003_Rubinrot
+    Case 3004: C = RAL_3004_Purpurrot
+    Case 3005: C = RAL_3005_Weinrot
+    Case 3007: C = RAL_3007_Schwarzrot
+    Case 3009: C = RAL_3009_Oxidrot
+    Case 3011: C = RAL_3011_Braunrot
+    Case 3012: C = RAL_3012_Beigerot
+    Case 3013: C = RAL_3013_Tomatenrot
+    Case 3014: C = RAL_3014_Altrosa
+    Case 3015: C = RAL_3015_Hellrosa
+    Case 3016: C = RAL_3016_Korallenrot
+    Case 3017: C = RAL_3017_Rosé
+    Case 3018: C = RAL_3018_Erdbeerrot
+    Case 3020: C = RAL_3020_Verkehrsrot
+    Case 3022: C = RAL_3022_Lachsrot
+    Case 3024: C = RAL_3024_Leuchtrot
+    Case 3026: C = RAL_3026_Leuchthellrot
+    Case 3027: C = RAL_3027_Himbeerrot
+    Case 3028: C = RAL_3028_Reinrot
+    Case 3031: C = RAL_3031_Orientrot
+    Case 3032: C = RAL_3032_Perlrubinrot
+    Case 3033: C = RAL_3033_Perlrosa
     
-    Case 4001: c = RAL_4001_Rotlila
-    Case 4002: c = RAL_4002_Rotviolett
-    Case 4003: c = RAL_4003_Erikaviolett
-    Case 4004: c = RAL_4004_Bordeauxviolett
-    Case 4005: c = RAL_4005_Blaulila
-    Case 4006: c = RAL_4006_Verkehrspurpur
-    Case 4007: c = RAL_4007_Purpurviolett
-    Case 4008: c = RAL_4008_Signalviolett
-    Case 4009: c = RAL_4009_Pastellviolett
-    Case 4010: c = RAL_4010_Telemagenta
-    Case 4011: c = RAL_4011_Perlviolett
-    Case 4012: c = RAL_4012_Perlbrombeer
+    Case 4001: C = RAL_4001_Rotlila
+    Case 4002: C = RAL_4002_Rotviolett
+    Case 4003: C = RAL_4003_Erikaviolett
+    Case 4004: C = RAL_4004_Bordeauxviolett
+    Case 4005: C = RAL_4005_Blaulila
+    Case 4006: C = RAL_4006_Verkehrspurpur
+    Case 4007: C = RAL_4007_Purpurviolett
+    Case 4008: C = RAL_4008_Signalviolett
+    Case 4009: C = RAL_4009_Pastellviolett
+    Case 4010: C = RAL_4010_Telemagenta
+    Case 4011: C = RAL_4011_Perlviolett
+    Case 4012: C = RAL_4012_Perlbrombeer
     
-    Case 5000: c = RAL_5000_Violettblau
-    Case 5001: c = RAL_5001_Grünblau
-    Case 5002: c = RAL_5002_Ultramarinblau
-    Case 5003: c = RAL_5003_Saphirblau
-    Case 5004: c = RAL_5004_Schwarzblau
-    Case 5005: c = RAL_5005_Signalblau
-    Case 5007: c = RAL_5007_Brillantblau
-    Case 5008: c = RAL_5008_Graublau
-    Case 5009: c = RAL_5009_Azurblau
-    Case 5010: c = RAL_5010_Enzianblau
-    Case 5011: c = RAL_5011_Stahlblau
-    Case 5012: c = RAL_5012_Lichtblau
-    Case 5013: c = RAL_5013_Kobaltblau
-    Case 5014: c = RAL_5014_Taubenblau
-    Case 5015: c = RAL_5015_Himmelblau
-    Case 5017: c = RAL_5017_Verkehrsblau
-    Case 5018: c = RAL_5018_Türkisblau
-    Case 5019: c = RAL_5019_Capriblau
-    Case 5020: c = RAL_5020_Ozeanblau
-    Case 5021: c = RAL_5021_Wasserblau
-    Case 5022: c = RAL_5022_Nachtblau
-    Case 5023: c = RAL_5023_Fernblau
-    Case 5024: c = RAL_5024_Pastellblau
-    Case 5025: c = RAL_5025_Perlenzian
-    Case 5026: c = RAL_5026_Perlnachtblau
+    Case 5000: C = RAL_5000_Violettblau
+    Case 5001: C = RAL_5001_Grünblau
+    Case 5002: C = RAL_5002_Ultramarinblau
+    Case 5003: C = RAL_5003_Saphirblau
+    Case 5004: C = RAL_5004_Schwarzblau
+    Case 5005: C = RAL_5005_Signalblau
+    Case 5007: C = RAL_5007_Brillantblau
+    Case 5008: C = RAL_5008_Graublau
+    Case 5009: C = RAL_5009_Azurblau
+    Case 5010: C = RAL_5010_Enzianblau
+    Case 5011: C = RAL_5011_Stahlblau
+    Case 5012: C = RAL_5012_Lichtblau
+    Case 5013: C = RAL_5013_Kobaltblau
+    Case 5014: C = RAL_5014_Taubenblau
+    Case 5015: C = RAL_5015_Himmelblau
+    Case 5017: C = RAL_5017_Verkehrsblau
+    Case 5018: C = RAL_5018_Türkisblau
+    Case 5019: C = RAL_5019_Capriblau
+    Case 5020: C = RAL_5020_Ozeanblau
+    Case 5021: C = RAL_5021_Wasserblau
+    Case 5022: C = RAL_5022_Nachtblau
+    Case 5023: C = RAL_5023_Fernblau
+    Case 5024: C = RAL_5024_Pastellblau
+    Case 5025: C = RAL_5025_Perlenzian
+    Case 5026: C = RAL_5026_Perlnachtblau
     
-    Case 6000: c = RAL_6000_Patinagrün
-    Case 6001: c = RAL_6001_Smaragdgrün
-    Case 6002: c = RAL_6002_Laubgrün
-    Case 6003: c = RAL_6003_Olivgrün
-    Case 6004: c = RAL_6004_Blaugrün
-    Case 6005: c = RAL_6005_Moosgrün
-    Case 6006: c = RAL_6006_Grauoliv
-    Case 6007: c = RAL_6007_Flaschengrün
-    Case 6008: c = RAL_6008_Braungrün
-    Case 6009: c = RAL_6009_Tannengrün
-    Case 6010: c = RAL_6010_Grasgrün
-    Case 6011: c = RAL_6011_Resedagrün
-    Case 6012: c = RAL_6012_Schwarzgrün
-    Case 6013: c = RAL_6013_Schilfgrün
-    Case 6014: c = RAL_6014_Gelboliv
-    Case 6015: c = RAL_6015_Schwarzoliv
-    Case 6016: c = RAL_6016_Türkisgrün
-    Case 6017: c = RAL_6017_Maigrün
-    Case 6018: c = RAL_6018_Gelbgrün
-    Case 6019: c = RAL_6019_Weißgrün
-    Case 6020: c = RAL_6020_Chromoxidgrün
-    Case 6021: c = RAL_6021_Blassgrün
-    Case 6022: c = RAL_6022_Braunoliv
-    Case 6024: c = RAL_6024_Verkehrsgrün
-    Case 6025: c = RAL_6025_Farngrün
-    Case 6026: c = RAL_6026_Opalgrün
-    Case 6027: c = RAL_6027_Lichtgrün
-    Case 6028: c = RAL_6028_Kieferngrün
-    Case 6029: c = RAL_6029_Minzgrün
-    Case 6032: c = RAL_6032_Signalgrün
-    Case 6033: c = RAL_6033_Minttürkis
-    Case 6034: c = RAL_6034_Pastelltürkis
-    Case 6035: c = RAL_6035_Perlgrün
-    Case 6036: c = RAL_6036_Perlopalgrün
-    Case 6037: c = RAL_6037_Reingrün
-    Case 6038: c = RAL_6038_Leuchtgrün
-    Case 6039: c = RAL_6039_Fasergrün
+    Case 6000: C = RAL_6000_Patinagrün
+    Case 6001: C = RAL_6001_Smaragdgrün
+    Case 6002: C = RAL_6002_Laubgrün
+    Case 6003: C = RAL_6003_Olivgrün
+    Case 6004: C = RAL_6004_Blaugrün
+    Case 6005: C = RAL_6005_Moosgrün
+    Case 6006: C = RAL_6006_Grauoliv
+    Case 6007: C = RAL_6007_Flaschengrün
+    Case 6008: C = RAL_6008_Braungrün
+    Case 6009: C = RAL_6009_Tannengrün
+    Case 6010: C = RAL_6010_Grasgrün
+    Case 6011: C = RAL_6011_Resedagrün
+    Case 6012: C = RAL_6012_Schwarzgrün
+    Case 6013: C = RAL_6013_Schilfgrün
+    Case 6014: C = RAL_6014_Gelboliv
+    Case 6015: C = RAL_6015_Schwarzoliv
+    Case 6016: C = RAL_6016_Türkisgrün
+    Case 6017: C = RAL_6017_Maigrün
+    Case 6018: C = RAL_6018_Gelbgrün
+    Case 6019: C = RAL_6019_Weißgrün
+    Case 6020: C = RAL_6020_Chromoxidgrün
+    Case 6021: C = RAL_6021_Blassgrün
+    Case 6022: C = RAL_6022_Braunoliv
+    Case 6024: C = RAL_6024_Verkehrsgrün
+    Case 6025: C = RAL_6025_Farngrün
+    Case 6026: C = RAL_6026_Opalgrün
+    Case 6027: C = RAL_6027_Lichtgrün
+    Case 6028: C = RAL_6028_Kieferngrün
+    Case 6029: C = RAL_6029_Minzgrün
+    Case 6032: C = RAL_6032_Signalgrün
+    Case 6033: C = RAL_6033_Minttürkis
+    Case 6034: C = RAL_6034_Pastelltürkis
+    Case 6035: C = RAL_6035_Perlgrün
+    Case 6036: C = RAL_6036_Perlopalgrün
+    Case 6037: C = RAL_6037_Reingrün
+    Case 6038: C = RAL_6038_Leuchtgrün
+    Case 6039: C = RAL_6039_Fasergrün
     
-    Case 7000: c = RAL_7000_Fehgrau
-    Case 7001: c = RAL_7001_Silbergrau
-    Case 7002: c = RAL_7002_Olivgrau
-    Case 7003: c = RAL_7003_Moosgrau
-    Case 7004: c = RAL_7004_Signalgrau
-    Case 7005: c = RAL_7005_Mausgrau
-    Case 7006: c = RAL_7006_Beigegrau
-    Case 7008: c = RAL_7008_Khakigrau
-    Case 7009: c = RAL_7009_Grüngrau
-    Case 7010: c = RAL_7010_Zeltgrau
-    Case 7011: c = RAL_7011_Eisengrau
-    Case 7012: c = RAL_7012_Basaltgrau
-    Case 7013: c = RAL_7013_Braungrau
-    Case 7015: c = RAL_7015_Schiefergrau
-    Case 7016: c = RAL_7016_Anthrazitgrau
-    Case 7021: c = RAL_7021_Schwarzgrau
-    Case 7022: c = RAL_7022_Umbragrau
-    Case 7023: c = RAL_7023_Betongrau
-    Case 7024: c = RAL_7024_Graphitgrau
-    Case 7026: c = RAL_7026_Granitgrau
-    Case 7030: c = RAL_7030_Steingrau
-    Case 7031: c = RAL_7031_Blaugrau
-    Case 7032: c = RAL_7032_Kieselgrau
-    Case 7033: c = RAL_7033_Zementgrau
-    Case 7034: c = RAL_7034_Gelbgrau
-    Case 7035: c = RAL_7035_Lichtgrau
-    Case 7036: c = RAL_7036_Platingrau
-    Case 7037: c = RAL_7037_Staubgrau
-    Case 7038: c = RAL_7038_Achatgrau
-    Case 7039: c = RAL_7039_Quarzgrau
-    Case 7040: c = RAL_7040_Fenstergrau
-    Case 7042: c = RAL_7042_VerkehrsgrauA
-    Case 7043: c = RAL_7043_VerkehrsgrauB
-    Case 7044: c = RAL_7044_Seidengrau
-    Case 7045: c = RAL_7045_Telegrau1
-    Case 7046: c = RAL_7046_Telegrau2
-    Case 7047: c = RAL_7047_Telegrau4
-    Case 7048: c = RAL_7048_Perlmausgrau
+    Case 7000: C = RAL_7000_Fehgrau
+    Case 7001: C = RAL_7001_Silbergrau
+    Case 7002: C = RAL_7002_Olivgrau
+    Case 7003: C = RAL_7003_Moosgrau
+    Case 7004: C = RAL_7004_Signalgrau
+    Case 7005: C = RAL_7005_Mausgrau
+    Case 7006: C = RAL_7006_Beigegrau
+    Case 7008: C = RAL_7008_Khakigrau
+    Case 7009: C = RAL_7009_Grüngrau
+    Case 7010: C = RAL_7010_Zeltgrau
+    Case 7011: C = RAL_7011_Eisengrau
+    Case 7012: C = RAL_7012_Basaltgrau
+    Case 7013: C = RAL_7013_Braungrau
+    Case 7015: C = RAL_7015_Schiefergrau
+    Case 7016: C = RAL_7016_Anthrazitgrau
+    Case 7021: C = RAL_7021_Schwarzgrau
+    Case 7022: C = RAL_7022_Umbragrau
+    Case 7023: C = RAL_7023_Betongrau
+    Case 7024: C = RAL_7024_Graphitgrau
+    Case 7026: C = RAL_7026_Granitgrau
+    Case 7030: C = RAL_7030_Steingrau
+    Case 7031: C = RAL_7031_Blaugrau
+    Case 7032: C = RAL_7032_Kieselgrau
+    Case 7033: C = RAL_7033_Zementgrau
+    Case 7034: C = RAL_7034_Gelbgrau
+    Case 7035: C = RAL_7035_Lichtgrau
+    Case 7036: C = RAL_7036_Platingrau
+    Case 7037: C = RAL_7037_Staubgrau
+    Case 7038: C = RAL_7038_Achatgrau
+    Case 7039: C = RAL_7039_Quarzgrau
+    Case 7040: C = RAL_7040_Fenstergrau
+    Case 7042: C = RAL_7042_VerkehrsgrauA
+    Case 7043: C = RAL_7043_VerkehrsgrauB
+    Case 7044: C = RAL_7044_Seidengrau
+    Case 7045: C = RAL_7045_Telegrau1
+    Case 7046: C = RAL_7046_Telegrau2
+    Case 7047: C = RAL_7047_Telegrau4
+    Case 7048: C = RAL_7048_Perlmausgrau
     
-    Case 8000: c = RAL_8000_Grünbraun
-    Case 8001: c = RAL_8001_Ockerbraun
-    Case 8002: c = RAL_8002_Signalbraun
-    Case 8003: c = RAL_8003_Lehmbraun
-    Case 8004: c = RAL_8004_Kupferbraun
-    Case 8007: c = RAL_8007_Rehbraun
-    Case 8008: c = RAL_8008_Olivbraun
-    Case 8011: c = RAL_8011_Nussbraun
-    Case 8012: c = RAL_8012_Rotbraun
-    Case 8014: c = RAL_8014_Sepiabraun
-    Case 8015: c = RAL_8015_Kastanienbraun
-    Case 8016: c = RAL_8016_Mahagonibraun
-    Case 8017: c = RAL_8017_Schokoladenbraun
-    Case 8019: c = RAL_8019_Graubraun
-    Case 8022: c = RAL_8022_Schwarzbraun
-    Case 8023: c = RAL_8023_Orangebraun
-    Case 8024: c = RAL_8024_Beigebraun
-    Case 8025: c = RAL_8025_Blassbraun
-    Case 8028: c = RAL_8028_Terrabraun
-    Case 8029: c = RAL_8029_Perlkupfer
+    Case 8000: C = RAL_8000_Grünbraun
+    Case 8001: C = RAL_8001_Ockerbraun
+    Case 8002: C = RAL_8002_Signalbraun
+    Case 8003: C = RAL_8003_Lehmbraun
+    Case 8004: C = RAL_8004_Kupferbraun
+    Case 8007: C = RAL_8007_Rehbraun
+    Case 8008: C = RAL_8008_Olivbraun
+    Case 8011: C = RAL_8011_Nussbraun
+    Case 8012: C = RAL_8012_Rotbraun
+    Case 8014: C = RAL_8014_Sepiabraun
+    Case 8015: C = RAL_8015_Kastanienbraun
+    Case 8016: C = RAL_8016_Mahagonibraun
+    Case 8017: C = RAL_8017_Schokoladenbraun
+    Case 8019: C = RAL_8019_Graubraun
+    Case 8022: C = RAL_8022_Schwarzbraun
+    Case 8023: C = RAL_8023_Orangebraun
+    Case 8024: C = RAL_8024_Beigebraun
+    Case 8025: C = RAL_8025_Blassbraun
+    Case 8028: C = RAL_8028_Terrabraun
+    Case 8029: C = RAL_8029_Perlkupfer
     
-    Case 9001: c = RAL_9001_Cremeweiß
-    Case 9002: c = RAL_9002_Grauweiß
-    Case 9003: c = RAL_9003_Signalweiß
-    Case 9004: c = RAL_9004_Signalschwarz
-    Case 9005: c = RAL_9005_Tiefschwarz
-    Case 9006: c = RAL_9006_Weißaluminium
-    Case 9007: c = RAL_9007_Graualuminium
-    Case 9010: c = RAL_9010_Reinweiß
-    Case 9011: c = RAL_9011_Graphitschwarz
-    Case 9012: c = RAL_9012_Reinraumweiß
-    Case 9016: c = RAL_9016_Verkehrsweiß
-    Case 9017: c = RAL_9017_Verkehrsschwarz
-    Case 9018: c = RAL_9018_Papyrusweiß
-    Case 9022: c = RAL_9022_Perlhellgrau
-    Case 9023: c = RAL_9023_Perldunkelgrau
-    Case 9020: c = RAL_9020_SeidenmattWeiß
+    Case 9001: C = RAL_9001_Cremeweiß
+    Case 9002: C = RAL_9002_Grauweiß
+    Case 9003: C = RAL_9003_Signalweiß
+    Case 9004: C = RAL_9004_Signalschwarz
+    Case 9005: C = RAL_9005_Tiefschwarz
+    Case 9006: C = RAL_9006_Weißaluminium
+    Case 9007: C = RAL_9007_Graualuminium
+    Case 9010: C = RAL_9010_Reinweiß
+    Case 9011: C = RAL_9011_Graphitschwarz
+    Case 9012: C = RAL_9012_Reinraumweiß
+    Case 9016: C = RAL_9016_Verkehrsweiß
+    Case 9017: C = RAL_9017_Verkehrsschwarz
+    Case 9018: C = RAL_9018_Papyrusweiß
+    Case 9022: C = RAL_9022_Perlhellgrau
+    Case 9023: C = RAL_9023_Perldunkelgrau
+    Case 9020: C = RAL_9020_SeidenmattWeiß
+        
+    Case 6031: C = RAL_6031_Bronzegrün
+    Case 8027: C = RAL_8027_Lederbraun
+    Case 9021: C = RAL_9021_Teerschwarz
+    Case 1039: C = RAL_1039_Sandbeige
+    Case 1040: C = RAL_1040_Lehmbeige
+    Case 6040: C = RAL_6040_Helloliv
+    Case 7050: C = RAL_7050_Tarngrau
+    Case 8031: C = RAL_8031_Sandbraun
     
     End Select
-    RALClassic_NumToColor = c
+    RALClassic_NumToColor = C
 End Function
 
 Public Function RALClassic_NumToColorname(num As Long) As String
@@ -1252,16 +1261,74 @@ End Function
 Public Sub RALClassic_ToListBox(aCBLB)
     If m_Count = 0 Then RALClassicColor_Init
     aCBLB.Clear
+    
     Dim i As Long, j As Long
     Dim num As Long, S As String
-    For i = 1 To 10
-        num = i * 1000
-        For j = 0 To 100
-            S = RALClassic_NumToColorname(num)
-            If Len(S) Then aCBLB.AddItem S
-            num = num + 1
-        Next
+    i = 1000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+    Loop While i <= 1037
+    
+    i = 2000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+    Loop While i <= 2017
+    
+    i = 3000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+    Loop While i <= 3033
+    
+    i = 4000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+    Loop While i <= 4012
+    
+    i = 5000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+    Loop While i <= 5026
+    
+    i = 6000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+        If i = 6031 Then i = i + 1
+        If i = 6040 Then i = i + 1
+    Loop While i <= 6039
+    
+    For i = 7000 To 7048
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
     Next
+    
+    i = 8000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+        If i = 8027 Then i = i + 1
+    Loop While i <= 8029
+    
+    i = 9000
+    Do
+        S = RALClassic_NumToColorname(i): If Len(S) Then aCBLB.AddItem S
+        i = i + 1
+        If i = 9021 Then i = i + 1
+    Loop While i <= 9023
+    
+    S = RALClassic_NumToColorname(6031): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(8027): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(9021): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(1039): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(1040): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(6040): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(7050): If Len(S) Then aCBLB.AddItem S
+    S = RALClassic_NumToColorname(8031): If Len(S) Then aCBLB.AddItem S
+    
 End Sub
 
 Public Function RALClassic_Parse(ByVal S As String) As RALClassic
