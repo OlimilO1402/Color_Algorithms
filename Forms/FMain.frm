@@ -1172,7 +1172,7 @@ Private m_APB     As AlphaPB
 
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
-    Set m_APB = New AlphaPB: m_APB.New_ Me.PBColor, Me.PbPicture
+    Set m_APB = AlphaPB(Me.PBColor, Me.PbPicture)
     Me.Caption = "Color Algorithms v" & App.Major & "." & App.Minor & "." & App.Revision
     Timer1.Interval = 50
     Timer1.Enabled = False
@@ -1197,18 +1197,18 @@ End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
-    PBColor.BackColor = c
-    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
+    Dim C As Long: C = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
+    PBColor.BackColor = C
+    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(C)))
     UpdateView
     
     'get closest color from knowncolors list:
-    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
+    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(C)
     LblClosestKnownColor.Caption = nc.Name
     PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
     
     'get closest color from RAL-colors list:
-    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(c)
+    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(C)
     LblClosestRALColor.Caption = "RAL_" & rc.RALNr & "_" & rc.Name
     PBClosestRALColor.BackColor = rc.RALCol
 End Sub
