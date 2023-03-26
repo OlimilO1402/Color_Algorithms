@@ -4,7 +4,7 @@ Option Explicit
 'OLE_COLORs:
 'Namespace VBRUN
 ' System color constants (see also ColorConstants).
-Public Enum SysteMColorConstants
+Public Enum SystemColorConstants
     vbScrollBars = &H80000000           ' Scroll-bars gray area color. '
     vbDesktop = &H80000001              ' Desktop color. '
     vbActiveTitleBar = &H80000002       ' Active window caption color. '
@@ -112,7 +112,7 @@ Private Const COLOR_ADJ_MIN    As Long = -100
 Private Const COLOR_MATCH_VERSION As Long = &H200
 Private Const COLOR_NO_TRANSPARENT As Long = &HFFFFFFFF
 
-'Public Enum SysteMColor
+'Public Enum SystemColor
 '    Desktop                 = &H80000001 '   -2147483647
 '    ScrollBar               = &H80000001 '   -2147483647
 '    ActiveCaption           = &H80000002 '   -2147483646
@@ -149,7 +149,7 @@ Private Const COLOR_NO_TRANSPARENT As Long = &HFFFFFFFF
 'End Enum
 '
 
-Public Enum SysteMColor 'aka VBRUN.SysteMColorConstants
+Public Enum SystemColor 'aka VBRUN.SystemColorConstants
     ActiveBorder = -2147483638
     ActiveCaption = -2147483646
     ActiveCaptionText = -2147483639
@@ -187,27 +187,27 @@ End Enum
 
 Private Declare Function GetSysColor Lib "user32" (ByVal nIndex As Long) As Long
 
-Private Function SysteMColor_IsValid(ByVal aColor As Long) As Boolean
+Private Function SystemColor_IsValid(ByVal aColor As Long) As Boolean
     If aColor > &H100FFFF Then Exit Function
     If aColor < 0 Then
         If (aColor And &HFF000000) <> &H80000000 Then Exit Function
         If (aColor And &HFFFF) > 28 Then Exit Function
     End If
-    SysteMColor_IsValid = True
+    SystemColor_IsValid = True
 End Function
 
-Public Function SysteMColor_ToColor(ByVal aOLEColor As Long) As Long
+Public Function SystemColor_ToColor(ByVal aOLEColor As Long) As Long
     'aOLEColor is a SysteMColorConstants
     Dim nIndex As Long: nIndex = &HFF& And aOLEColor
-    SysteMColor_ToColor = GetSysColor(nIndex)
+    SystemColor_ToColor = GetSysColor(nIndex)
 End Function
 
-Public Sub SysteMColor_ToCB(CB As ComboBox)
+Public Sub SystemColor_ToCB(CB As ComboBox)
     With CB
         .Clear
         Dim i As Long, S As String
         For i = 0 To 30
-            S = SysteMColor_ToStr(i)
+            S = SystemColor_ToStr(i)
             If Len(S) Then .AddItem S
         Next
     End With
@@ -248,7 +248,7 @@ End Sub
 'Private Const COLOR_GRADIENTACTIVECAPTION   As Long = 27
 'Private Const COLOR_GRADIENTINACTIVECAPTION As Long = 28
 
-Function SysteMColor_ToStr(C As SysteMColor) As String
+Function SystemColor_ToStr(ByVal C As SystemColor) As String
     Dim S As String, nIndex As Long: nIndex = C And &HFF&
     Select Case C
     Case &H0&:  S = "ScrollBar"                ' 0   -2147483647
@@ -288,7 +288,7 @@ Function SysteMColor_ToStr(C As SysteMColor) As String
     Case &H1D&: S = "MenuHighlight"            '29   -2147483619
     Case &H1E&: S = "MenuBar"                  '30   -2147483618
     End Select
-    SysteMColor_ToStr = S
+    SystemColor_ToStr = S
 End Function
 
 'Private Function OLE_COLOR_IsValid(nColor As Long) As Boolean
