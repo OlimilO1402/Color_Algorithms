@@ -4,7 +4,7 @@ Begin VB.Form FMain
    ClientHeight    =   3375
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   14895
+   ClientWidth     =   16695
    BeginProperty Font 
       Name            =   "Segoe UI"
       Size            =   9
@@ -17,8 +17,148 @@ Begin VB.Form FMain
    Icon            =   "FMain.frx":0000
    LinkTopic       =   "Form2"
    ScaleHeight     =   3375
-   ScaleWidth      =   14895
+   ScaleWidth      =   16695
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.PictureBox Picture1 
+      Appearance      =   0  '2D
+      BorderStyle     =   0  'Kein
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H80000008&
+      Height          =   2295
+      Left            =   15000
+      ScaleHeight     =   2295
+      ScaleWidth      =   1575
+      TabIndex        =   87
+      Top             =   120
+      Width           =   1575
+      Begin VB.ComboBox CmbCIELabLight 
+         Height          =   345
+         Left            =   360
+         TabIndex        =   97
+         Top             =   1080
+         Width           =   1215
+      End
+      Begin VB.TextBox TBCIELab_L 
+         Alignment       =   1  'Rechts
+         BeginProperty Font 
+            Name            =   "Consolas"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   315
+         Left            =   360
+         TabIndex        =   92
+         Top             =   0
+         Width           =   975
+      End
+      Begin VB.TextBox TBCIELab_aa 
+         Alignment       =   1  'Rechts
+         BeginProperty Font 
+            Name            =   "Consolas"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   315
+         Left            =   360
+         TabIndex        =   91
+         Top             =   360
+         Width           =   975
+      End
+      Begin VB.TextBox TBCIELab_bb 
+         Alignment       =   1  'Rechts
+         BeginProperty Font 
+            Name            =   "Consolas"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   315
+         Left            =   360
+         TabIndex        =   90
+         Top             =   720
+         Width           =   975
+      End
+      Begin VB.TextBox TBCIELab_A 
+         Alignment       =   1  'Rechts
+         BeginProperty Font 
+            Name            =   "Consolas"
+            Size            =   9
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   315
+         Left            =   360
+         TabIndex        =   89
+         Top             =   1440
+         Width           =   975
+      End
+      Begin VB.CommandButton BtnSetCIELab 
+         Caption         =   "Set  CIELab"
+         Height          =   375
+         Left            =   0
+         TabIndex        =   88
+         Top             =   1800
+         Width           =   1575
+      End
+      Begin VB.Label Label33 
+         AutoSize        =   -1  'True
+         Caption         =   "L*:"
+         Height          =   225
+         Left            =   0
+         TabIndex        =   96
+         Top             =   0
+         Width           =   210
+      End
+      Begin VB.Label Label32 
+         AutoSize        =   -1  'True
+         Caption         =   "a*:"
+         Height          =   225
+         Left            =   0
+         TabIndex        =   95
+         Top             =   360
+         Width           =   210
+      End
+      Begin VB.Label Label31 
+         AutoSize        =   -1  'True
+         Caption         =   "b*:"
+         Height          =   225
+         Left            =   0
+         TabIndex        =   94
+         Top             =   720
+         Width           =   225
+      End
+      Begin VB.Label Label30 
+         AutoSize        =   -1  'True
+         Caption         =   "A:"
+         Height          =   225
+         Left            =   0
+         TabIndex        =   93
+         Top             =   1440
+         Width           =   165
+      End
+   End
    Begin VB.PictureBox PBClosestRALColor 
       Height          =   375
       Left            =   5520
@@ -1170,6 +1310,10 @@ Private m_Max     As Single
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
 
+Private Sub CmbCIELabLight_Click()
+    UpdateView
+End Sub
+
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
     Set m_APB = AlphaPB(Me.PBColor, Me.PbPicture)
@@ -1181,8 +1325,8 @@ Private Sub Form_Load()
     HideCBValues
     MKnownColors.X11KnownColor_ToCB CmbColorNames
     MRALColors.RALClassic_ToListBox CmbRALClassic
-    MSysColor.SysteMColor_ToCB CmbSysColor
-    
+    MSysColor.SystemColor_ToCB CmbSysColor
+    CIELabLight_ToCmb CmbCIELabLight
     PBColor.BackColor = vbCyan
     m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
     SetToolTipText GetControls("TextBox")
@@ -1254,6 +1398,9 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     Dim XYZ As XYZ: XYZ = RGBAf_ToXYZ(RGBAf)
     MColor.XYZ_ToView TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, XYZ
     
+    Dim Lab As CIELab: Lab = XYZ_ToCIELab(XYZ, CmbCIELabLight.ListIndex)
+    MColor.CIELab_ToView TBCIELab_L, TBCIELab_aa, TBCIELab_bb, TBCIELab_A, Lab
+    
     If Not bNoUpdataColorName Then
         Dim xn As String: xn = MKnownColors.NameFromColor(LCol.Value)
         If Len(xn) Then CmbColorNames.Text = xn
@@ -1315,6 +1462,13 @@ Private Sub BtnSetXYZ_Click()
     UpdateView
 End Sub
 
+Private Sub BtnSetCIELab_Click()
+    Dim Lab As CIELab, sErr As String
+    If Not MColor.CIELab_Read(Lab, TBCIELab_L, TBCIELab_aa, TBCIELab_bb, TBCIELab_A, sErr) Then ErrMsg sErr: Exit Sub
+    'm_CMYK = RGBAf_ToCMYK(MColor.XYZ_ToRGBAf(XYZ))
+    UpdateView
+End Sub
+
 Private Sub CmbColorNames_Click()
     If CmbColorNames.Text = "" Then Exit Sub
     PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
@@ -1334,18 +1488,18 @@ End Sub
 
 Private Sub CmbSysColor_Click()
     Dim i As Long: i = CmbSysColor.ListIndex
-    Dim L As LngColor: L.Value = MSysColor.SysteMColor_ToColor(i)
+    Dim l As LngColor: l.Value = MSysColor.SystemColor_ToColor(i)
     'PBColor.BackColor = L.Value
-    m_CMYK = LngColor_ToCMYK(L)
+    m_CMYK = LngColor_ToCMYK(l)
     UpdateView
 End Sub
 
 Private Sub FillCmbMouseScrollf(Cmb As ComboBox)
     Dim i As Long
     Cmb.Clear
-    Dim n As Long: n = 256
-    Dim fact As Double: fact = 1 / n
-    For i = n To 0 Step -1
+    Dim N As Long: N = 256
+    Dim fact As Double: fact = 1 / N
+    For i = N To 0 Step -1
         Cmb.AddItem Format(i * fact, "0.###")
     Next
 End Sub
@@ -1353,8 +1507,8 @@ End Sub
 Private Sub FillCmbMouseScroll(Cmb As ComboBox)
     'CBValues
     Dim i As Long
-    Dim n As Long: n = 255
-    For i = n To 0 Step -1
+    Dim N As Long: N = 255
+    For i = N To 0 Step -1
         Cmb.AddItem i
     Next
 End Sub
@@ -1366,8 +1520,8 @@ Try: On Error GoTo Catch
     PBColor.BackColor = m_CPicker.Color
     'so OK
     'jetzt BackColor
-    Dim L As LngColor: L.Value = m_CPicker.Color
-    Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(L)
+    Dim l As LngColor: l.Value = m_CPicker.Color
+    Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(l)
     RGBA.A = CByte(TBRGBA_A.Text)
     m_CMYK = RGBA_ToCMYK(RGBA)
     UpdateView
@@ -1428,9 +1582,9 @@ Private Sub SetTB(TB As TextBox, CB As ComboBox, Btn As CommandButton, ByVal pnl
     m_Max = MaxVal
     SetParent CB.hwnd, pnlHwnd
     CB.Move m_TBBack.Left, m_TBBack.Top
-    Dim n As Single: n = 256
-    If f = 1 Then n = 255
-    CB.ListIndex = n - (f * CSng(m_TBBack.Text))
+    Dim N As Single: N = 256
+    If f = 1 Then N = 255
+    CB.ListIndex = N - (f * CSng(m_TBBack.Text))
     CB.ZOrder 0
 End Sub
 
@@ -1455,8 +1609,8 @@ Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
     End If
 End Sub
 Private Sub CBValues_Click()
-    Dim B As Byte, S As String: S = CBValues.Text
-    If Not Byte_TryParse(S, B) Then Exit Sub
+    Dim B As Byte, s As String: s = CBValues.Text
+    If Not Byte_TryParse(s, B) Then Exit Sub
     If m_Max > 0 Then B = MinB(CByte(m_Max), B)
     m_TBBack.Text = CStr(B)
     m_Btn.Value = True
@@ -1495,20 +1649,20 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
     Dim sa() As String: sa = Split(nam, "_")
     Dim u As Long: u = UBound(sa)
     If u = 1 Then
-        Dim S As String ': s = "Change the "
+        Dim s As String ': s = "Change the "
         Dim c_1 As String: c_1 = sa(0)
         Dim c_2 As String: c_2 = sa(1)
         If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
-        S = S & ttt.Item(c_2) & "-value of "
+        s = s & ttt.Item(c_2) & "-value of "
         Dim c11 As String: c11 = Mid(c_1, 1, 1)
         Dim c12 As String: c12 = Mid(c_1, 2, 1)
         Dim c13 As String: c13 = Mid(c_1, 3, 1)
         If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
-        S = S & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
         If Len(c_1) > 3 Then
             Dim c14 As String: c14 = Mid(c_1, 4, 1)
-            S = S & ", " & ttt.Item(c14)
+            s = s & ", " & ttt.Item(c14)
         End If
-        CreateToolTipText = S & ")"
+        CreateToolTipText = s & ")"
     End If
 End Function
