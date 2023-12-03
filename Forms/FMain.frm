@@ -1,9 +1,10 @@
 VERSION 5.00
 Begin VB.Form FMain 
+   BorderStyle     =   3  'Fester Dialog
    Caption         =   "Color Algorithms"
    ClientHeight    =   3375
-   ClientLeft      =   120
-   ClientTop       =   465
+   ClientLeft      =   45
+   ClientTop       =   390
    ClientWidth     =   18495
    BeginProperty Font 
       Name            =   "Segoe UI"
@@ -16,9 +17,20 @@ Begin VB.Form FMain
    EndProperty
    Icon            =   "FMain.frx":0000
    LinkTopic       =   "Form2"
+   MaxButton       =   0   'False
+   MinButton       =   0   'False
    ScaleHeight     =   3375
    ScaleWidth      =   18495
+   ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.CommandButton BtnInfo 
+      Caption         =   "Info"
+      Height          =   375
+      Left            =   9600
+      TabIndex        =   108
+      Top             =   2520
+      Width           =   1575
+   End
    Begin VB.PictureBox PnlYCbCr 
       Appearance      =   0  '2D
       BorderStyle     =   0  'Kein
@@ -298,6 +310,7 @@ Begin VB.Form FMain
       ScaleHeight     =   315
       ScaleWidth      =   315
       TabIndex        =   86
+      ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2880
       Width           =   375
    End
@@ -307,6 +320,7 @@ Begin VB.Form FMain
       ScaleHeight     =   315
       ScaleWidth      =   315
       TabIndex        =   85
+      ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2880
       Width           =   375
    End
@@ -464,6 +478,7 @@ Begin VB.Form FMain
       Height          =   375
       Left            =   120
       TabIndex        =   67
+      ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2040
       Width           =   2055
    End
@@ -1443,10 +1458,6 @@ Private m_Max     As Single
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
 
-Private Sub CmbCIELabLight_Click()
-    UpdateView
-End Sub
-
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
     Set m_APB = AlphaPB(Me.PBColor, Me.PbPicture)
@@ -1463,6 +1474,14 @@ Private Sub Form_Load()
     PBColor.BackColor = vbCyan
     m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
     SetToolTipText GetControls("TextBox")
+    UpdateView
+End Sub
+
+Private Sub BtnInfo_Click()
+    MsgBox App.CompanyName & " " & App.EXEName & " v" & App.Major & "." & App.Minor & "." & App.Revision & vbCrLf & App.FileDescription
+End Sub
+
+Private Sub CmbCIELabLight_Click()
     UpdateView
 End Sub
 
