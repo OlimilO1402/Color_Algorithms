@@ -1457,8 +1457,22 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Type POINTAPI
+    X As Long
+    Y As Long
+End Type
+
+Private Declare Function SetParent Lib "user32" (ByVal hWndChild As LongPtr, ByVal hWndNewParent As LongPtr) As LongPtr
+Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+Private Declare Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal X As Long, ByVal Y As Long) As Long
+Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+
+Private CurMousePos As POINTAPI
+
 ' Everything will be converted to CMYK
-Private m_CMYK As CMYK
+Private m_CMYK    As CMYK
 Private m_TBBack  As TextBox
 Private m_PnlHwnd As Long
 Private m_Btn     As CommandButton
@@ -1511,7 +1525,7 @@ End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.x, CurMousePos.Y)
+    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
     PBColor.BackColor = c
     m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
@@ -1527,8 +1541,8 @@ Private Sub Timer1_Timer()
     PBClosestRALColor.BackColor = rc.RALCol
 End Sub
 
-Private Function ColorUnderMouse(ByVal x As Long, ByVal Y As Long) As Long
-    ColorUnderMouse = GetPixel(GetDC(0), x, Y)
+Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long
+    ColorUnderMouse = GetPixel(GetDC(0), X, Y)
 End Function
 
 Private Sub BtnOnOff_Click()
@@ -1544,18 +1558,18 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
     Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
-    m_APB.Alpha = 255 - RGBA.a
+    m_APB.Alpha = 255 - RGBA.A
     MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
-    Dim alp As Single: alp = RGBA.a
+    Dim alp As Single: alp = RGBA.A
     
     Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
     TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
     
-    RGBA.a = 0
+    RGBA.A = 0
     LCol = MColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
-    RGBA.a = alp
+    RGBA.A = alp
     
     Dim HSLAf As HSLAf: HSLAf = RGBAf_ToHSLAf(RGBAf)
     MColor.HSLAf_ToView TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, HSLAf
@@ -1703,7 +1717,7 @@ Try: On Error GoTo Catch
     'jetzt BackColor
     Dim L As LngColor: L.Value = m_CPicker.Color
     Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(L)
-    RGBA.a = CByte(TBRGBA_A.Text)
+    RGBA.A = CByte(TBRGBA_A.Text)
     m_CMYK = RGBA_ToCMYK(RGBA)
     UpdateView
 Catch:
@@ -1759,17 +1773,17 @@ Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, CBValuesf, BtnSetXYZ, PnlXYZ.hwn
 Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
 Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
 
-Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 1, 256: End Sub
-Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 1, 256: End Sub
-Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 1, 256: End Sub
-Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 1: End Sub
+Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
 
 Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
 Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
 Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
-Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1: End Sub
+Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 256: End Sub
 
-Private Sub SetTB(TB As TextBox, cb As ComboBox, Btn As CommandButton, ByVal pnlHwnd As Long, ByVal f As Single, Optional ByVal MaxVal As Single)
+Private Sub SetTB(TB As TextBox, cb As ComboBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, ByVal f As Single, Optional ByVal MaxVal As Single)
     Set m_TBBack = TB
     Set m_Btn = Btn
     m_Max = MaxVal
@@ -1778,6 +1792,9 @@ Private Sub SetTB(TB As TextBox, cb As ComboBox, Btn As CommandButton, ByVal pnl
     Dim n As Single: n = 256
     If f = 1 Then n = 255
     cb.ListIndex = n - (f * CSng(m_TBBack.Text))
+    'CBValuesf.ZOrder 1
+    'CBValues.ZOrder 1
+    HideCBValues
     cb.ZOrder 0
 End Sub
 
@@ -1802,8 +1819,8 @@ Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
     End If
 End Sub
 Private Sub CBValues_Click()
-    Dim b As Byte, s As String: s = CBValues.Text
-    If Not Byte_TryParse(s, b) Then Exit Sub
+    Dim b As Byte, S As String: S = CBValues.Text
+    If Not Byte_TryParse(S, b) Then Exit Sub
     If m_Max > 0 Then b = MinByt(CByte(m_Max), b)
     m_TBBack.Text = CStr(b)
     m_Btn.Value = True
@@ -1849,11 +1866,11 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
     Dim sa() As String: sa = Split(nam, "_")
     Dim u As Long: u = UBound(sa)
     If u = 1 Then
-        Dim s As String ': s = "Change the "
+        Dim S As String ': s = "Change the "
         Dim c_1 As String: c_1 = sa(0)
         Dim c_2 As String: c_2 = sa(1)
         If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
-        s = s & ttt.Item(c_2) & "-value of "
+        S = S & ttt.Item(c_2) & "-value of "
         Dim c11 As String
         Dim c12 As String
         Dim c13 As String
@@ -1864,12 +1881,12 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
             c11 = Mid(c_1, 1, 1): c12 = Mid(c_1, 2, 1): c13 = Mid(c_1, 3, 1)
             If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
         End If
-        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        S = S & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
         If c_1 <> "YCbCr" And Len(c_1) > 3 Then
             Dim c14 As String: c14 = Mid(c_1, 4, 1)
-            s = s & ", " & ttt.Item(c14)
+            S = S & ", " & ttt.Item(c14)
         End If
-        CreateToolTipText = s & ")"
+        CreateToolTipText = S & ")"
     End If
     'Debug.Print FncCallCounter
 End Function
