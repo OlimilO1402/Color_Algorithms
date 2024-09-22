@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form FMain 
-   BorderStyle     =   3  'Fester Dialog
+   BorderStyle     =   1  'Fest Einfach
    Caption         =   "Color Algorithms"
    ClientHeight    =   3375
    ClientLeft      =   45
@@ -21,7 +21,6 @@ Begin VB.Form FMain
    MinButton       =   0   'False
    ScaleHeight     =   3375
    ScaleWidth      =   18495
-   ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows-Standard
    Begin VB.CommandButton BtnMunsell 
       Caption         =   "Munsell"
@@ -511,7 +510,7 @@ Begin VB.Form FMain
       Top             =   480
       Width           =   975
    End
-   Begin VB.ComboBox CBValuesf 
+   Begin VB.ComboBox CBValuesf_ 
       BeginProperty Font 
          Name            =   "Consolas"
          Size            =   9
@@ -1459,14 +1458,14 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type POINTAPI
-    X As Long
+    x As Long
     Y As Long
 End Type
 
 Private Declare Function SetParent Lib "user32" (ByVal hWndChild As LongPtr, ByVal hWndNewParent As LongPtr) As LongPtr
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Private Declare Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
-Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal X As Long, ByVal Y As Long) As Long
+Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal x As Long, ByVal Y As Long) As Long
 Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
 
 Private CurMousePos As POINTAPI
@@ -1483,11 +1482,11 @@ Private m_APB     As AlphaPB
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
     Set m_APB = AlphaPB(Me.PBColor, Me.PbPicture)
-    Me.Caption = "Color Algorithms v" & App.Major & "." & App.Minor & "." & App.Revision
+    Me.Caption = "Color Algorithms v" & Me.Version
     Timer1.Interval = 50
     Timer1.Enabled = False
-    FillCmbMouseScrollf CBValuesf
-    FillCmbMouseScroll CBValues
+    'FillCmbMouseScrollf CBValuesf
+    'FillCmbMouseScroll CBValues
     HideCBValues
     MKnownColors.X11KnownColor_ToCB CmbColorNames
     MRALColors.RALClassic_ToListBox CmbRALClassic
@@ -1509,8 +1508,12 @@ Private Sub BtnMunsell_Click()
     UpdateView
 End Sub
 
+Public Property Get Version() As String
+    Version = App.Major & "." & App.Minor & "." & App.Revision
+End Property
+
 Private Sub BtnInfo_Click()
-    MsgBox App.CompanyName & " " & App.EXEName & " v" & App.Major & "." & App.Minor & "." & App.Revision & vbCrLf & App.FileDescription
+    MsgBox App.CompanyName & " " & App.EXEName & " v" & Me.Version & vbCrLf & App.FileDescription
 End Sub
 
 Private Sub CmbCIELabLight_Click()
@@ -1525,7 +1528,7 @@ End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
+    Dim c As Long: c = ColorUnderMouse(CurMousePos.x, CurMousePos.Y)
     PBColor.BackColor = c
     m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
@@ -1541,8 +1544,8 @@ Private Sub Timer1_Timer()
     PBClosestRALColor.BackColor = rc.RALCol
 End Sub
 
-Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long
-    ColorUnderMouse = GetPixel(GetDC(0), X, Y)
+Private Function ColorUnderMouse(ByVal x As Long, ByVal Y As Long) As Long
+    ColorUnderMouse = GetPixel(GetDC(0), x, Y)
 End Function
 
 Private Sub BtnOnOff_Click()
@@ -1725,8 +1728,9 @@ End Sub
 
 Private Sub HideCBValues()
     CBValues.ZOrder 1
-    CBValuesf.ZOrder 1
+    'CBValuesf.ZOrder 1
 End Sub
+
 Private Sub PnlCMYK_DblClick():   HideCBValues:  End Sub
 Private Sub PnlRGBAf_DblClick():  HideCBValues:  End Sub
 Private Sub PnlRGBA_DblClick():   HideCBValues:  End Sub
@@ -1737,80 +1741,148 @@ Private Sub PnlXYZ_DblClick():    HideCBValues:  End Sub
 Private Sub PnlCIELab_DblClick(): HideCBValues:  End Sub
 Private Sub PnlYCbCr_DblClick():  HideCBValues:  End Sub
 
-Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
-Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
-Private Sub TBCMYK_Y_DblClick():  SetTB TBCMYK_Y, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
-Private Sub TBCMYK_K_DblClick():  SetTB TBCMYK_K, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
-Private Sub TBCMYK_A_DblClick():  SetTB TBCMYK_A, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_C: End Sub
+Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_M: End Sub
+Private Sub TBCMYK_Y_DblClick():  SetTB TBCMYK_Y, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_Y: End Sub
+Private Sub TBCMYK_K_DblClick():  SetTB TBCMYK_K, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_K: End Sub
+Private Sub TBCMYK_A_DblClick():  SetTB TBCMYK_A, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_A: End Sub
 
-Private Sub TBRGBAf_R_DblClick(): SetTB TBRGBAf_R, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
-Private Sub TBRGBAf_G_DblClick(): SetTB TBRGBAf_G, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
-Private Sub TBRGBAf_B_DblClick(): SetTB TBRGBAf_B, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
-Private Sub TBRGBAf_A_DblClick(): SetTB TBRGBAf_A, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
+Private Sub TBRGBAf_R_DblClick(): SetTB TBRGBAf_R, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_R: End Sub
+Private Sub TBRGBAf_G_DblClick(): SetTB TBRGBAf_G, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_G: End Sub
+Private Sub TBRGBAf_B_DblClick(): SetTB TBRGBAf_B, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_B: End Sub
+Private Sub TBRGBAf_A_DblClick(): SetTB TBRGBAf_A, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_A: End Sub
 
-Private Sub TBRGBA_R_DblClick():  SetTB TBRGBA_R, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
-Private Sub TBRGBA_G_DblClick():  SetTB TBRGBA_G, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
-Private Sub TBRGBA_B_DblClick():  SetTB TBRGBA_B, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
-Private Sub TBRGBA_A_DblClick():  SetTB TBRGBA_A, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
+Private Sub TBRGBA_R_DblClick():  SetTB TBRGBA_R, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_R: End Sub
+Private Sub TBRGBA_G_DblClick():  SetTB TBRGBA_G, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_G: End Sub
+Private Sub TBRGBA_B_DblClick():  SetTB TBRGBA_B, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_B: End Sub
+Private Sub TBRGBA_A_DblClick():  SetTB TBRGBA_A, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_A: End Sub
 
-Private Sub TBHSLAf_H_DblClick():  SetTB TBHSLAf_H, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
-Private Sub TBHSLAf_S_DblClick():  SetTB TBHSLAf_S, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
-Private Sub TBHSLAf_L_DblClick():  SetTB TBHSLAf_L, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
-Private Sub TBHSLAf_A_DblClick():  SetTB TBHSLAf_A, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
+Private Sub TBHSLAf_H_DblClick():  SetTB TBHSLAf_H, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_H: End Sub
+Private Sub TBHSLAf_S_DblClick():  SetTB TBHSLAf_S, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_S: End Sub
+Private Sub TBHSLAf_L_DblClick():  SetTB TBHSLAf_L, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_L: End Sub
+Private Sub TBHSLAf_A_DblClick():  SetTB TBHSLAf_A, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_A: End Sub
 
-Private Sub TBHSLA_H_DblClick():  SetTB TBHSLA_H, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 239: End Sub
-Private Sub TBHSLA_S_DblClick():  SetTB TBHSLA_S, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 240: End Sub
-Private Sub TBHSLA_L_DblClick():  SetTB TBHSLA_L, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 240: End Sub
-Private Sub TBHSLA_A_DblClick():  SetTB TBHSLA_A, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1: End Sub
+Private Sub TBHSLA_H_DblClick():  SetTB TBHSLA_H, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_H: End Sub
+Private Sub TBHSLA_S_DblClick():  SetTB TBHSLA_S, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_S: End Sub
+Private Sub TBHSLA_L_DblClick():  SetTB TBHSLA_L, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_L: End Sub
+Private Sub TBHSLA_A_DblClick():  SetTB TBHSLA_A, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_A: End Sub
 '
-Private Sub TBHSV_H_DblClick():  SetTB TBHSV_H, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
-Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
-Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
-Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
+Private Sub TBHSV_H_DblClick():  SetTB TBHSV_H, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_H: End Sub
+Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_S: End Sub
+Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_V: End Sub
+Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_A: End Sub
 
-Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
-Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_X: End Sub
+Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Y: End Sub
+Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Z: End Sub
+Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_A: End Sub
 
-Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
-Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
-Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
-Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_L: End Sub
+Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_aa: End Sub
+Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_bb: End Sub
+Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_A: End Sub
 
-Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
-Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
-Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
-Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 256: End Sub
+Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Y: End Sub
+Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cb: End Sub
+Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cr: End Sub
+Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_A: End Sub
 
-Private Sub SetTB(TB As TextBox, cb As ComboBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, ByVal f As Single, Optional ByVal MaxVal As Single)
+Private Sub SetTB(TB As TextBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, CVR As ColorValueRange)
     Set m_TBBack = TB
     Set m_Btn = Btn
-    m_Max = MaxVal
-    SetParent cb.hwnd, pnlHwnd
-    cb.Move m_TBBack.Left, m_TBBack.Top
-    Dim n As Single: n = 256
-    If f = 1 Then n = 255
-    cb.ListIndex = n - (f * CSng(m_TBBack.Text))
-    'CBValuesf.ZOrder 1
-    'CBValues.ZOrder 1
-    HideCBValues
-    cb.ZOrder 0
+    'm_Max = MaxVal
+    SetParent Me.CBValues.hwnd, pnlHwnd
+    Me.CBValues.Move m_TBBack.Left, m_TBBack.Top
+    MColor.ColorValueRange_ToComboBox CVR, Me.CBValues
+    CBValues.Text = m_TBBack.Text
+    CBValues.ZOrder 0
+    'Dim n As Single: n = 256
+'    If f = 1 Then n = 255
+'    cb.ListIndex = n - (f * CSng(m_TBBack.Text))
+'    'CBValuesf.ZOrder 1
+'    'CBValues.ZOrder 1
+'    HideCBValues
+'    cb.ZOrder 0
+
 End Sub
 
-Private Sub CBValuesf_DblClick()
-    m_TBBack.ZOrder 0
-End Sub
-Private Sub CBValuesf_KeyDown(KeyCode As Integer, Shift As Integer)
-    If KeyCode = vbKeyReturn Then
-        CBValuesf_Click
-        m_TBBack.ZOrder 0
-    End If
-End Sub
-Private Sub CBValuesf_Click()
-    m_TBBack.Text = CBValuesf.Text
-    m_Btn.Value = True
-End Sub
+
+
+
+'Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+'Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+'Private Sub TBCMYK_Y_DblClick():  SetTB TBCMYK_Y, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+'Private Sub TBCMYK_K_DblClick():  SetTB TBCMYK_K, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+'Private Sub TBCMYK_A_DblClick():  SetTB TBCMYK_A, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
+'
+'Private Sub TBRGBAf_R_DblClick(): SetTB TBRGBAf_R, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
+'Private Sub TBRGBAf_G_DblClick(): SetTB TBRGBAf_G, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
+'Private Sub TBRGBAf_B_DblClick(): SetTB TBRGBAf_B, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
+'Private Sub TBRGBAf_A_DblClick(): SetTB TBRGBAf_A, CBValuesf, BtnSetRGBAf, PnlRGBAf.hwnd, 256: End Sub
+'
+'Private Sub TBRGBA_R_DblClick():  SetTB TBRGBA_R, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
+'Private Sub TBRGBA_G_DblClick():  SetTB TBRGBA_G, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
+'Private Sub TBRGBA_B_DblClick():  SetTB TBRGBA_B, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
+'Private Sub TBRGBA_A_DblClick():  SetTB TBRGBA_A, CBValues, BtnSetRGBA, PnlRGBA.hwnd, 1: End Sub
+'
+'Private Sub TBHSLAf_H_DblClick():  SetTB TBHSLAf_H, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
+'Private Sub TBHSLAf_S_DblClick():  SetTB TBHSLAf_S, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
+'Private Sub TBHSLAf_L_DblClick():  SetTB TBHSLAf_L, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
+'Private Sub TBHSLAf_A_DblClick():  SetTB TBHSLAf_A, CBValuesf, BtnSetHSLAf, PnlHSLAf.hwnd, 256: End Sub
+'
+'Private Sub TBHSLA_H_DblClick():  SetTB TBHSLA_H, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 239: End Sub
+'Private Sub TBHSLA_S_DblClick():  SetTB TBHSLA_S, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 240: End Sub
+'Private Sub TBHSLA_L_DblClick():  SetTB TBHSLA_L, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1, 240: End Sub
+'Private Sub TBHSLA_A_DblClick():  SetTB TBHSLA_A, CBValues, BtnSetHSLA, PnlHSLA.hwnd, 1: End Sub
+''
+'Private Sub TBHSV_H_DblClick():  SetTB TBHSV_H, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
+'Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
+'Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
+'Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, CBValuesf, BtnSetHSV, PnlHSV.hwnd, 256: End Sub
+'
+'Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+'Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+'Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+'Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, CBValuesf, BtnSetXYZ, PnlXYZ.hwnd, 256: End Sub
+'
+'Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+'Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+'Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+'Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, CBValuesf, BtnSetCIELab, PnlCIELab.hwnd, 256: End Sub
+'
+'Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
+'Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
+'Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 1, 256: End Sub
+'Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, CBValuesf, BtnSetYCbCr, PnlYCbCr.hwnd, 256: End Sub
+'
+'Private Sub SetTB(TB As TextBox, cb As ComboBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, ByVal f As Single, Optional ByVal MaxVal As Single)
+'    Set m_TBBack = TB
+'    Set m_Btn = Btn
+'    m_Max = MaxVal
+'    SetParent cb.hwnd, pnlHwnd
+'    cb.Move m_TBBack.Left, m_TBBack.Top
+'    Dim n As Single: n = 256
+'    If f = 1 Then n = 255
+'    cb.ListIndex = n - (f * CSng(m_TBBack.Text))
+'    'CBValuesf.ZOrder 1
+'    'CBValues.ZOrder 1
+'    HideCBValues
+'    cb.ZOrder 0
+'End Sub
+'
+'Private Sub CBValuesf_DblClick()
+'    m_TBBack.ZOrder 0
+'End Sub
+'Private Sub CBValuesf_KeyDown(KeyCode As Integer, Shift As Integer)
+'    If KeyCode = vbKeyReturn Then
+'        CBValuesf_Click
+'        m_TBBack.ZOrder 0
+'    End If
+'End Sub
+'Private Sub CBValuesf_Click()
+'    m_TBBack.Text = CBValuesf.Text
+'    m_Btn.Value = True
+'End Sub
 
 Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = vbKeyReturn Then
@@ -1819,11 +1891,14 @@ Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
     End If
 End Sub
 Private Sub CBValues_Click()
-    Dim b As Byte, S As String: S = CBValues.Text
-    If Not Byte_TryParse(S, b) Then Exit Sub
-    If m_Max > 0 Then b = MinByt(CByte(m_Max), b)
-    m_TBBack.Text = CStr(b)
+    m_TBBack.Text = CBValues.Text
     m_Btn.Value = True
+
+'    Dim b As Byte, s As String: s = CBValues.Text
+'    If Not Byte_TryParse(s, b) Then Exit Sub
+'    If m_Max > 0 Then b = MinByt(CByte(m_Max), b)
+'    m_TBBack.Text = CStr(b)
+'    m_Btn.Value = True
 End Sub
 
 'the following 4 functions are for creating tooltiptexts

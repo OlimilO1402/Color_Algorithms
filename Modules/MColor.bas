@@ -1,5 +1,5 @@
 Attribute VB_Name = "MColor"
-Option Explicit
+Option Explicit '2024-08-14: lines of code: 1286;
 'VB Type-Kürzel
 ' $ = String
 ' % = Integer
@@ -19,44 +19,76 @@ Option Explicit
 'Public Declare Function ColorRGBToHLS Lib "shlwapi.dll" (ByVal clrRGB As Long, pwHue As Long, pwLuminance As Long, pwSaturation As Long) As Long
 'Public Declare Function ColorHLSToRGB Lib "shlwapi.dll" (ByVal wHue As Long, ByVal wLuminance As Long, ByVal wSaturation As Long) As Long
 
-Private Declare Sub ColorRGBToHLS Lib "shlwapi" (ByVal clrRGB As Long, ByRef pwHue As Integer, ByRef pwLuminance As Integer, ByRef pwSaturation As Integer)
+Private Declare Sub ColorRGBToHLS Lib "shlwapi" (ByVal clrRGB As Long, ByRef pwHue_out As Integer, ByRef pwLuminance_out As Integer, ByRef pwSaturation_out As Integer)
 Private Declare Function ColorHLSToRGB Lib "shlwapi" (ByVal wHue As Integer, ByVal wLuminance As Integer, ByVal wSaturation As Integer) As Long
+
+Public Type ColorValueRange
+    RangeMin   As Single
+    RangeMax   As Single
+    RangeSteps As Long
+    FormatStr  As String
+End Type
 
 Public Type LngColor
     Value As Long
 End Type
+
 Public Type RGBA
     r As Byte '0..255
     G As Byte '0..255
     b As Byte '0..255
-    A As Byte '0..255
+    a As Byte '0..255
 End Type
-Public Type aRGB
-    A As Byte '0..255
+
+Private m_CVR_RGBA_R As ColorValueRange
+Private m_CVR_RGBA_G As ColorValueRange
+Private m_CVR_RGBA_B As ColorValueRange
+Private m_CVR_RGBA_A As ColorValueRange
+
+Public Type ARGB
+    a As Byte '0..255
     r As Byte '0..255
     G As Byte '0..255
     b As Byte '0..255
 End Type
+
 Public Type RGBAf
     r As Single '0..1
     G As Single '0..1
     b As Single '0..1
-    A As Single '0..1
+    a As Single '0..1
 End Type
+
+Private m_CVR_RGBAf_R As ColorValueRange
+Private m_CVR_RGBAf_G As ColorValueRange
+Private m_CVR_RGBAf_B As ColorValueRange
+Private m_CVR_RGBAf_A As ColorValueRange
+
 Public Type CMYK
     c As Single '0..1
     M As Single '0..1
     Y As Single '0..1
     K As Single '0..1
-    A As Single '0..1
+    a As Single '0..1
 End Type
+
+Private m_CVR_CMYK_C As ColorValueRange
+Private m_CVR_CMYK_M As ColorValueRange
+Private m_CVR_CMYK_Y As ColorValueRange
+Private m_CVR_CMYK_K As ColorValueRange
+Private m_CVR_CMYK_A As ColorValueRange
 
 Public Type HSLA
     H As Byte '0..239
-    S As Byte '0..240
+    s As Byte '0..240
     L As Byte '0..240
-    A As Byte '0..255
+    a As Byte '0..255
 End Type
+
+Private m_CVR_HSLA_H As ColorValueRange
+Private m_CVR_HSLA_S As ColorValueRange
+Private m_CVR_HSLA_L As ColorValueRange
+Private m_CVR_HSLA_A As ColorValueRange
 
 'Public Type HSLA
 '    H As Byte '0..255
@@ -67,16 +99,28 @@ End Type
 
 Public Type HSLAf
     H As Single '0..1
-    S As Single '0..1
+    s As Single '0..1
     L As Single '0..1
-    A As Single '0..1
+    a As Single '0..1
 End Type
+
+Private m_CVR_HSLAf_H As ColorValueRange
+Private m_CVR_HSLAf_S As ColorValueRange
+Private m_CVR_HSLAf_L As ColorValueRange
+Private m_CVR_HSLAf_A As ColorValueRange
+
 Public Type HSV
     H As Single '0..1
-    S As Single '0..1
+    s As Single '0..1
     v As Single '0..1
-    A As Single '0..1
+    a As Single '0..1
 End Type
+
+Private m_CVR_HSV_H As ColorValueRange
+Private m_CVR_HSV_S As ColorValueRange
+Private m_CVR_HSV_V As ColorValueRange
+Private m_CVR_HSV_A As ColorValueRange
+
 'Public Type HSB
 '    H As Single '0..1
 '    S As Single '0..1
@@ -88,23 +132,39 @@ Public Type XYZ
     x As Single '0..1
     Y As Single '0..1
     z As Single '0..1
-    A As Single '0..1
+    a As Single '0..1
 End Type
 
+Private m_CVR_XYZ_X As ColorValueRange
+Private m_CVR_XYZ_Y As ColorValueRange
+Private m_CVR_XYZ_Z As ColorValueRange
+Private m_CVR_XYZ_A As ColorValueRange
+
 'https://de.wikipedia.org/wiki/YCbCr-Farbmodell
+
 Public Type YCbCr '(CCIR 601-256 levels)
-    Y  As Single  ' Grundhelligkeit Y
-    cb As Single  ' Blue-Yellow Chrominance
-    Cr As Single  ' Red-Green Chrominance
-    A  As Single  ' 0..1
+    Y  As Single  ' E'Y  =  0..1     ' Grundhelligkeit Y
+    cb As Single  ' E'Cb = -0.5..0.5 ' Blue-Yellow Chrominance
+    Cr As Single  ' E'Cr = -0.5..0.5 ' Red-Green Chrominance
+    a  As Single  ' 0..1
 End Type
+
+Private m_CVR_YCbCr_Y  As ColorValueRange
+Private m_CVR_YCbCr_Cb As ColorValueRange
+Private m_CVR_YCbCr_Cr As ColorValueRange
+Private m_CVR_YCbCr_A  As ColorValueRange
 
 Public Type CIELab
     L  As Single ' 0 .. 100
-    aA As Single '-128 .. 128
+    aa As Single '-128 .. 128
     bb As Single '-128 .. 128
-    A  As Single  '0..1
+    a  As Single  '0..1
 End Type
+
+Private m_CVR_CIELab_L  As ColorValueRange
+Private m_CVR_CIELab_aa As ColorValueRange
+Private m_CVR_CIELab_bb As ColorValueRange
+Private m_CVR_CIELab_A  As ColorValueRange
 
 Public Enum CIELabLight
     D50_2 = 0
@@ -112,6 +172,7 @@ Public Enum CIELabLight
     D50_10 = 2
     D65_10 = 3
 End Enum
+
 Private Type XYZMatrix
     x(0 To 2) As Single
     Y(0 To 2) As Single
@@ -144,79 +205,23 @@ Public Sub Init()
     CIELabLights(CIELabLight.D65_2) = XYZ(0.95047, 1, 1.08883)
     CIELabLights(CIELabLight.D50_10) = XYZ(0.9672, 1, 0.81427)
     CIELabLights(CIELabLight.D65_10) = XYZ(0.94811, 1, 1.07304)
+    
+    'init the ValueRanges
+    InitValueRanges
 End Sub
 
-' #################### ' Single ' #################### '
-'Public Function FloatS_TryParse(ByVal s As String, v_out As Single) As Boolean
-'Try: On Error GoTo Catch
-'    v_out = CSng(Val(Replace(s, ",", ".")))
-'    FloatS_TryParse = True
-'Catch:
-'End Function
+Private Sub InitValueRanges()
+    m_CVR_RGBA_R = CVR_RGBA_R:      m_CVR_RGBA_G = CVR_RGBA_G:        m_CVR_RGBA_B = CVR_RGBA_B:       m_CVR_RGBA_A = CVR_RGBA_A
+    m_CVR_RGBAf_R = CVR_RGBAf_R:    m_CVR_RGBAf_G = CVR_RGBAf_G:      m_CVR_RGBAf_B = CVR_RGBAf_B:     m_CVR_RGBAf_A = CVR_RGBAf_A
+    m_CVR_CMYK_C = CVR_CMYK_C:      m_CVR_CMYK_M = CVR_CMYK_M:        m_CVR_CMYK_Y = CVR_CMYK_Y:       m_CVR_CMYK_K = CVR_CMYK_K:    m_CVR_CMYK_A = CVR_CMYK_A
+    m_CVR_HSLA_H = CVR_HSL_H:       m_CVR_HSLA_S = CVR_HSL_S:         m_CVR_HSLA_L = CVR_HSL_L:        m_CVR_HSLA_A = CVR_HSL_A
+    m_CVR_HSLAf_H = CVR_HSLAf_H:    m_CVR_HSLAf_S = CVR_HSLAf_S:      m_CVR_HSLAf_L = CVR_HSLAf_L:     m_CVR_HSLAf_A = CVR_HSLAf_A
+    m_CVR_HSV_H = CVR_HSV_H:        m_CVR_HSV_S = CVR_HSV_S:          m_CVR_HSV_V = CVR_HSV_V:         m_CVR_HSV_A = CVR_HSV_A
+    m_CVR_XYZ_X = CVR_XYZ_X:        m_CVR_XYZ_Y = CVR_XYZ_Y:          m_CVR_XYZ_Z = CVR_XYZ_Z:         m_CVR_XYZ_A = CVR_XYZ_A
+    m_CVR_CIELab_L = CVR_CIELab_L:  m_CVR_CIELab_aa = CVR_CIELab_aa:  m_CVR_CIELab_bb = CVR_CIELab_bb: m_CVR_CIELab_A = CVR_CIELab_A
+    m_CVR_YCbCr_Y = CVR_YCbCr_Y:    m_CVR_YCbCr_Cb = CVR_YCbCr_Cb:    m_CVR_YCbCr_Cr = CVR_YCbCr_Cr:   m_CVR_YCbCr_A = CVR_YCbCr_A
+End Sub
 
-' #################### ' Byte ' #################### '
-'Public Function Byte_TryParse(ByVal s As String, Value_out As Byte) As Boolean
-'Try: On Error GoTo Catch
-'    If Not IsNumeric(s) Then Exit Function
-'    Value_out = CByte(s)
-'    Byte_TryParse = True
-'Catch:
-'End Function
-
-' #################### ' String ' #################### '
-'Private Function Hex2(ByVal b As Byte) As String
-'    Hex2 = Hex(b): If Len(Hex2) < 2 Then Hex2 = "0" & Hex2
-'End Function
-
-' #################### ' Math ' #################### '
-'Public Function MinByt(ByVal V1 As Byte, ByVal V2 As Byte) As Byte
-'    If V1 < V2 Then MinByt = V1 Else MinByt = V2
-'End Function
-'Public Function MinByt3(ByVal V1 As Byte, ByVal V2 As Byte, ByVal V3 As Byte) As Byte
-'    If V1 < V2 Then
-'        If V1 < V3 Then MinByt3 = V1 Else MinByt3 = V3
-'    Else
-'        If V2 < V3 Then MinByt3 = V2 Else MinByt3 = V3
-'    End If
-'End Function
-'Public Function MaxB(ByVal V1 As Byte, ByVal V2 As Byte) As Byte
-'    If V1 > V2 Then MaxB = V1 Else MaxB = V2
-'End Function
-'Public Function MaxB3(ByVal V1 As Byte, ByVal V2 As Byte, ByVal V3 As Byte) As Byte
-'    If V1 > V2 Then
-'        If V1 > V3 Then MaxB3 = V1 Else MaxB3 = V3
-'    Else
-'        If V2 > V3 Then MaxB3 = V2 Else MaxB3 = V3
-'    End If
-'End Function
-
-'Public Function MinSng(V1 As Single, V2 As Single) As Single
-'    If V1 < V2 Then MinSng = V1 Else MinSng = V2
-'End Function
-'Public Function MinSng3(V1 As Single, V2 As Single, V3 As Single) As Single
-'    If V1 < V2 Then
-'        If V1 < V3 Then MinSng3 = V1 Else MinSng3 = V3
-'    Else
-'        If V2 < V3 Then MinSng3 = V2 Else MinSng3 = V3
-'    End If
-'End Function
-'Public Function MaxSng(V1 As Single, V2 As Single) As Single
-'    If V1 > V2 Then MaxSng = V1 Else MaxSng = V2
-'End Function
-'Public Function MaxSng3(V1 As Single, V2 As Single, V3 As Single) As Single
-'    If V1 > V2 Then
-'        If V1 > V3 Then MaxSng3 = V1 Else MaxSng3 = V3
-'    Else
-'        If V2 > V3 Then MaxSng3 = V2 Else MaxSng3 = V3
-'    End If
-'End Function
-
-'Public Function MinD(V1 As Double, V2 As Double) As Double
-'    If V1 < V2 Then MinD = V1 Else MinD = V2
-'End Function
-'Public Function MaxD(V1 As Double, V2 As Double) As Double
-'    If V1 > V2 Then MaxD = V1 Else MaxD = V2
-'End Function
 
 ' #################### ' LngColor ' #################### '
 Public Function LngColor(ByVal aColor As Long) As LngColor
@@ -257,26 +262,26 @@ End Function
 '    B As Byte '0..255
 '    A As Byte '0..255
 'End Type
-Public Function RGBA(ByVal r As Byte, ByVal G As Byte, ByVal b As Byte, ByVal A As Byte) As RGBA
-    With RGBA: .r = r: .G = G: .b = b: .A = A: End With
+Public Function RGBA(ByVal r As Byte, ByVal G As Byte, ByVal b As Byte, ByVal a As Byte) As RGBA
+    With RGBA: .r = r: .G = G: .b = b: .a = a: End With
 End Function
 Public Function RGBA_Read(this_out As RGBA, TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Byte, S As String
+    Dim v As Byte, s As String
     With this_out
-        S = TB_R.Text: If Byte_TryParse(S, v) Then .r = v Else err_out = S: Exit Function
-        S = TB_G.Text: If Byte_TryParse(S, v) Then .G = v Else err_out = S: Exit Function
-        S = TB_B.Text: If Byte_TryParse(S, v) Then .b = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Byte_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_R.Text: If Byte_TryParse(s, v) Then .r = v Else err_out = s: Exit Function
+        s = TB_G.Text: If Byte_TryParse(s, v) Then .G = v Else err_out = s: Exit Function
+        s = TB_B.Text: If Byte_TryParse(s, v) Then .b = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Byte_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     RGBA_Read = True
 End Function
 Public Function RGBA_ToView(TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, TB_A As TextBox, this As RGBA)
-    With this: TB_R.Text = .r: TB_G.Text = .G: TB_B.Text = .b: TB_A.Text = .A: End With
+    With this: TB_R.Text = .r: TB_G.Text = .G: TB_B.Text = .b: TB_A.Text = .a: End With
 End Function
 
-Public Function RGBA_TryParse(ByVal S As String, RGBA_out As RGBA) As Boolean
+Public Function RGBA_TryParse(ByVal s As String, RGBA_out As RGBA) As Boolean
 Try: On Error GoTo Catch
-    Dim sv As String, v As Byte, sa() As String: sa = Split(S, ",")
+    Dim sv As String, v As Byte, sa() As String: sa = Split(s, ",")
     Dim i As Long, u As Long: u = UBound(sa)
     If u >= i Then sv = sa(i): If Byte_TryParse(sv, v) Then RGBA_out.r = v
     i = i + 1
@@ -284,7 +289,7 @@ Try: On Error GoTo Catch
     i = i + 1
     If u >= i Then sv = sa(i): If Byte_TryParse(sv, v) Then RGBA_out.b = v
     i = i + 1
-    If u >= i Then sv = sa(i): If Byte_TryParse(sv, v) Then RGBA_out.A = v
+    If u >= i Then sv = sa(i): If Byte_TryParse(sv, v) Then RGBA_out.a = v
     RGBA_TryParse = True
 Catch:
 End Function
@@ -302,41 +307,41 @@ Public Function RGBA_EuclidRMean(this As RGBA, other As RGBA) As Double
     RGBA_EuclidRMean = Math.Sqr((2 + sr / 256#) * dR * dR + 4 * dG * dG + (2 + (255# - sr) / 256) * dB * dB)
 End Function
 
-Public Function RGBA_ToARGB(this As RGBA) As aRGB
-    With RGBA_ToARGB: .r = this.r: .G = this.G: .b = this.b: .A = this.A: End With
+Public Function RGBA_ToARGB(this As RGBA) As ARGB
+    With RGBA_ToARGB: .r = this.r: .G = this.G: .b = this.b: .a = this.a: End With
 End Function
 Public Function RGBA_ToLngColor(this As RGBA) As LngColor
     LSet RGBA_ToLngColor = this
 End Function
 Public Function RGBA_ToWebHex(this As RGBA) As String
-    With this: RGBA_ToWebHex = "#" & Hex2(.A) & Hex2(.r) & Hex2(.G) & Hex2(.b): End With
+    With this: RGBA_ToWebHex = "#" & Hex2(.a) & Hex2(.r) & Hex2(.G) & Hex2(.b): End With
 End Function
 
 Public Function RGBA_ParseWebHex(ByVal HashtagColor As String) As RGBA
     If Left(HashtagColor, 1) <> "#" Then Exit Function
     HashtagColor = Mid$(HashtagColor, 2)
-    Dim S As String: S = Mid$(HashtagColor, 1, 2)
+    Dim s As String: s = Mid$(HashtagColor, 1, 2)
     With RGBA_ParseWebHex
         If 7 < Len(HashtagColor) Then     'ARGB
-            .A = CByte("&H" & S): S = Mid$(HashtagColor, 3, 2)
-            .r = CByte("&H" & S): S = Mid$(HashtagColor, 5, 2)
-            .G = CByte("&H" & S): S = Mid$(HashtagColor, 7, 2)
-            .b = CByte("&H" & S)
+            .a = CByte("&H" & s): s = Mid$(HashtagColor, 3, 2)
+            .r = CByte("&H" & s): s = Mid$(HashtagColor, 5, 2)
+            .G = CByte("&H" & s): s = Mid$(HashtagColor, 7, 2)
+            .b = CByte("&H" & s)
         ElseIf 5 < Len(HashtagColor) Then 'RGB
-            .r = CByte("&H" & S): S = Mid$(HashtagColor, 3, 2)
-            .G = CByte("&H" & S): S = Mid$(HashtagColor, 5, 2)
-            .b = CByte("&H" & S)
+            .r = CByte("&H" & s): s = Mid$(HashtagColor, 3, 2)
+            .G = CByte("&H" & s): s = Mid$(HashtagColor, 5, 2)
+            .b = CByte("&H" & s)
         ElseIf 3 < Len(HashtagColor) Then 'GB
-            .G = CByte("&H" & S): S = Mid$(HashtagColor, 3, 2)
-            .b = CByte("&H" & S)
+            .G = CByte("&H" & s): s = Mid$(HashtagColor, 3, 2)
+            .b = CByte("&H" & s)
         ElseIf 1 < Len(HashtagColor) Then 'B
-            .b = CByte("&H" & S)
+            .b = CByte("&H" & s)
         End If
     End With
 End Function
 
 Public Function RGBA_ToRGBAf(this As RGBA) As RGBAf
-    With this: RGBA_ToRGBAf = RGBAf(.r / 255, .G / 255, .b / 255, .A / 255): End With
+    With this: RGBA_ToRGBAf = RGBAf(.r / 255, .G / 255, .b / 255, .a / 255): End With
 End Function
 
 Public Function RGBA_ToCMYK(this As RGBA) As CMYK
@@ -349,10 +354,10 @@ Public Function RGBA_ToHSLA(this As RGBA) As HSLA
     Dim L As LngColor: L = RGBA_ToLngColor(this)
     Dim iiH As Integer, iiL As Integer, iiS As Integer
     With RGBA_ToHSLA
-        .A = this.A
+        .a = this.a
         ColorRGBToHLS L.Value, iiH, iiL, iiS
         .H = CByte(iiH)
-        .S = CByte(iiS)
+        .s = CByte(iiS)
         .L = CByte(iiL)
     End With
 End Function
@@ -427,14 +432,30 @@ End Function
 'https://de.wikipedia.org/wiki/YCbCr-Farbmodell
 Public Function RGBA_ToYCbCr(this As RGBA) As YCbCr
     'ITU-R BT 601 (=CCIR 601)
-    Const Kb As Single = 0.114
-    Const Kr As Single = 0.299
+    Const Kb As Single = 0.114!
+    Const Kr As Single = 0.299!
     With this
         RGBA_ToYCbCr.Y = Kr * .r + (1 - Kb - Kr) * .G + Kb * .b
         RGBA_ToYCbCr.cb = -0.168736 * .r - 0.331264 * .G + 0.5 * .b + 128
         RGBA_ToYCbCr.Cr = 0.5 * .r - 0.418688 * .G - 0.081312 * .b + 128
-        RGBA_ToYCbCr.A = .A / 255
+        RGBA_ToYCbCr.a = .a / 255
     End With
+End Function
+
+Public Function CVR_RGBA_R() As ColorValueRange
+    CVR_RGBA_R = ColorValueRange(0, 255, 256, "0")
+End Function
+
+Public Function CVR_RGBA_G() As ColorValueRange
+    CVR_RGBA_G = ColorValueRange(0, 255, 256, "0")
+End Function
+
+Public Function CVR_RGBA_B() As ColorValueRange
+    CVR_RGBA_B = ColorValueRange(0, 255, 256, "0")
+End Function
+
+Public Function CVR_RGBA_A() As ColorValueRange
+    CVR_RGBA_A = ColorValueRange(0, 255, 256, "0")
 End Function
 
 ' #################### ' ARGB ' #################### '
@@ -444,8 +465,8 @@ End Function
 '    G As Byte '0..255
 '    B As Byte '0..255
 'End Type
-Public Function ARGB_ToRGBA(this As aRGB) As RGBA
-    With this: ARGB_ToRGBA.r = .r: ARGB_ToRGBA.G = .G: ARGB_ToRGBA.b = .b: ARGB_ToRGBA.A = .A: End With
+Public Function ARGB_ToRGBA(this As ARGB) As RGBA
+    With this: ARGB_ToRGBA.r = .r: ARGB_ToRGBA.G = .G: ARGB_ToRGBA.b = .b: ARGB_ToRGBA.a = .a: End With
 End Function
 
 ' #################### ' RGBAf ' #################### '
@@ -455,26 +476,26 @@ End Function
 '    B As Single '0..1
 '    A As Single '0..1
 'End Type
-Public Function RGBAf(r As Single, G As Single, b As Single, A As Single) As RGBAf
-    With RGBAf: .r = r: .G = G: .b = b: .A = A: End With
+Public Function RGBAf(r As Single, G As Single, b As Single, a As Single) As RGBAf
+    With RGBAf: .r = r: .G = G: .b = b: .a = a: End With
 End Function
 Public Function RGBAf_Read(this_out As RGBAf, TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_R.Text: If Single_TryParse(S, v) Then .r = v Else err_out = S: Exit Function
-        S = TB_G.Text: If Single_TryParse(S, v) Then .G = v Else err_out = S: Exit Function
-        S = TB_B.Text: If Single_TryParse(S, v) Then .b = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Single_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_R.Text: If Single_TryParse(s, v) Then .r = v Else err_out = s: Exit Function
+        s = TB_G.Text: If Single_TryParse(s, v) Then .G = v Else err_out = s: Exit Function
+        s = TB_B.Text: If Single_TryParse(s, v) Then .b = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     RGBAf_Read = True
 End Function
 Public Function RGBAf_ToView(TB_R As TextBox, TB_G As TextBox, TB_B As TextBox, TB_A As TextBox, this As RGBAf)
-    Dim fmt As String: fmt = "0.#####"
+    Dim fmt As String: fmt = "0.000"
     With this
         TB_R.Text = Format(.r, fmt)
         TB_G.Text = Format(.G, fmt)
         TB_B.Text = Format(.b, fmt)
-        TB_A.Text = Format(.A, fmt)
+        TB_A.Text = Format(.a, fmt)
     End With
 End Function
 
@@ -491,13 +512,13 @@ Public Function RGBAf_ToRGBA(this As RGBAf) As RGBA
         RGBAf_ToRGBA.r = CByte(.r * 255)
         RGBAf_ToRGBA.G = CByte(.G * 255)
         RGBAf_ToRGBA.b = CByte(.b * 255)
-        RGBAf_ToRGBA.A = CByte(.A * 255)
+        RGBAf_ToRGBA.a = CByte(.a * 255)
     End With
 End Function
 
 Public Function RGBAf_ToCMYK(this As RGBAf) As CMYK
     With RGBAf_ToCMYK
-        .A = this.A
+        .a = this.a
         .c = 1 - this.r
         .M = 1 - this.G
         .Y = 1 - this.b
@@ -518,16 +539,16 @@ Public Function RGBAf_ToHSLAf(this As RGBAf) As HSLAf
         Dim MinRGB As Single: MinRGB = MinSng3(.r, .G, .b)
     End With
     With RGBAf_ToHSLAf
-        .A = this.A
+        .a = this.a
         .L = (MaxRGB + MinRGB) / 2
         If MaxRGB = MinRGB Then
-            .H = 0: .S = 0 'achromatic
+            .H = 0: .s = 0 'achromatic
         Else
             Dim Delta As Single: Delta = MaxRGB - MinRGB
             If .L > 0.5 Then
-                .S = Delta / (2 - MaxRGB - MinRGB)
+                .s = Delta / (2 - MaxRGB - MinRGB)
             Else
-                .S = Delta / (MaxRGB + MinRGB)
+                .s = Delta / (MaxRGB + MinRGB)
             End If
             Select Case MaxRGB
             Case this.r: If this.G < this.b Then .H = 6 Else .H = 0
@@ -546,10 +567,10 @@ Function RGBAf_ToHSV(this As RGBAf) As HSV
         Dim MinRGB As Single: MinRGB = MinSng3(.r, .G, .b)
     End With
     With RGBAf_ToHSV
-        .A = this.A
+        .a = this.a
         .v = MaxRGB
         Dim Delta As Single: Delta = MaxRGB - MinRGB
-        If MaxRGB <> 0 Then .S = Delta / MaxRGB
+        If MaxRGB <> 0 Then .s = Delta / MaxRGB
         If MaxRGB = MinRGB Then
             .H = 0 'achromatic
         Else
@@ -601,7 +622,7 @@ Function RGBAf_ToXYZ(this As RGBAf) As XYZ
         .x = r * M.x(0) + G * M.x(1) + b * M.x(2)
         .Y = r * M.Y(0) + G * M.Y(1) + b * M.Y(2)
         .z = r * M.z(0) + G * M.z(1) + b * M.z(2)
-        .A = this.A
+        .a = this.a
     End With
 End Function
 
@@ -616,40 +637,56 @@ Function RGBAf_ToYCbCr(this As RGBAf) As YCbCr
         RGBAf_ToYCbCr.Y = Y
         RGBAf_ToYCbCr.cb = 0.5 * (.b - Y) / (1 - Kb)
         RGBAf_ToYCbCr.Cr = 0.5 * (.r - Y) / (1 - Kr)
-        RGBAf_ToYCbCr.A = .A
+        RGBAf_ToYCbCr.a = .a
     End With
+End Function
+
+Public Function CVR_RGBAf_R() As ColorValueRange
+    CVR_RGBAf_R = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_RGBAf_G() As ColorValueRange
+    CVR_RGBAf_G = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_RGBAf_B() As ColorValueRange
+    CVR_RGBAf_B = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_RGBAf_A() As ColorValueRange
+    CVR_RGBAf_A = ColorValueRange(0, 1, 1000, "0.000")
 End Function
 
 ' #################### ' CMYK ' #################### '
 'Public Type CMYK
-'    c As Single '0..1
+'    C As Single '0..1
 '    M As Single '0..1
 '    Y As Single '0..1
 '    K As Single '0..1
 '    A As Single '0..1
 'End Type
-Public Function CMYK(ByVal c As Single, ByVal M As Single, ByVal Y As Single, ByVal K As Single, ByVal A As Single) As CMYK
-    With CMYK: .c = c: .M = M: .Y = Y: .K = K: .A = A: End With
+Public Function CMYK(ByVal c As Single, ByVal M As Single, ByVal Y As Single, ByVal K As Single, ByVal a As Single) As CMYK
+    With CMYK: .c = c: .M = M: .Y = Y: .K = K: .a = a: End With
 End Function
 
 Public Function CMYK_Read(this_out As CMYK, TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, TB_K As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_C.Text: If Single_TryParse(S, v) Then .c = v Else err_out = S: Exit Function
-        S = TB_M.Text: If Single_TryParse(S, v) Then .M = v Else err_out = S: Exit Function
-        S = TB_Y.Text: If Single_TryParse(S, v) Then .Y = v Else err_out = S: Exit Function
-        S = TB_K.Text: If Single_TryParse(S, v) Then .K = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Single_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_C.Text: If Single_TryParse(s, v) Then .c = v Else err_out = s: Exit Function
+        s = TB_M.Text: If Single_TryParse(s, v) Then .M = v Else err_out = s: Exit Function
+        s = TB_Y.Text: If Single_TryParse(s, v) Then .Y = v Else err_out = s: Exit Function
+        s = TB_K.Text: If Single_TryParse(s, v) Then .K = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     CMYK_Read = True
 End Function
 Public Function CMYK_ToView(TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, TB_K As TextBox, TB_A As TextBox, this As CMYK)
     With this
-        TB_C.Text = Format(.c, "0.#####")
-        TB_M.Text = Format(.M, "0.#####")
-        TB_Y.Text = Format(.Y, "0.#####")
-        TB_K.Text = Format(.K, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_C.Text = Format(.c, m_CVR_CMYK_C.FormatStr)
+        TB_M.Text = Format(.M, m_CVR_CMYK_M.FormatStr)
+        TB_Y.Text = Format(.Y, m_CVR_CMYK_Y.FormatStr)
+        TB_K.Text = Format(.K, m_CVR_CMYK_K.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_CMYK_A.FormatStr)
     End With
 End Function
 
@@ -667,7 +704,7 @@ Public Function CMYK_ToRGBAf(this As CMYK) As RGBAf
         CMYK_ToRGBAf.r = 1 - MinSng(1, .c * kf + .K)
         CMYK_ToRGBAf.G = 1 - MinSng(1, .M * kf + .K)
         CMYK_ToRGBAf.b = 1 - MinSng(1, .Y * kf + .K)
-        CMYK_ToRGBAf.A = .A
+        CMYK_ToRGBAf.a = .a
     End With
 End Function
 Public Function CMYK_ToRGBA(this As CMYK) As RGBA
@@ -679,6 +716,26 @@ Public Function CMYK_ToRGBA(this As CMYK) As RGBA
     CMYK_ToRGBA = RGBAf_ToRGBA(CMYK_ToRGBAf(this))
 End Function
 
+Public Function CVR_CMYK_C() As ColorValueRange
+    CVR_CMYK_C = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_CMYK_M() As ColorValueRange
+    CVR_CMYK_M = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_CMYK_Y() As ColorValueRange
+    CVR_CMYK_Y = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_CMYK_K() As ColorValueRange
+    CVR_CMYK_K = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_CMYK_A() As ColorValueRange
+    CVR_CMYK_A = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
 ' #################### ' HSLA  ' #################### '
 'Public Type HSLA
 '    H As Byte '0..239
@@ -686,34 +743,34 @@ End Function
 '    L As Byte '0..240
 '    A As Byte '0..255
 'End Type
-Public Function HSLA(ByVal H As Byte, ByVal S As Byte, ByVal L As Byte, ByVal A As Byte) As HSLA
-    With HSLA: .H = H: .S = S: .L = L: .A = A: End With
+Public Function HSLA(ByVal H As Byte, ByVal s As Byte, ByVal L As Byte, ByVal a As Byte) As HSLA
+    With HSLA: .H = H: .s = s: .L = L: .a = a: End With
 End Function
 
 Public Function HSLA_ToRGBA(this As HSLA) As RGBA
     Dim L As LngColor
     With this
-        L.Value = ColorHLSToRGB(.H, .L, .S)
+        L.Value = ColorHLSToRGB(.H, .L, .s)
     End With
     HSLA_ToRGBA = LngColor_ToRGBA(L)
-    HSLA_ToRGBA.A = this.A
+    HSLA_ToRGBA.a = this.a
 End Function
 Public Function HSLA_Read(this_out As HSLA, TB_H As TextBox, TB_S As TextBox, TB_L As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Byte, S As String
+    Dim v As Byte, s As String
     With this_out
-        S = TB_H.Text: If Byte_TryParse(S, v) Then .H = MinByt(v, 240) Else err_out = S: Exit Function
-        S = TB_S.Text: If Byte_TryParse(S, v) Then .S = MinByt(v, 240) Else err_out = S: Exit Function
-        S = TB_L.Text: If Byte_TryParse(S, v) Then .L = MinByt(v, 240) Else err_out = S: Exit Function
-        S = TB_A.Text: If Byte_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_H.Text: If Byte_TryParse(s, v) Then .H = MinByt(v, 240) Else err_out = s: Exit Function
+        s = TB_S.Text: If Byte_TryParse(s, v) Then .s = MinByt(v, 240) Else err_out = s: Exit Function
+        s = TB_L.Text: If Byte_TryParse(s, v) Then .L = MinByt(v, 240) Else err_out = s: Exit Function
+        s = TB_A.Text: If Byte_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     HSLA_Read = True
 End Function
 Public Function HSLA_ToView(TBHSLA_H As TextBox, TBHSLA_S As TextBox, TBHSLA_L As TextBox, TBHSLA_A As TextBox, this As HSLA)
     With this
         TBHSLA_H.Text = .H
-        TBHSLA_S.Text = .S
+        TBHSLA_S.Text = .s
         TBHSLA_L.Text = .L
-        TBHSLA_A.Text = .A
+        TBHSLA_A.Text = .a
     End With
 End Function
 
@@ -724,10 +781,26 @@ End Function
 Public Function HSLA_ToHSLAf(this As HSLA) As HSLAf
     With HSLA_ToHSLAf
         .H = this.H / 240
-        .S = this.S / 240
+        .s = this.s / 240
         .L = this.L / 240
-        .A = this.A / 255
+        .a = this.a / 255
     End With
+End Function
+
+Public Function CVR_HSL_H() As ColorValueRange
+    CVR_HSL_H = ColorValueRange(0, 239, 239, "0")
+End Function
+
+Public Function CVR_HSL_S() As ColorValueRange
+    CVR_HSL_S = ColorValueRange(0, 240, 240, "0")
+End Function
+
+Public Function CVR_HSL_L() As ColorValueRange
+    CVR_HSL_L = ColorValueRange(0, 240, 240, "0")
+End Function
+
+Public Function CVR_HSL_A() As ColorValueRange
+    CVR_HSL_A = ColorValueRange(0, 255, 255, "0")
 End Function
 
 ' #################### ' HSLAf ' #################### '
@@ -737,19 +810,19 @@ End Function
 '    L As Single '0..1
 '    A As Single '0..1
 'End Type
-Public Function HSLAf(ByVal H As Single, ByVal S As Single, ByVal L As Single, ByVal A As Single) As HSLAf
-    With HSLAf: .H = H: .S = S: .L = L: .A = A: End With
+Public Function HSLAf(ByVal H As Single, ByVal s As Single, ByVal L As Single, ByVal a As Single) As HSLAf
+    With HSLAf: .H = H: .s = s: .L = L: .a = a: End With
 End Function
 
 Public Function HSLAf_ToRGBAf(this As HSLAf) As RGBAf
     With this
-        HSLAf_ToRGBAf.A = .A
-        If .S = 0 Then 'achromatic
+        HSLAf_ToRGBAf.a = .a
+        If .s = 0 Then 'achromatic
             HSLAf_ToRGBAf.r = .L
             HSLAf_ToRGBAf.G = .L
             HSLAf_ToRGBAf.b = .L
         Else
-            Dim q As Single: If .L < 0.5 Then q = .L * (1 + .S) Else q = .L + .S - .L * .S
+            Dim q As Single: If .L < 0.5 Then q = .L * (1 + .s) Else q = .L + .s - .L * .s
             Dim p As Single: p = 2 * .L - q
             HSLAf_ToRGBAf.r = Hue_ToRGB(p, q, .H + 1 / 3)
             HSLAf_ToRGBAf.G = Hue_ToRGB(p, q, .H)
@@ -772,36 +845,67 @@ Public Function Hue_ToRGB(ByVal p As Single, ByVal q As Single, ByVal t As Singl
 End Function
 
 Public Function HSLAf_Read(this_out As HSLAf, TB_H As TextBox, TB_S As TextBox, TB_L As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_H.Text: If Single_TryParse(S, v) Then .H = v Else err_out = S: Exit Function
-        S = TB_S.Text: If Single_TryParse(S, v) Then .S = v Else err_out = S: Exit Function
-        S = TB_L.Text: If Single_TryParse(S, v) Then .L = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Single_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_H.Text: If Single_TryParse(s, v) Then .H = v Else err_out = s: Exit Function
+        s = TB_S.Text: If Single_TryParse(s, v) Then .s = v Else err_out = s: Exit Function
+        s = TB_L.Text: If Single_TryParse(s, v) Then .L = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     HSLAf_Read = True
 End Function
 Public Function HSLAf_ToView(TB_H As TextBox, TB_S As TextBox, TB_L As TextBox, TB_A As TextBox, this As HSLAf)
     With this
-        TB_H.Text = Format(.H, "0.#####")
-        TB_S.Text = Format(.S, "0.#####")
-        TB_L.Text = Format(.L, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_H.Text = Format(.H, m_CVR_HSLAf_H.FormatStr)
+        TB_S.Text = Format(.s, m_CVR_HSLAf_S.FormatStr)
+        TB_L.Text = Format(.L, m_CVR_HSLAf_L.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_HSLAf_A.FormatStr)
     End With
+End Function
+
+Public Function CVR_HSLAf_H() As ColorValueRange
+    CVR_HSLAf_H = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSLAf_S() As ColorValueRange
+    CVR_HSLAf_S = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSLAf_L() As ColorValueRange
+    CVR_HSLAf_L = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSLAf_A() As ColorValueRange
+    CVR_HSLAf_A = ColorValueRange(0, 1, 1000, "0.000")
 End Function
 
 ' #################### ' HSV ' #################### '
 'https://www.rapidtables.com/convert/color/hsv-to-rgb.html
+'Public Type HSV
+'    H As Single '0..1
+'    S As Single '0..1
+'    v As Single '0..1
+'    A As Single '0..1
+'End Type
+Public Function HSV(ByVal Hue As Single, ByVal Saturation As Single, ByVal Value As Single, ByVal Alpha As Single) As HSV
+    With HSV
+        .H = Hue
+        .s = Saturation
+        .v = Value
+        .a = Alpha
+    End With
+End Function
+
 Public Function HSV_ToRGBAf(this As HSV) As RGBAf
     With this
         Dim i As Single: i = CSng(Int(.H * 6)) 'Floor
         Dim f As Single: f = .H * 6 - i
-        Dim p As Single: p = .v * (1 - .S)
-        Dim q As Single: q = .v * (1 - f * .S)
-        Dim t As Single: t = .v * (1 - (1 - f) * .S)
+        Dim p As Single: p = .v * (1 - .s)
+        Dim q As Single: q = .v * (1 - f * .s)
+        Dim t As Single: t = .v * (1 - (1 - f) * .s)
     End With
     With HSV_ToRGBAf
-        .A = this.A
+        .a = this.a
         Select Case i Mod 6
         Case 0: .r = this.v: .G = t:      .b = p
         Case 1: .r = q:      .G = this.v: .b = p
@@ -814,22 +918,38 @@ Public Function HSV_ToRGBAf(this As HSV) As RGBAf
 End Function
 
 Public Function HSV_Read(this_out As HSV, TB_H As TextBox, TB_S As TextBox, TB_V As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_H.Text: If Single_TryParse(S, v) Then .H = v Else err_out = S: Exit Function
-        S = TB_S.Text: If Single_TryParse(S, v) Then .S = v Else err_out = S: Exit Function
-        S = TB_V.Text: If Single_TryParse(S, v) Then .v = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Single_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_H.Text: If Single_TryParse(s, v) Then .H = v Else err_out = s: Exit Function
+        s = TB_S.Text: If Single_TryParse(s, v) Then .s = v Else err_out = s: Exit Function
+        s = TB_V.Text: If Single_TryParse(s, v) Then .v = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     HSV_Read = True
 End Function
 Public Function HSV_ToView(TB_H As TextBox, TB_S As TextBox, TB_V As TextBox, TB_A As TextBox, this As HSV)
     With this
-        TB_H.Text = Format(.H, "0.#####")
-        TB_S.Text = Format(.S, "0.#####")
-        TB_V.Text = Format(.v, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_H.Text = Format(.H, m_CVR_HSV_H.FormatStr)
+        TB_S.Text = Format(.s, m_CVR_HSV_S.FormatStr)
+        TB_V.Text = Format(.v, m_CVR_HSV_V.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_HSV_A.FormatStr)
     End With
+End Function
+
+Public Function CVR_HSV_H() As ColorValueRange
+    CVR_HSV_H = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSV_S() As ColorValueRange
+    CVR_HSV_S = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSV_V() As ColorValueRange
+    CVR_HSV_V = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_HSV_A() As ColorValueRange
+    CVR_HSV_A = ColorValueRange(0, 1, 1000, "0.000")
 End Function
 
 ' #################### ' HSB ' #################### '
@@ -878,33 +998,40 @@ End Function
 '        b: limitValue(b, 0, 1)
 '    };
 '},
-Public Function XYZ(ByVal aX As Single, ByVal aY As Single, ByVal aZ As Single, Optional ByVal aA As Single = 1!) As XYZ
-    With XYZ: .x = aX: .Y = aY: .z = aZ: .A = aA: End With
+'Public Type XYZ
+'    x As Single '0..1
+'    Y As Single '0..1
+'    z As Single '0..1
+'    a As Single '0..1
+'End Type
+
+Public Function XYZ(ByVal aX As Single, ByVal aY As Single, ByVal aZ As Single, Optional ByVal aa As Single = 1!) As XYZ
+    With XYZ: .x = aX: .Y = aY: .z = aZ: .a = aa: End With
 End Function
 Public Function XYZ_Read(this_out As XYZ, TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_X.Text: If Single_TryParse(S, v) Then .x = v Else err_out = S: Exit Function
-        S = TB_Y.Text: If Single_TryParse(S, v) Then .Y = v Else err_out = S: Exit Function
-        S = TB_Z.Text: If Single_TryParse(S, v) Then .z = v Else err_out = S: Exit Function
-        S = TB_A.Text: If Single_TryParse(S, v) Then .A = v Else err_out = S: Exit Function
+        s = TB_X.Text: If Single_TryParse(s, v) Then .x = v Else err_out = s: Exit Function
+        s = TB_Y.Text: If Single_TryParse(s, v) Then .Y = v Else err_out = s: Exit Function
+        s = TB_Z.Text: If Single_TryParse(s, v) Then .z = v Else err_out = s: Exit Function
+        s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     XYZ_Read = True
 End Function
 Public Function XYZ_ToView(TB_X As TextBox, TB_Y As TextBox, TB_Z As TextBox, TB_A As TextBox, this As XYZ)
     With this
-        TB_X.Text = Format(.x, "0.#####")
-        TB_Y.Text = Format(.Y, "0.#####")
-        TB_Z.Text = Format(.z, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_X.Text = Format(.x, m_CVR_XYZ_X.FormatStr)
+        TB_Y.Text = Format(.Y, m_CVR_XYZ_Y.FormatStr)
+        TB_Z.Text = Format(.z, m_CVR_XYZ_Z.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_XYZ_A.FormatStr)
     End With
 End Function
 
 Public Function XYZ_Euclidean(this As XYZ, other As XYZ) As Double
-    Dim dX As Double: dX = this.x - other.x
+    Dim dx As Double: dx = this.x - other.x
     Dim dY As Double: dY = this.Y - other.Y
     Dim dZ As Double: dZ = this.z - other.z
-    XYZ_Euclidean = Math.Sqr(dX * dX + dY * dY + dZ * dZ)
+    XYZ_Euclidean = Math.Sqr(dx * dx + dY * dY + dZ * dZ)
 End Function
 
 Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
@@ -925,7 +1052,7 @@ Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
         .r = MinSng(MaxSng(r, 0), 1) 'limitValue 0..1
         .G = MinSng(MaxSng(G, 0), 1)
         .b = MinSng(MaxSng(b, 0), 1)
-        .A = this.A
+        .a = this.a
     End With
 End Function
 
@@ -940,47 +1067,69 @@ Public Function XYZ_ToCIELab(this As XYZ, Optional lighttype As CIELabLight = CI
     Dim root3_ZZN As Double: If ZZN < 216 / 24389 Then root3_ZZN = 1 / 116 * (24389 / 27 * ZZN + 16) Else root3_ZZN = (this.z / n.z) ^ (1 / 3)
     With XYZ_ToCIELab
         .L = 116 * root3_YYN - 16
-        .aA = 500 * (root3_XXN - root3_YYN)
+        .aa = 500 * (root3_XXN - root3_YYN)
         .bb = 200 * (root3_YYN - root3_ZZN)
-        .A = this.A
+        .a = this.a
     End With
+End Function
+
+Public Function CVR_XYZ_X() As ColorValueRange
+    CVR_XYZ_X = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_XYZ_Y() As ColorValueRange
+    CVR_XYZ_Y = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_XYZ_Z() As ColorValueRange
+    CVR_XYZ_Z = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_XYZ_A() As ColorValueRange
+    CVR_XYZ_A = ColorValueRange(0, 1, 1000, "0.000")
 End Function
 
 ' #################### ' CIELab ' #################### '
 'https://de.wikipedia.org/wiki/Lab-Farbraum
 'CIE = International Commission on Illumination
+'Public Type CIELab
+'    L  As Single ' 0 .. 100
+'    aA As Single '-128 .. 128
+'    bb As Single '-128 .. 128
+'    a  As Single  '0..1
+'End Type
 
-Public Function CIELab(ByVal L As Single, ByVal aA As Single, ByVal bb As Single) As CIELab
-    With CIELab: .L = L: .aA = aA: .bb = bb: .A = 1: End With
+Public Function CIELab(ByVal L As Single, ByVal aa As Single, ByVal bb As Single) As CIELab
+    With CIELab: .L = L: .aa = aa: .bb = bb: .a = 1: End With
 End Function
 Public Function CIELab_Read(this_out As CIELab, TB_L As TextBox, TB_aa As TextBox, TB_bb As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_L.Text:  If Single_TryParse(S, v) Then .L = v Else err_out = S:  Exit Function
-        S = TB_aa.Text: If Single_TryParse(S, v) Then .aA = v Else err_out = S: Exit Function
-        S = TB_bb.Text: If Single_TryParse(S, v) Then .bb = v Else err_out = S: Exit Function
-        S = TB_A.Text:  If Single_TryParse(S, v) Then .A = v Else err_out = S:  Exit Function
+        s = TB_L.Text:  If Single_TryParse(s, v) Then .L = v Else err_out = s:  Exit Function
+        s = TB_aa.Text: If Single_TryParse(s, v) Then .aa = v Else err_out = s: Exit Function
+        s = TB_bb.Text: If Single_TryParse(s, v) Then .bb = v Else err_out = s: Exit Function
+        s = TB_A.Text:  If Single_TryParse(s, v) Then .a = v Else err_out = s:  Exit Function
     End With
     CIELab_Read = True
 End Function
 Public Function CIELab_ToView(TB_L As TextBox, TB_aa As TextBox, TB_bb As TextBox, TB_A As TextBox, this As CIELab)
     With this
-        TB_L.Text = Format(.L, "0.#####")
-        TB_aa.Text = Format(.aA, "0.#####")
-        TB_bb.Text = Format(.bb, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_L.Text = Format(.L, m_CVR_CIELab_L.FormatStr)
+        TB_aa.Text = Format(.aa, m_CVR_CIELab_aa.FormatStr)
+        TB_bb.Text = Format(.bb, m_CVR_CIELab_bb.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_CIELab_A.FormatStr)
     End With
 End Function
 
 Function CIELabLight_ToStr(ByVal L As CIELabLight) As String
-    Dim S As String
+    Dim s As String
     Select Case L
-    Case CIELabLight.D50_2:  S = "D-50 2°"
-    Case CIELabLight.D65_2:  S = "D-65 2°"
-    Case CIELabLight.D50_10: S = "D-50 10°"
-    Case CIELabLight.D65_10: S = "D-65 10°"
+    Case CIELabLight.D50_2:  s = "D-50 2°"
+    Case CIELabLight.D65_2:  s = "D-65 2°"
+    Case CIELabLight.D50_10: s = "D-50 10°"
+    Case CIELabLight.D65_10: s = "D-65 10°"
     End Select
-    CIELabLight_ToStr = S
+    CIELabLight_ToStr = s
 End Function
 
 Public Sub CIELabLight_ToCmb(aCBLB As ComboBox)
@@ -1001,27 +1150,27 @@ Public Function CIELab_ToXYZ(this As CIELab, Optional ByVal lighttype As CIELabL
     Dim pow As Double, ratio As Double: ratio = 0.206892707 '6! / 29!
     With CIELab_ToXYZ
         .Y = (this.L + 16!) / 116!
-        .x = (this.aA / 500!) + .Y
-        .z = .Y - (this.bb / 200!)
-        .A = this.A '* 255
+        .x = (this.aa / 500!) + .Y
+        .z = .Y - (this.bb / 200#) '!)
+        .a = this.a '* 255
         
         pow = .x * .x * .x
         If .x < ratio Then
-            .x = (.x - 16# / 116#) / 7.787
+            .x = (.x - 16# / 116#) / 7.787 '!
         Else
             .x = pow
         End If
         
         pow = .Y * .Y * .Y
         If .Y < ratio Then
-            .Y = (.Y - 16# / 116#) / 7.787
+            .Y = (.Y - 16# / 116#) / 7.787 '!
         Else
             .Y = pow
         End If
         
         pow = .z * .z * .z
         If .z < ratio Then
-            .z = (.z - 16# / 116#) / 7.787
+            .z = (.z - 16# / 116#) / 7.787 '!
         Else
             .z = pow
         End If
@@ -1097,33 +1246,56 @@ End Function
 '
 '            return new Vector4(xyz[0], xyz[1], xyz[2], color[3]);
 '        }
+'
+'Public Type CIELab
+'    L  As Single ' 0 .. 100
+'    aA As Single '-128 .. 128
+'    bb As Single '-128 .. 128
+'    a  As Single  '0..1
+'End Type
 
+
+Public Function CVR_CIELab_L() As ColorValueRange
+    CVR_CIELab_L = ColorValueRange(0, 100, 1000, "0.0")
+End Function
+
+Public Function CVR_CIELab_aa() As ColorValueRange
+    CVR_CIELab_aa = ColorValueRange(-128, 128, 1000, "0.000")
+End Function
+
+Public Function CVR_CIELab_bb() As ColorValueRange
+    CVR_CIELab_bb = ColorValueRange(-128, 128, 1000, "0.000")
+End Function
+
+Public Function CVR_CIELab_A() As ColorValueRange
+    CVR_CIELab_A = ColorValueRange(0, 1, 1000, "0.000")
+End Function
 
 ' #################### ' YCbCr ' #################### '
 ' E'Y  =  0..1
 ' E'Cb = -0.5..0.5
 ' E'Cr = -0.5..0.5
 
-Public Function YCbCr(ByVal Y As Single, ByVal cb As Single, ByVal Cr As Single, ByVal A As Single) As YCbCr
-    With YCbCr: .Y = Y: .cb = cb: .Cr = Cr: .A = A: End With
+Public Function YCbCr(ByVal Y As Single, ByVal cb As Single, ByVal Cr As Single, ByVal a As Single) As YCbCr
+    With YCbCr: .Y = Y: .cb = cb: .Cr = Cr: .a = a: End With
 End Function
 
 Public Function YCbCr_Read(this_out As YCbCr, TB_Y As TextBox, TB_Cb As TextBox, TB_Cr As TextBox, TB_A As TextBox, err_out As String) As Boolean
-    Dim v As Single, S As String
+    Dim v As Single, s As String
     With this_out
-        S = TB_Y.Text:  If Single_TryParse(S, v) Then .Y = v Else err_out = S:  Exit Function
-        S = TB_Cb.Text: If Single_TryParse(S, v) Then .cb = v Else err_out = S: Exit Function
-        S = TB_Cr.Text: If Single_TryParse(S, v) Then .Cr = v Else err_out = S: Exit Function
-        S = TB_A.Text:  If Single_TryParse(S, v) Then .A = v Else err_out = S:  Exit Function
+        s = TB_Y.Text:  If Single_TryParse(s, v) Then .Y = v Else err_out = s:  Exit Function
+        s = TB_Cb.Text: If Single_TryParse(s, v) Then .cb = v Else err_out = s: Exit Function
+        s = TB_Cr.Text: If Single_TryParse(s, v) Then .Cr = v Else err_out = s: Exit Function
+        s = TB_A.Text:  If Single_TryParse(s, v) Then .a = v Else err_out = s:  Exit Function
     End With
     YCbCr_Read = True
 End Function
 Public Function YCbCr_ToView(TB_Y As TextBox, TB_Cb As TextBox, TB_Cr As TextBox, TB_A As TextBox, this As YCbCr)
     With this
-        TB_Y.Text = Format(.Y, "0.#####")
-        TB_Cb.Text = Format(.cb, "0.#####")
-        TB_Cr.Text = Format(.Cr, "0.#####")
-        TB_A.Text = Format(.A, "0.#####")
+        TB_Y.Text = Format(.Y, m_CVR_YCbCr_Y.FormatStr)
+        TB_Cb.Text = Format(.cb, m_CVR_YCbCr_Cb.FormatStr)
+        TB_Cr.Text = Format(.Cr, m_CVR_YCbCr_Cr.FormatStr)
+        TB_A.Text = Format(.a, m_CVR_YCbCr_A.FormatStr)
     End With
 End Function
 
@@ -1133,7 +1305,7 @@ Public Function YCbCr_ToRGBA(this As YCbCr) As RGBA
         YCbCr_ToRGBA.G = .Y - 0.34414 * (.cb - 128) - 0.71414 * (.Cr - 128)
         YCbCr_ToRGBA.b = .Y + 1.772 * (.cb - 128)
         
-        YCbCr_ToRGBA.A = .A * 255
+        YCbCr_ToRGBA.a = .a * 255
     End With
 End Function
 
@@ -1141,3 +1313,48 @@ Public Function YCbCr_ToRGBAf(this As YCbCr) As RGBAf
     YCbCr_ToRGBAf = RGBA_ToRGBAf(YCbCr_ToRGBA(this))
 End Function
 
+Public Function CVR_YCbCr_Y() As ColorValueRange
+    CVR_YCbCr_Y = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+Public Function CVR_YCbCr_Cb() As ColorValueRange
+    CVR_YCbCr_Cb = ColorValueRange(-0.5, 0.5, 1000, "0.000")
+End Function
+
+Public Function CVR_YCbCr_Cr() As ColorValueRange
+    CVR_YCbCr_Cr = ColorValueRange(-0.5, 0.5, 1000, "0.000")
+End Function
+
+Public Function CVR_YCbCr_A() As ColorValueRange
+    CVR_YCbCr_A = ColorValueRange(0, 1, 1000, "0.000")
+End Function
+
+' v #################### v '    ColorValueRange ' v #################### v '
+Public Function ColorValueRange(ByVal RMin As Single, ByVal RMax As Single, ByVal CountSteps As Long, ByVal FormatStr As String) As ColorValueRange
+    With ColorValueRange: .RangeMin = RMin:     .RangeMax = RMax:   .RangeSteps = CountSteps: .FormatStr = FormatStr: End With
+End Function
+
+Public Function ColorValueRange_IsEqual(this As ColorValueRange, other As ColorValueRange) As Boolean
+    With this
+        ColorValueRange_IsEqual = .RangeMin = other.RangeMin And .RangeMax = other.RangeMax And .RangeSteps = other.RangeSteps
+    End With
+End Function
+
+Public Property Get ColorValueRange_dx(this As ColorValueRange) As Double
+    With this
+        ColorValueRange_dx = (.RangeMax - .RangeMin) / .RangeSteps
+    End With
+End Property
+
+Public Sub ColorValueRange_ToComboBox(this As ColorValueRange, aCmb As ComboBox)
+    Dim dx As Double: dx = ColorValueRange_dx(this)
+    With aCmb
+        .Clear
+        '.AddItem Format(this.RangeMax, this.FormatStr)
+        Dim i As Long
+        For i = this.RangeSteps To 1 Step -1
+            .AddItem Format(i * dx, this.FormatStr)
+        Next
+        .AddItem Format(this.RangeMin, this.FormatStr)
+    End With
+End Sub
