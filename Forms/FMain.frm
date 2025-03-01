@@ -1,10 +1,9 @@
 VERSION 5.00
 Begin VB.Form FMain 
-   BorderStyle     =   1  'Fest Einfach
    Caption         =   "Color Algorithms"
    ClientHeight    =   3375
-   ClientLeft      =   45
-   ClientTop       =   390
+   ClientLeft      =   120
+   ClientTop       =   465
    ClientWidth     =   18495
    BeginProperty Font 
       Name            =   "Segoe UI"
@@ -17,8 +16,6 @@ Begin VB.Form FMain
    EndProperty
    Icon            =   "FMain.frx":0000
    LinkTopic       =   "Form2"
-   MaxButton       =   0   'False
-   MinButton       =   0   'False
    ScaleHeight     =   3375
    ScaleWidth      =   18495
    StartUpPosition =   3  'Windows-Standard
@@ -26,7 +23,7 @@ Begin VB.Form FMain
       Caption         =   "Munsell"
       Height          =   375
       Left            =   9600
-      TabIndex        =   109
+      TabIndex        =   32
       Top             =   2520
       Width           =   1575
    End
@@ -34,7 +31,7 @@ Begin VB.Form FMain
       Caption         =   "Info"
       Height          =   375
       Left            =   11400
-      TabIndex        =   108
+      TabIndex        =   38
       Top             =   2520
       Width           =   1575
    End
@@ -55,14 +52,14 @@ Begin VB.Form FMain
       Left            =   16800
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   98
+      TabIndex        =   105
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetYCbCr 
          Caption         =   "Set  YCbCr"
          Height          =   375
          Left            =   0
-         TabIndex        =   103
+         TabIndex        =   54
          Top             =   1800
          Width           =   1575
       End
@@ -79,7 +76,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   102
+         TabIndex        =   53
          Top             =   1440
          Width           =   975
       End
@@ -96,7 +93,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   101
+         TabIndex        =   52
          Top             =   720
          Width           =   975
       End
@@ -113,7 +110,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   100
+         TabIndex        =   51
          Top             =   360
          Width           =   975
       End
@@ -130,7 +127,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   99
+         TabIndex        =   50
          Top             =   0
          Width           =   975
       End
@@ -139,7 +136,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   107
+         TabIndex        =   109
          Top             =   1440
          Width           =   165
       End
@@ -148,7 +145,7 @@ Begin VB.Form FMain
          Caption         =   "Cr:"
          Height          =   225
          Left            =   0
-         TabIndex        =   106
+         TabIndex        =   108
          Top             =   720
          Width           =   225
       End
@@ -157,7 +154,7 @@ Begin VB.Form FMain
          Caption         =   "Cb:"
          Height          =   225
          Left            =   0
-         TabIndex        =   105
+         TabIndex        =   107
          Top             =   360
          Width           =   270
       End
@@ -166,7 +163,7 @@ Begin VB.Form FMain
          Caption         =   "Y:"
          Height          =   225
          Left            =   0
-         TabIndex        =   104
+         TabIndex        =   106
          Top             =   0
          Width           =   150
       End
@@ -188,13 +185,13 @@ Begin VB.Form FMain
       Left            =   15000
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   87
+      TabIndex        =   100
       Top             =   120
       Width           =   1575
       Begin VB.ComboBox CmbCIELabLight 
          Height          =   345
          Left            =   360
-         TabIndex        =   97
+         TabIndex        =   47
          Top             =   1080
          Width           =   1215
       End
@@ -211,7 +208,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   92
+         TabIndex        =   44
          Top             =   0
          Width           =   975
       End
@@ -228,7 +225,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   91
+         TabIndex        =   45
          Top             =   360
          Width           =   975
       End
@@ -245,7 +242,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   90
+         TabIndex        =   46
          Top             =   720
          Width           =   975
       End
@@ -262,7 +259,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   89
+         TabIndex        =   48
          Top             =   1440
          Width           =   975
       End
@@ -270,7 +267,7 @@ Begin VB.Form FMain
          Caption         =   "Set  CIELab"
          Height          =   375
          Left            =   0
-         TabIndex        =   88
+         TabIndex        =   49
          Top             =   1800
          Width           =   1575
       End
@@ -279,7 +276,7 @@ Begin VB.Form FMain
          Caption         =   "L*:"
          Height          =   225
          Left            =   0
-         TabIndex        =   96
+         TabIndex        =   104
          Top             =   0
          Width           =   210
       End
@@ -288,7 +285,7 @@ Begin VB.Form FMain
          Caption         =   "a*:"
          Height          =   225
          Left            =   0
-         TabIndex        =   95
+         TabIndex        =   103
          Top             =   360
          Width           =   210
       End
@@ -297,7 +294,7 @@ Begin VB.Form FMain
          Caption         =   "b*:"
          Height          =   225
          Left            =   0
-         TabIndex        =   94
+         TabIndex        =   102
          Top             =   720
          Width           =   225
       End
@@ -306,7 +303,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   93
+         TabIndex        =   101
          Top             =   1440
          Width           =   165
       End
@@ -316,7 +313,7 @@ Begin VB.Form FMain
       Left            =   5520
       ScaleHeight     =   315
       ScaleWidth      =   315
-      TabIndex        =   86
+      TabIndex        =   99
       ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2880
       Width           =   375
@@ -326,7 +323,7 @@ Begin VB.Form FMain
       Left            =   1920
       ScaleHeight     =   315
       ScaleWidth      =   315
-      TabIndex        =   85
+      TabIndex        =   98
       ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2880
       Width           =   375
@@ -334,7 +331,7 @@ Begin VB.Form FMain
    Begin VB.ComboBox CmbSysColor 
       Height          =   345
       Left            =   6840
-      TabIndex        =   82
+      TabIndex        =   21
       Text            =   "Combo1"
       Top             =   2520
       Width           =   2535
@@ -356,14 +353,14 @@ Begin VB.Form FMain
       Left            =   9600
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   71
+      TabIndex        =   90
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetHSLA 
          Caption         =   "Set  HSLA"
          Height          =   375
          Left            =   0
-         TabIndex        =   76
+         TabIndex        =   31
          Top             =   1800
          Width           =   1575
       End
@@ -380,7 +377,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   75
+         TabIndex        =   30
          Top             =   1440
          Width           =   975
       End
@@ -397,7 +394,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   74
+         TabIndex        =   29
          Top             =   720
          Width           =   975
       End
@@ -414,7 +411,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   73
+         TabIndex        =   28
          Top             =   360
          Width           =   975
       End
@@ -431,7 +428,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   72
+         TabIndex        =   27
          Top             =   0
          Width           =   975
       End
@@ -440,7 +437,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   80
+         TabIndex        =   94
          Top             =   1440
          Width           =   165
       End
@@ -449,7 +446,7 @@ Begin VB.Form FMain
          Caption         =   "L:"
          Height          =   225
          Left            =   0
-         TabIndex        =   79
+         TabIndex        =   93
          Top             =   720
          Width           =   135
       End
@@ -458,7 +455,7 @@ Begin VB.Form FMain
          Caption         =   "S:"
          Height          =   225
          Left            =   0
-         TabIndex        =   78
+         TabIndex        =   92
          Top             =   360
          Width           =   135
       End
@@ -467,7 +464,7 @@ Begin VB.Form FMain
          Caption         =   "H:"
          Height          =   225
          Left            =   0
-         TabIndex        =   77
+         TabIndex        =   91
          Top             =   0
          Width           =   180
       End
@@ -475,7 +472,7 @@ Begin VB.Form FMain
    Begin VB.ComboBox CmbRALClassic 
       Height          =   345
       Left            =   2880
-      TabIndex        =   69
+      TabIndex        =   10
       Text            =   "Combo1"
       Top             =   2520
       Width           =   2895
@@ -484,7 +481,7 @@ Begin VB.Form FMain
       Caption         =   "on/off"
       Height          =   375
       Left            =   120
-      TabIndex        =   67
+      TabIndex        =   2
       ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
       Top             =   2040
       Width           =   2055
@@ -505,7 +502,7 @@ Begin VB.Form FMain
       EndProperty
       Height          =   330
       Left            =   720
-      TabIndex        =   66
+      TabIndex        =   87
       Text            =   "Combo2"
       Top             =   480
       Width           =   975
@@ -522,7 +519,7 @@ Begin VB.Form FMain
       EndProperty
       Height          =   330
       Left            =   720
-      TabIndex        =   65
+      TabIndex        =   86
       Text            =   "Combo2"
       Top             =   120
       Width           =   975
@@ -544,14 +541,14 @@ Begin VB.Form FMain
       Left            =   11400
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   55
+      TabIndex        =   81
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetHSV 
          Caption         =   "Set  HSV"
          Height          =   375
          Left            =   0
-         TabIndex        =   60
+         TabIndex        =   37
          Top             =   1800
          Width           =   1575
       End
@@ -568,7 +565,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   59
+         TabIndex        =   36
          Top             =   1440
          Width           =   975
       End
@@ -585,7 +582,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   58
+         TabIndex        =   35
          Top             =   720
          Width           =   975
       End
@@ -602,7 +599,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   57
+         TabIndex        =   34
          Top             =   360
          Width           =   975
       End
@@ -619,7 +616,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   56
+         TabIndex        =   33
          Top             =   0
          Width           =   975
       End
@@ -628,7 +625,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   64
+         TabIndex        =   85
          Top             =   1440
          Width           =   165
       End
@@ -637,7 +634,7 @@ Begin VB.Form FMain
          Caption         =   "V:"
          Height          =   225
          Left            =   0
-         TabIndex        =   63
+         TabIndex        =   84
          Top             =   720
          Width           =   150
       End
@@ -646,7 +643,7 @@ Begin VB.Form FMain
          Caption         =   "S:"
          Height          =   225
          Left            =   0
-         TabIndex        =   62
+         TabIndex        =   83
          Top             =   360
          Width           =   135
       End
@@ -655,7 +652,7 @@ Begin VB.Form FMain
          Caption         =   "H:"
          Height          =   225
          Left            =   0
-         TabIndex        =   61
+         TabIndex        =   82
          Top             =   0
          Width           =   180
       End
@@ -677,14 +674,14 @@ Begin VB.Form FMain
       Left            =   13200
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   45
+      TabIndex        =   76
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetXYZ 
          Caption         =   "Set  XYZ"
          Height          =   375
          Left            =   0
-         TabIndex        =   50
+         TabIndex        =   43
          Top             =   1800
          Width           =   1575
       End
@@ -701,7 +698,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   49
+         TabIndex        =   42
          Top             =   1440
          Width           =   975
       End
@@ -718,7 +715,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   48
+         TabIndex        =   41
          Top             =   720
          Width           =   975
       End
@@ -735,7 +732,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   47
+         TabIndex        =   40
          Top             =   360
          Width           =   975
       End
@@ -752,7 +749,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   46
+         TabIndex        =   39
          Top             =   0
          Width           =   975
       End
@@ -761,7 +758,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   54
+         TabIndex        =   80
          Top             =   1440
          Width           =   165
       End
@@ -770,7 +767,7 @@ Begin VB.Form FMain
          Caption         =   "Z:"
          Height          =   225
          Left            =   0
-         TabIndex        =   53
+         TabIndex        =   79
          Top             =   720
          Width           =   150
       End
@@ -779,7 +776,7 @@ Begin VB.Form FMain
          Caption         =   "Y:"
          Height          =   225
          Left            =   0
-         TabIndex        =   52
+         TabIndex        =   78
          Top             =   360
          Width           =   150
       End
@@ -788,7 +785,7 @@ Begin VB.Form FMain
          Caption         =   "X:"
          Height          =   225
          Left            =   0
-         TabIndex        =   51
+         TabIndex        =   77
          Top             =   0
          Width           =   150
       End
@@ -810,7 +807,7 @@ Begin VB.Form FMain
       Left            =   7800
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   15
+      TabIndex        =   62
       Top             =   120
       Width           =   1575
       Begin VB.TextBox TBHSLAf_H 
@@ -826,7 +823,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   40
+         TabIndex        =   22
          Top             =   0
          Width           =   975
       End
@@ -843,7 +840,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   39
+         TabIndex        =   23
          Top             =   360
          Width           =   975
       End
@@ -860,7 +857,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   38
+         TabIndex        =   24
          Top             =   720
          Width           =   975
       End
@@ -877,7 +874,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   37
+         TabIndex        =   25
          Top             =   1440
          Width           =   975
       End
@@ -885,7 +882,7 @@ Begin VB.Form FMain
          Caption         =   "Set  HSLAf"
          Height          =   375
          Left            =   0
-         TabIndex        =   36
+         TabIndex        =   26
          Top             =   1800
          Width           =   1575
       End
@@ -894,7 +891,7 @@ Begin VB.Form FMain
          Caption         =   "H:"
          Height          =   225
          Left            =   0
-         TabIndex        =   44
+         TabIndex        =   75
          Top             =   0
          Width           =   180
       End
@@ -903,7 +900,7 @@ Begin VB.Form FMain
          Caption         =   "S:"
          Height          =   225
          Left            =   0
-         TabIndex        =   43
+         TabIndex        =   74
          Top             =   360
          Width           =   135
       End
@@ -912,7 +909,7 @@ Begin VB.Form FMain
          Caption         =   "L:"
          Height          =   225
          Left            =   0
-         TabIndex        =   42
+         TabIndex        =   73
          Top             =   720
          Width           =   135
       End
@@ -921,7 +918,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   41
+         TabIndex        =   72
          Top             =   1440
          Width           =   165
       End
@@ -943,14 +940,14 @@ Begin VB.Form FMain
       Left            =   4200
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   14
+      TabIndex        =   61
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetRGBAf 
          Caption         =   "Set RGBAf"
          Height          =   375
          Left            =   0
-         TabIndex        =   31
+         TabIndex        =   15
          Top             =   1800
          Width           =   1575
       End
@@ -967,7 +964,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   30
+         TabIndex        =   14
          Top             =   1440
          Width           =   975
       End
@@ -984,7 +981,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   29
+         TabIndex        =   13
          Top             =   720
          Width           =   975
       End
@@ -1001,7 +998,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   28
+         TabIndex        =   12
          Top             =   360
          Width           =   975
       End
@@ -1018,7 +1015,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   27
+         TabIndex        =   11
          Top             =   0
          Width           =   975
       End
@@ -1027,7 +1024,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   35
+         TabIndex        =   71
          Top             =   1440
          Width           =   165
       End
@@ -1036,7 +1033,7 @@ Begin VB.Form FMain
          Caption         =   "B:"
          Height          =   225
          Left            =   0
-         TabIndex        =   34
+         TabIndex        =   70
          Top             =   720
          Width           =   150
       End
@@ -1045,7 +1042,7 @@ Begin VB.Form FMain
          Caption         =   "G:"
          Height          =   225
          Left            =   0
-         TabIndex        =   33
+         TabIndex        =   69
          Top             =   360
          Width           =   165
       End
@@ -1054,7 +1051,7 @@ Begin VB.Form FMain
          Caption         =   "R:"
          Height          =   225
          Left            =   0
-         TabIndex        =   32
+         TabIndex        =   68
          Top             =   0
          Width           =   150
       End
@@ -1076,7 +1073,7 @@ Begin VB.Form FMain
       Left            =   2400
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   13
+      TabIndex        =   60
       Top             =   120
       Width           =   1575
       Begin VB.TextBox TBCMYK_Y 
@@ -1092,7 +1089,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   18
+         TabIndex        =   6
          Top             =   720
          Width           =   975
       End
@@ -1109,7 +1106,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   21
+         TabIndex        =   7
          Top             =   1080
          Width           =   975
       End
@@ -1117,7 +1114,7 @@ Begin VB.Form FMain
          Caption         =   "Set CMYKA"
          Height          =   375
          Left            =   0
-         TabIndex        =   17
+         TabIndex        =   9
          Top             =   1800
          Width           =   1575
       End
@@ -1134,7 +1131,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   16
+         TabIndex        =   8
          Top             =   1440
          Width           =   975
       End
@@ -1151,7 +1148,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   19
+         TabIndex        =   5
          Top             =   360
          Width           =   975
       End
@@ -1168,7 +1165,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   20
+         TabIndex        =   4
          Top             =   0
          Width           =   975
       End
@@ -1177,7 +1174,7 @@ Begin VB.Form FMain
          Caption         =   "C:"
          Height          =   225
          Left            =   0
-         TabIndex        =   26
+         TabIndex        =   67
          Top             =   0
          Width           =   165
       End
@@ -1186,7 +1183,7 @@ Begin VB.Form FMain
          Caption         =   "M:"
          Height          =   225
          Left            =   0
-         TabIndex        =   25
+         TabIndex        =   66
          Top             =   360
          Width           =   210
       End
@@ -1195,7 +1192,7 @@ Begin VB.Form FMain
          Caption         =   "Y:"
          Height          =   225
          Left            =   0
-         TabIndex        =   24
+         TabIndex        =   65
          Top             =   720
          Width           =   150
       End
@@ -1204,7 +1201,7 @@ Begin VB.Form FMain
          Caption         =   "K:"
          Height          =   225
          Left            =   0
-         TabIndex        =   23
+         TabIndex        =   64
          Top             =   1080
          Width           =   150
       End
@@ -1213,7 +1210,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   22
+         TabIndex        =   63
          Top             =   1440
          Width           =   165
       End
@@ -1235,14 +1232,14 @@ Begin VB.Form FMain
       Left            =   6000
       ScaleHeight     =   2295
       ScaleWidth      =   1575
-      TabIndex        =   3
+      TabIndex        =   55
       Top             =   120
       Width           =   1575
       Begin VB.CommandButton BtnSetRGBA 
          Caption         =   "Set RGBA"
          Height          =   375
          Left            =   0
-         TabIndex        =   8
+         TabIndex        =   20
          Top             =   1800
          Width           =   1575
       End
@@ -1259,7 +1256,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   7
+         TabIndex        =   19
          Top             =   1440
          Width           =   975
       End
@@ -1276,7 +1273,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   6
+         TabIndex        =   18
          Top             =   720
          Width           =   975
       End
@@ -1293,7 +1290,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   5
+         TabIndex        =   17
          Top             =   360
          Width           =   975
       End
@@ -1310,7 +1307,7 @@ Begin VB.Form FMain
          EndProperty
          Height          =   315
          Left            =   360
-         TabIndex        =   4
+         TabIndex        =   16
          Top             =   0
          Width           =   975
       End
@@ -1319,7 +1316,7 @@ Begin VB.Form FMain
          Caption         =   "A:"
          Height          =   225
          Left            =   0
-         TabIndex        =   12
+         TabIndex        =   59
          Top             =   1440
          Width           =   165
       End
@@ -1328,7 +1325,7 @@ Begin VB.Form FMain
          Caption         =   "B:"
          Height          =   225
          Left            =   0
-         TabIndex        =   11
+         TabIndex        =   58
          Top             =   720
          Width           =   150
       End
@@ -1337,7 +1334,7 @@ Begin VB.Form FMain
          Caption         =   "G:"
          Height          =   225
          Left            =   0
-         TabIndex        =   10
+         TabIndex        =   57
          Top             =   360
          Width           =   165
       End
@@ -1346,7 +1343,7 @@ Begin VB.Form FMain
          Caption         =   "R:"
          Height          =   225
          Left            =   0
-         TabIndex        =   9
+         TabIndex        =   56
          Top             =   0
          Width           =   150
       End
@@ -1371,7 +1368,7 @@ Begin VB.Form FMain
    Begin VB.ComboBox CmbColorNames 
       Height          =   345
       Left            =   120
-      TabIndex        =   0
+      TabIndex        =   3
       Text            =   "Combo1"
       Top             =   2520
       Width           =   2055
@@ -1391,7 +1388,7 @@ Begin VB.Form FMain
       ScaleHeight     =   167.23
       ScaleMode       =   0  'Benutzerdefiniert
       ScaleWidth      =   120.012
-      TabIndex        =   2
+      TabIndex        =   0
       Top             =   120
       Width           =   1575
    End
@@ -1411,7 +1408,7 @@ Begin VB.Form FMain
       ScaleHeight     =   101
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   101
-      TabIndex        =   68
+      TabIndex        =   88
       Top             =   120
       Width           =   1575
    End
@@ -1419,7 +1416,7 @@ Begin VB.Form FMain
       Caption         =   " "
       Height          =   375
       Left            =   2880
-      TabIndex        =   84
+      TabIndex        =   97
       Top             =   2880
       Width           =   2655
    End
@@ -1427,7 +1424,7 @@ Begin VB.Form FMain
       Caption         =   " "
       Height          =   375
       Left            =   120
-      TabIndex        =   83
+      TabIndex        =   96
       Top             =   2880
       Width           =   1815
    End
@@ -1436,7 +1433,7 @@ Begin VB.Form FMain
       Caption         =   "SysColor:"
       Height          =   225
       Left            =   6000
-      TabIndex        =   81
+      TabIndex        =   95
       Top             =   2520
       Width           =   735
    End
@@ -1445,7 +1442,7 @@ Begin VB.Form FMain
       Caption         =   "RAL:"
       Height          =   225
       Left            =   2400
-      TabIndex        =   70
+      TabIndex        =   89
       Top             =   2520
       Width           =   360
    End
@@ -1478,10 +1475,11 @@ Private m_Btn     As CommandButton
 Private m_Max     As Single
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
+Private m_IsInit  As Boolean
 
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
-    Set m_APB = AlphaPB(Me.PBColor, Me.PbPicture)
+    Set m_APB = MNew.AlphaPB(Me.PBColor, Me.PbPicture)
     Me.Caption = "Color Algorithms v" & Me.Version
     Timer1.Interval = 50
     Timer1.Enabled = False
@@ -1492,6 +1490,7 @@ Private Sub Form_Load()
     MRALColors.RALClassic_ToListBox CmbRALClassic
     MSysColor.SystemColor_ToCB CmbSysColor
     CIELabLight_ToCmb CmbCIELabLight
+    CmbCIELabLight.ListIndex = 1
     PBColor.BackColor = vbCyan
     m_CMYK = RGBAf_ToCMYK(LngColor_ToRGBAf(LngColor(PBColor.BackColor)))
     SetToolTipText GetControls("TextBox")
@@ -1561,18 +1560,18 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
     Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
-    m_APB.Alpha = 255 - RGBA.A
+    m_APB.Alpha = 255 - RGBA.a
     MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
-    Dim alp As Single: alp = RGBA.A
+    Dim alp As Single: alp = RGBA.a
     
     Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
     TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
     
-    RGBA.A = 0
+    RGBA.a = 0
     LCol = MColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
-    RGBA.A = alp
+    RGBA.a = alp
     
     Dim HSLAf As HSLAf: HSLAf = RGBAf_ToHSLAf(RGBAf)
     MColor.HSLAf_ToView TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, HSLAf
@@ -1602,7 +1601,7 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
 End Sub
 
 Private Sub ErrMsg(sErr As String)
-    MsgBox "Invalid numeric value: " & sErr & vbCrLf & "please try again"
+    ErrHandler "Invalid numeric value: " & sErr & vbCrLf & "please try again"
 End Sub
 
 Private Sub BtnSetCMYK_Click()
@@ -1720,7 +1719,7 @@ Try: On Error GoTo Catch
     'jetzt BackColor
     Dim L As LngColor: L.Value = m_CPicker.Color
     Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(L)
-    RGBA.A = CByte(TBRGBA_A.Text)
+    RGBA.a = CByte(TBRGBA_A.Text)
     m_CMYK = RGBA_ToCMYK(RGBA)
     UpdateView
 Catch:
@@ -1788,13 +1787,16 @@ Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, BtnSetYCbCr, PnlYCbCr.hwnd,
 Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_A: End Sub
 
 Private Sub SetTB(TB As TextBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, CVR As ColorValueRange)
+Try: On Error GoTo Catch
     Set m_TBBack = TB
     Set m_Btn = Btn
     'm_Max = MaxVal
     SetParent Me.CBValues.hwnd, pnlHwnd
     Me.CBValues.Move m_TBBack.Left, m_TBBack.Top
-    MColor.ColorValueRange_ToComboBox CVR, Me.CBValues
-    CBValues.Text = m_TBBack.Text
+    m_IsInit = True
+    MColor.ColorValueRange_ToComboBox CVR, Me.CBValues, m_TBBack.Text
+    m_IsInit = False
+    'CBValues.Text = m_TBBack.Text
     CBValues.ZOrder 0
     'Dim n As Single: n = 256
 '    If f = 1 Then n = 255
@@ -1803,7 +1805,9 @@ Private Sub SetTB(TB As TextBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr,
 '    'CBValues.ZOrder 1
 '    HideCBValues
 '    cb.ZOrder 0
-
+    Exit Sub
+Catch:
+    ErrHandler "SetTB"
 End Sub
 
 
@@ -1891,6 +1895,7 @@ Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
     End If
 End Sub
 Private Sub CBValues_Click()
+    If m_IsInit Then Exit Sub
     m_TBBack.Text = CBValues.Text
     m_Btn.Value = True
 
@@ -1941,11 +1946,11 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
     Dim sa() As String: sa = Split(nam, "_")
     Dim u As Long: u = UBound(sa)
     If u = 1 Then
-        Dim S As String ': s = "Change the "
+        Dim s As String ': s = "Change the "
         Dim c_1 As String: c_1 = sa(0)
         Dim c_2 As String: c_2 = sa(1)
         If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
-        S = S & ttt.Item(c_2) & "-value of "
+        s = s & ttt.Item(c_2) & "-value of "
         Dim c11 As String
         Dim c12 As String
         Dim c13 As String
@@ -1956,12 +1961,34 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
             c11 = Mid(c_1, 1, 1): c12 = Mid(c_1, 2, 1): c13 = Mid(c_1, 3, 1)
             If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
         End If
-        S = S & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
         If c_1 <> "YCbCr" And Len(c_1) > 3 Then
             Dim c14 As String: c14 = Mid(c_1, 4, 1)
-            S = S & ", " & ttt.Item(c14)
+            s = s & ", " & ttt.Item(c14)
         End If
-        CreateToolTipText = S & ")"
+        CreateToolTipText = s & ")"
     End If
     'Debug.Print FncCallCounter
 End Function
+
+Private Function ErrHandler(ByVal FuncName As String, _
+                            Optional ByVal AddInfo As String, _
+                            Optional WinApiError, _
+                            Optional bLoud As Boolean = True, _
+                            Optional bErrLog As Boolean = True, _
+                            Optional vbDecor As VbMsgBoxStyle = vbOKCancel, _
+                            Optional bRetry As Boolean) As VbMsgBoxResult
+
+    If bRetry Then
+
+        ErrHandler = MessErrorRetry(TypeName(Me), FuncName, AddInfo, WinApiError, bErrLog)
+
+    Else
+
+        ErrHandler = MessError(TypeName(Me), FuncName, AddInfo, WinApiError, bLoud, bErrLog, vbDecor)
+
+    End If
+
+End Function
+
+

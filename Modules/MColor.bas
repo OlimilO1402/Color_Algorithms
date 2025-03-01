@@ -192,9 +192,19 @@ Public Sub Init()
         .x(0) = 0.4124564: .x(1) = 0.3575761:  .x(2) = 0.1804375
         .Y(0) = 0.2126729: .Y(1) = 0.7151522:  .Y(2) = 0.072175
         .z(0) = 0.0193339: .z(1) = 0.119192:   .z(2) = 0.9503041
-        .r(0) = 3.2404542: .r(1) = -1.5371385: .r(2) = -0.4985314
-        .G(0) = -0.969266: .G(1) = 1.8760108:  .G(2) = 0.041556
-        .b(0) = 0.0556434: .b(1) = -0.2040259: .b(2) = 1.0572252
+        
+'
+'    rgb[0] = (xyz[0] * 3.240479f) + (xyz[1] * -1.537150f) + (xyz[2] * -.498535f);
+'    rgb[1] = (xyz[0] * -.969256f) + (xyz[1] *  1.875992f) + (xyz[2] * .041556f);
+'    rgb[2] = (xyz[0] * .055648f)  + (xyz[1] * -.204043f) + (xyz[2] * 1.057311f);
+        
+        .r(0) = 3.240479:  .r(1) = -1.53715:  .r(2) = -0.498535
+        .G(0) = -0.969256: .G(1) = 1.8760108: .G(2) = 0.041556
+        .b(0) = 0.055648:  .b(1) = -0.204043: .b(2) = 1.057311
+'
+'        .R(0) = 3.2404542: .R(1) = -1.5371385: .R(2) = -0.4985314
+'        .G(0) = -0.969266: .G(1) = 1.8760108:  .G(2) = 0.041556
+'        .B(0) = 0.0556434: .B(1) = -0.2040259: .B(2) = 1.0572252
     End With
 '    CIELabLights(CIELabLight.D50_2) = XYZ(96.422, 100, 82.521)
 '    CIELabLights(CIELabLight.D65_2) = XYZ(95.047, 100, 108.883)
@@ -209,6 +219,8 @@ Public Sub Init()
     'init the ValueRanges
     InitValueRanges
 End Sub
+
+'https://web.archive.org/web/20111111073514/http://www.easyrgb.com/index.php?X=MATH&H=08#text8
 
 Private Sub InitValueRanges()
     m_CVR_RGBA_R = CVR_RGBA_R:      m_CVR_RGBA_G = CVR_RGBA_G:        m_CVR_RGBA_B = CVR_RGBA_B:       m_CVR_RGBA_A = CVR_RGBA_A
@@ -509,10 +521,10 @@ End Function
 
 Public Function RGBAf_ToRGBA(this As RGBAf) As RGBA
     With this
-        RGBAf_ToRGBA.r = CByte(.r * 255)
-        RGBAf_ToRGBA.G = CByte(.G * 255)
-        RGBAf_ToRGBA.b = CByte(.b * 255)
-        RGBAf_ToRGBA.a = CByte(.a * 255)
+        RGBAf_ToRGBA.r = CByte(Min(.r * 255, 255))
+        RGBAf_ToRGBA.G = CByte(Min(.G * 255, 255))
+        RGBAf_ToRGBA.b = CByte(Min(.b * 255, 255))
+        RGBAf_ToRGBA.a = CByte(Min(.a * 255, 255))
     End With
 End Function
 
@@ -1035,26 +1047,55 @@ Public Function XYZ_Euclidean(this As XYZ, other As XYZ) As Double
 End Function
 
 Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
-    Dim x As Single: x = this.x
-    Dim Y As Single: Y = this.Y
-    Dim z As Single: z = this.z
-    Dim r As Single: r = x * M.r(0) + Y * M.r(1) + z * M.r(2)
-    Dim G As Single: G = x * M.G(0) + Y * M.G(1) + z * M.G(2)
-    Dim b As Single: b = x * M.b(0) + Y * M.b(1) + z * M.b(2)
-    Dim n As Single: n = 1 / 2.4
-    Dim MM As Single: MM = 0.0031308
-    
-    If r > MM Then r = 1.055 * r ^ n - 0.055 Else r = 12.92 * r
-    If G > MM Then G = 1.055 * G ^ n - 0.055 Else G = 12.92 * G
-    If b > MM Then b = 1.055 * b ^ n - 0.055 Else b = 12.92 * b
-    
-    With XYZ_ToRGBAf
-        .r = MinSng(MaxSng(r, 0), 1) 'limitValue 0..1
-        .G = MinSng(MaxSng(G, 0), 1)
-        .b = MinSng(MaxSng(b, 0), 1)
-        .a = this.a
+    With this
+        Dim var_X As Single: var_X = .x '/ 100        '//X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
+        Dim var_Y As Single: var_Y = .Y '/ 100        '//Y from 0 to 100.000
+        Dim var_Z As Single: var_Z = .z '/ 100        '//Z from 0 to 108.883
     End With
+    Dim var_R As Single: var_R = var_X * 3.2406 + var_Y * -1.5372 + var_Z * -0.4986
+    Dim var_G As Single: var_G = var_X * -0.9689 + var_Y * 1.8758 + var_Z * 0.0415
+    Dim var_B As Single: var_B = var_X * 0.0557 + var_Y * -0.204 + var_Z * 1.057
+
+    With XYZ_ToRGBAf
+        If (var_R > 0.0031308) Then .r = 1.055 * (var_R ^ (1 / 2.4)) - 0.055 Else .r = 12.92 * var_R
+        If (var_G > 0.0031308) Then .G = 1.055 * (var_G ^ (1 / 2.4)) - 0.055 Else .G = 12.92 * var_G
+        If (var_B > 0.0031308) Then .b = 1.055 * (var_B ^ (1 / 2.4)) - 0.055 Else .b = 12.92 * var_B
+    End With
+    'r = var_R * 255
+    'G = var_G * 255
+    'b = var_B * 255
+
 End Function
+
+
+'Public Function XYZ_ToRGBAf(this As XYZ) As RGBAf
+'    Dim x As Single: x = this.x
+'    Dim Y As Single: Y = this.Y
+'    Dim z As Single: z = this.z
+'    Dim r As Single: r = x * M.r(0) + Y * M.r(1) + z * M.r(2)
+'    Dim G As Single: G = x * M.G(0) + Y * M.G(1) + z * M.G(2)
+'    Dim b As Single: b = x * M.b(0) + Y * M.b(1) + z * M.b(2)
+'    Dim n As Single: n = 1 / 2.4
+'    Dim MM As Single: MM = 0.0031308
+'
+'    If r > MM Then r = 1.055 * r ^ n - 0.055 Else r = 12.92 * r
+'    If G > MM Then G = 1.055 * G ^ n - 0.055 Else G = 12.92 * G
+'    If b > MM Then b = 1.055 * b ^ n - 0.055 Else b = 12.92 * b
+'
+'    With XYZ_ToRGBAf
+'        .r = r * 0.13844015
+'
+'        .G = G * 0.13844015
+'        .b = b * 0.0913844
+'
+'        .a = this.a
+''        .R = MinSng(MaxSng(R, 0), 1) 'limitValue 0..1
+''        .G = MinSng(MaxSng(G, 0), 1)
+''        .B = MinSng(MaxSng(B, 0), 1)
+''        .A = this.A
+'        Debug.Print "RGB:(" & .r & ", " & .G & ", " & .b & ")"
+'    End With
+'End Function
 
 Public Function XYZ_ToCIELab(this As XYZ, Optional lighttype As CIELabLight = CIELabLight.D65_2) As CIELab
     'https://de.wikipedia.org/wiki/Lab-Farbraum
@@ -1144,40 +1185,28 @@ Public Sub CIELabLight_ToCmb(aCBLB As ComboBox)
     End With
 End Sub
 
+'    CIELabLights(CIELabLight.D50_2) = XYZ(0.96422, 1, 0.82521)
+'    CIELabLights(CIELabLight.D65_2) = XYZ(0.95047, 1, 1.08883)
+'    CIELabLights(CIELabLight.D50_10) = XYZ(0.9672, 1, 0.81427)
+'    CIELabLights(CIELabLight.D65_10) = XYZ(0.94811, 1, 1.07304)
+
 'https://stackoverflow.com/questions/58973890/lab-to-xyz-and-xyz-to-rgb-color-space-conversion-algorithm
+'https://stackoverflow.com/questions/58952430/rgb-xyz-and-xyz-lab-color-space-conversion-algorithm
 Public Function CIELab_ToXYZ(this As CIELab, Optional ByVal lighttype As CIELabLight = CIELabLight.D65_2) As XYZ
-    'TODO!!!
-    Dim pow As Double, ratio As Double: ratio = 0.206892707 '6! / 29!
+    With this
+        Dim var_Y As Single: var_Y = (.L + 16) / 116
+        Dim var_X As Single: var_X = .aa / 500 + var_Y
+        Dim var_Z As Single: var_Z = var_Y - .bb / 200
+    End With
+
+    If (var_Y ^ 3 > 0.008856) Then var_Y = var_Y ^ 3 Else var_Y = (var_Y - 16 / 116) / 7.787
+    If (var_X ^ 3 > 0.008856) Then var_X = var_X ^ 3 Else var_X = (var_X - 16 / 116) / 7.787
+    If (var_Z ^ 3 > 0.008856) Then var_Z = var_Z ^ 3 Else var_Z = (var_Z - 16 / 116) / 7.787
+
     With CIELab_ToXYZ
-        .Y = (this.L + 16!) / 116!
-        .x = (this.aa / 500!) + .Y
-        .z = .Y - (this.bb / 200#) '!)
-        .a = this.a '* 255
-        
-        pow = .x * .x * .x
-        If .x < ratio Then
-            .x = (.x - 16# / 116#) / 7.787 '!
-        Else
-            .x = pow
-        End If
-        
-        pow = .Y * .Y * .Y
-        If .Y < ratio Then
-            .Y = (.Y - 16# / 116#) / 7.787 '!
-        Else
-            .Y = pow
-        End If
-        
-        pow = .z * .z * .z
-        If .z < ratio Then
-            .z = (.z - 16# / 116#) / 7.787 '!
-        Else
-            .z = pow
-        End If
-        
-        .x = .x * 95.047!
-        .Y = .Y * 100!
-        .z = .z * 108.883!
+        .x = CIELabLights(lighttype).x * var_X  '//ref_X =  95.047     Observer= 2°, Illuminant= D65
+        .Y = CIELabLights(lighttype).Y * var_Y  '//ref_Y = 100.000
+        .z = CIELabLights(lighttype).z * var_Z  '//ref_Z = 108.883
     End With
 End Function
 
@@ -1256,7 +1285,7 @@ End Function
 
 
 Public Function CVR_CIELab_L() As ColorValueRange
-    CVR_CIELab_L = ColorValueRange(0, 100, 1000, "0.0")
+    CVR_CIELab_L = ColorValueRange(0, 100, 1000, "0.000")
 End Function
 
 Public Function CVR_CIELab_aa() As ColorValueRange
@@ -1346,15 +1375,30 @@ Public Property Get ColorValueRange_dx(this As ColorValueRange) As Double
     End With
 End Property
 
-Public Sub ColorValueRange_ToComboBox(this As ColorValueRange, aCmb As ComboBox)
+Public Sub ColorValueRange_ToComboBox(this As ColorValueRange, aCmb As ComboBox, ByVal sCurrentVal As String)
     Dim dx As Double: dx = ColorValueRange_dx(this)
+    Dim cv As Double
+    ' wir müssen den Wert mit der geringsten Differenz suchen
+    'und davon das i merken
+    If Double_TryParse(sCurrentVal, cv) Then
+        'sCurrentVal = Format(d, this.FormatStr)
+        'OK weiter
+    End If
+    Dim s As String, li As Long, vi As Double
+    Dim dif_cvvi0 As Double, dif_cvvi1 As Double: dif_cvvi1 = this.RangeMax
     With aCmb
         .Clear
-        '.AddItem Format(this.RangeMax, this.FormatStr)
         Dim i As Long
-        For i = this.RangeSteps To 1 Step -1
-            .AddItem Format(i * dx, this.FormatStr)
+        For i = this.RangeSteps To 0 Step -1
+            vi = i * dx
+            dif_cvvi0 = Abs(vi - cv)
+            If dif_cvvi0 <= dif_cvvi1 Then
+                dif_cvvi1 = dif_cvvi0
+                li = i
+            End If
+            s = Format(vi, this.FormatStr)
+            .AddItem s
         Next
-        .AddItem Format(this.RangeMin, this.FormatStr)
+        .ListIndex = .ListCount - li - 1
     End With
 End Sub

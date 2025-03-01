@@ -94,7 +94,7 @@ Begin VB.Form FMunsell
       ScaleHeight     =   5115
       ScaleWidth      =   7995
       TabIndex        =   6
-      ToolTipText     =   "double-click to select, click once to unselect"
+      ToolTipText     =   "double-click to select, click again to unselect"
       Top             =   2040
       Width           =   8055
    End
