@@ -1,5 +1,5 @@
 Attribute VB_Name = "MColor"
-Option Explicit '2024-08-14: lines of code: 1286;
+Option Explicit 'lines of code: 2024-08-14: 1286; 2025-03-01: 1404;
 'VB Type-Kürzel
 ' $ = String
 ' % = Integer
@@ -68,7 +68,7 @@ Public Type CMYK
     c As Single '0..1
     M As Single '0..1
     Y As Single '0..1
-    K As Single '0..1
+    k As Single '0..1
     a As Single '0..1
 End Type
 
@@ -534,12 +534,12 @@ Public Function RGBAf_ToCMYK(this As RGBAf) As CMYK
         .c = 1 - this.r
         .M = 1 - this.G
         .Y = 1 - this.b
-        .K = MinSng3(.c, .M, .Y)
-        If .K = 1 Then Exit Function
-        Dim kf As Single: kf = 1 - .K
-        .c = ((.c - .K) / kf)
-        .M = ((.M - .K) / kf)
-        .Y = ((.Y - .K) / kf)
+        .k = MinSng3(.c, .M, .Y)
+        If .k = 1 Then Exit Function
+        Dim kf As Single: kf = 1 - .k
+        .c = ((.c - .k) / kf)
+        .M = ((.M - .k) / kf)
+        .Y = ((.Y - .k) / kf)
     End With
 End Function
 
@@ -677,8 +677,8 @@ End Function
 '    K As Single '0..1
 '    A As Single '0..1
 'End Type
-Public Function CMYK(ByVal c As Single, ByVal M As Single, ByVal Y As Single, ByVal K As Single, ByVal a As Single) As CMYK
-    With CMYK: .c = c: .M = M: .Y = Y: .K = K: .a = a: End With
+Public Function CMYK(ByVal c As Single, ByVal M As Single, ByVal Y As Single, ByVal k As Single, ByVal a As Single) As CMYK
+    With CMYK: .c = c: .M = M: .Y = Y: .k = k: .a = a: End With
 End Function
 
 Public Function CMYK_Read(this_out As CMYK, TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, TB_K As TextBox, TB_A As TextBox, err_out As String) As Boolean
@@ -687,7 +687,7 @@ Public Function CMYK_Read(this_out As CMYK, TB_C As TextBox, TB_M As TextBox, TB
         s = TB_C.Text: If Single_TryParse(s, v) Then .c = v Else err_out = s: Exit Function
         s = TB_M.Text: If Single_TryParse(s, v) Then .M = v Else err_out = s: Exit Function
         s = TB_Y.Text: If Single_TryParse(s, v) Then .Y = v Else err_out = s: Exit Function
-        s = TB_K.Text: If Single_TryParse(s, v) Then .K = v Else err_out = s: Exit Function
+        s = TB_K.Text: If Single_TryParse(s, v) Then .k = v Else err_out = s: Exit Function
         s = TB_A.Text: If Single_TryParse(s, v) Then .a = v Else err_out = s: Exit Function
     End With
     CMYK_Read = True
@@ -697,7 +697,7 @@ Public Function CMYK_ToView(TB_C As TextBox, TB_M As TextBox, TB_Y As TextBox, T
         TB_C.Text = Format(.c, m_CVR_CMYK_C.FormatStr)
         TB_M.Text = Format(.M, m_CVR_CMYK_M.FormatStr)
         TB_Y.Text = Format(.Y, m_CVR_CMYK_Y.FormatStr)
-        TB_K.Text = Format(.K, m_CVR_CMYK_K.FormatStr)
+        TB_K.Text = Format(.k, m_CVR_CMYK_K.FormatStr)
         TB_A.Text = Format(.a, m_CVR_CMYK_A.FormatStr)
     End With
 End Function
@@ -706,16 +706,16 @@ Public Function CMYK_Euclidean(this As CMYK, other As CMYK) As Double
     Dim dC As Double: dC = this.c - other.c
     Dim dM As Double: dM = this.M - other.M
     Dim dY As Double: dY = this.Y - other.Y
-    Dim dK As Double: dK = this.K - other.K
+    Dim dK As Double: dK = this.k - other.k
     CMYK_Euclidean = VBA.Math.Sqr(dC * dC + dM * dM + dY * dY + dK * dK)
 End Function
 
 Public Function CMYK_ToRGBAf(this As CMYK) As RGBAf
     With this
-        Dim kf As Single: kf = 1 - .K
-        CMYK_ToRGBAf.r = 1 - MinSng(1, .c * kf + .K)
-        CMYK_ToRGBAf.G = 1 - MinSng(1, .M * kf + .K)
-        CMYK_ToRGBAf.b = 1 - MinSng(1, .Y * kf + .K)
+        Dim kf As Single: kf = 1 - .k
+        CMYK_ToRGBAf.r = 1 - MinSng(1, .c * kf + .k)
+        CMYK_ToRGBAf.G = 1 - MinSng(1, .M * kf + .k)
+        CMYK_ToRGBAf.b = 1 - MinSng(1, .Y * kf + .k)
         CMYK_ToRGBAf.a = .a
     End With
 End Function
