@@ -6,7 +6,5 @@ Sub Main()
     MColor.Init
     MString.Init
     MMunsell.Init
-    MMunsell.FilterChromaValues
-    
     FMain.Show
 End Sub

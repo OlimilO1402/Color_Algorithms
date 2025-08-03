@@ -5,7 +5,7 @@ Begin VB.Form FMunsell
    ClientHeight    =   7770
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8055
+   ClientWidth     =   8295
    BeginProperty Font 
       Name            =   "Segoe UI"
       Size            =   9.75
@@ -19,12 +19,12 @@ Begin VB.Form FMunsell
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7770
-   ScaleWidth      =   8055
+   ScaleWidth      =   8295
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows-Standard
    Begin VB.PictureBox PBColorNearest 
       Height          =   615
-      Left            =   5400
+      Left            =   5640
       ScaleHeight     =   555
       ScaleWidth      =   675
       TabIndex        =   19
@@ -33,7 +33,7 @@ Begin VB.Form FMunsell
    End
    Begin VB.PictureBox PBColorInput 
       Height          =   615
-      Left            =   5400
+      Left            =   5640
       ScaleHeight     =   555
       ScaleWidth      =   675
       TabIndex        =   15
@@ -46,10 +46,10 @@ Begin VB.Form FMunsell
       Height          =   615
       Left            =   0
       ScaleHeight     =   615
-      ScaleWidth      =   8055
+      ScaleWidth      =   8295
       TabIndex        =   12
       Top             =   7155
-      Width           =   8055
+      Width           =   8295
       Begin VB.CommandButton BtnCancel 
          Cancel          =   -1  'True
          Caption         =   "Cancel"
@@ -71,7 +71,7 @@ Begin VB.Form FMunsell
    End
    Begin VB.ComboBox CmbMunsell3 
       Height          =   375
-      Left            =   1560
+      Left            =   1800
       TabIndex        =   10
       Text            =   "CmbMunsell3"
       Top             =   1560
@@ -79,7 +79,7 @@ Begin VB.Form FMunsell
    End
    Begin VB.PictureBox PBColorSelected 
       Height          =   615
-      Left            =   5400
+      Left            =   5640
       ScaleHeight     =   555
       ScaleWidth      =   675
       TabIndex        =   7
@@ -92,15 +92,15 @@ Begin VB.Form FMunsell
       Height          =   5175
       Left            =   0
       ScaleHeight     =   5115
-      ScaleWidth      =   7995
+      ScaleWidth      =   8235
       TabIndex        =   6
       ToolTipText     =   "double-click to select, click again to unselect"
       Top             =   2040
-      Width           =   8055
+      Width           =   8295
    End
    Begin VB.ComboBox CmbMunsell2 
       Height          =   375
-      Left            =   1560
+      Left            =   1800
       TabIndex        =   3
       Text            =   "CmbMunsell2"
       Top             =   1080
@@ -108,7 +108,7 @@ Begin VB.Form FMunsell
    End
    Begin VB.ComboBox CmbMunsell1 
       Height          =   375
-      Left            =   1560
+      Left            =   1800
       TabIndex        =   1
       Text            =   "CmbMunsell1"
       Top             =   600
@@ -116,7 +116,7 @@ Begin VB.Form FMunsell
    End
    Begin VB.ComboBox CmbMunsell 
       Height          =   375
-      Left            =   1560
+      Left            =   1800
       TabIndex        =   0
       Text            =   "CmbMunsell"
       Top             =   120
@@ -126,7 +126,7 @@ Begin VB.Form FMunsell
       Alignment       =   2  'Zentriert
       Caption         =   "255, 255, 255"
       Height          =   255
-      Left            =   6240
+      Left            =   6480
       TabIndex        =   22
       Top             =   1560
       Width           =   1770
@@ -135,7 +135,7 @@ Begin VB.Form FMunsell
       Alignment       =   2  'Zentriert
       Caption         =   "255, 255, 255"
       Height          =   255
-      Left            =   6240
+      Left            =   6480
       TabIndex        =   21
       Top             =   960
       Width           =   1770
@@ -144,7 +144,7 @@ Begin VB.Form FMunsell
       Alignment       =   2  'Zentriert
       Caption         =   "-- | --"
       Height          =   255
-      Left            =   6240
+      Left            =   6480
       TabIndex        =   20
       Top             =   720
       Width           =   1695
@@ -153,7 +153,7 @@ Begin VB.Form FMunsell
       AutoSize        =   -1  'True
       Caption         =   "Nearest Color:"
       Height          =   255
-      Left            =   3840
+      Left            =   4080
       TabIndex        =   18
       Top             =   720
       Width           =   1275
@@ -162,25 +162,25 @@ Begin VB.Form FMunsell
       Alignment       =   2  'Zentriert
       Caption         =   "255, 255, 255"
       Height          =   255
-      Left            =   6240
+      Left            =   6480
       TabIndex        =   17
       Top             =   240
       Width           =   1770
    End
    Begin VB.Label LblInputColor 
       AutoSize        =   -1  'True
-      Caption         =   "Input Color:"
+      Caption         =   "Previous Color:"
       Height          =   255
-      Left            =   3840
+      Left            =   4080
       TabIndex        =   16
       Top             =   120
-      Width           =   1020
+      Width           =   1320
    End
    Begin VB.Label LblColorSelectedKey 
       Alignment       =   2  'Zentriert
       Caption         =   "-- | --"
       Height          =   255
-      Left            =   6240
+      Left            =   6480
       TabIndex        =   11
       Top             =   1320
       Width           =   1695
@@ -192,13 +192,13 @@ Begin VB.Form FMunsell
       Left            =   120
       TabIndex        =   9
       Top             =   1560
-      Width           =   1290
+      Width           =   1530
    End
    Begin VB.Label LblSelectedColor 
       AutoSize        =   -1  'True
       Caption         =   "Selected Color:"
       Height          =   255
-      Left            =   3840
+      Left            =   4080
       TabIndex        =   8
       Top             =   1320
       Width           =   1320
@@ -237,7 +237,10 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Private m_ChromaValue As HueValue
+Private m_ChromaValue     As MMunsell.HueValueCV
+Private m_ChromaHuePrefix As MMunsell.HueValueCHP
+Private m_ChromaHue       As MMunsell.ValValueCH
+
 Private m_bUpdateView As Boolean
 Private m_bSelected   As Boolean
 
@@ -249,12 +252,10 @@ Private m_Result As VbMsgBoxResult
 'Private m_ColorNearest  As TMunsellColor
 Private m_ColorSelected As TMunsellColor
 
+Private m_LastSelIndex As Long
+
 Private Sub Form_Load()
-    CmbMunsell.Clear
-    CmbMunsell.AddItem "Chroma-Value"
-    CmbMunsell.AddItem "Chroma-HuePrefix"
-    CmbMunsell.AddItem "Chroma-Hue"
-    CmbMunsell.ListIndex = 0
+    InitFillCmbMunsell
     m_bUpdateView = True
     UpdateView
 End Sub
@@ -278,11 +279,19 @@ Private Sub Form_Resize()
     If W > 0 And H > 0 Then BtnCancel.Move L, t, W, H
 End Sub
 
+Private Sub InitFillCmbMunsell()
+    CmbMunsell.Clear
+    CmbMunsell.AddItem "Chroma-Value"
+    CmbMunsell.AddItem "Chroma-HuePrefix"
+    CmbMunsell.AddItem "Chroma-Hue"
+    CmbMunsell.ListIndex = 0
+End Sub
+
 Public Function ShowDialog(Owner As Form, Color_inout As Long) As VbMsgBoxResult
     View_Init Color_inout 'only once
     Me.Show vbModal, Owner
     ShowDialog = m_Result
-    Color_inout = RGBA_ToLngColor(m_ColorSelected.RGBA).Value
+    Color_inout = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
 End Function
 
 'Friend Property Get ColorInput() As Long
@@ -317,14 +326,29 @@ Private Sub CmbMunsell_Click()
     Label2.Caption = s2 & ":"
     Label3.Caption = s1 & "/" & s2 & ":"
     
-    If i = 0 Or i = 1 Then HueValue_ToCmb CmbMunsell2
-    If i = 1 Or i = 2 Then ValValue_ToCmb CmbMunsell1: ValValue_ToCmb CmbMunsell2
-    If i = 2 Or i = 0 Then EHuePrefix_ToCmb CmbMunsell1
-    If i = 0 Then EHuePrefixHueValue_ToCmb CmbMunsell3
+    Select Case i
+    Case 0: MMunsell.EHuePrefix_ToCmb CmbMunsell1
+            MMunsell.HueValue_ToCmb CmbMunsell2
+            MMunsell.EHuePrefixHueValue_ToCmb CmbMunsell3
+            
+    Case 1: MMunsell.ValValue_ToCmb CmbMunsell1
+            MMunsell.HueValue_ToCmb CmbMunsell2
+            MMunsell.ValValueHueValue_ToCmb CmbMunsell3
+            
+    Case 2: MMunsell.EHuePrefix_ToCmb CmbMunsell1
+            MMunsell.ValValue_ToCmb CmbMunsell2
+            MMunsell.EHuePrefixValValue_ToCmb CmbMunsell3
+            
+    End Select
+    'If i = 0 Or i = 1 Then MMunsell.HueValue_ToCmb CmbMunsell2
+    'If i = 1 Or i = 2 Then MMunsell.ValValue_ToCmb CmbMunsell1: MMunsell.HueValue_ToCmb CmbMunsell2 ': CmbMunsell3.Clear: CmbMunsell3.Enabled = False
+    'If i = 2 Or i = 0 Then MMunsell.EHuePrefix_ToCmb CmbMunsell1: MMunsell.ValValue_ToCmb CmbMunsell2
     
+    'If i = 0 Then MMunsell.EHuePrefixHueValue_ToCmb CmbMunsell3 ': CmbMunsell3.Enabled = True
+    'If i = 1 Then MMunsell.ValValueHueValue_ToCmb CmbMunsell3
+    'If i = 2 Then MMunsell.EHuePrefixValValue_ToCmb CmbMunsell3
     CmbMunsell1.ListIndex = 0
     CmbMunsell2.ListIndex = 0
-    
     UpdateView
 End Sub
 
@@ -338,53 +362,125 @@ End Sub
 
 Private Sub CmbMunsell3_Click()
     Dim i As Long: i = CmbMunsell3.ListIndex
+    m_LastSelIndex = i
+    
     Dim s As String: s = CmbMunsell3.List(i) 'CmbMunsell3.SelText
     Dim sa() As String: sa = Split(s, " - ")
-    Dim e As EHuePrefix
-    m_bUpdateView = False
-    If EHuePrefixName_TryParse(sa(0), e) Then
-        i = e
-        i = i - 1
-        If CmbMunsell1.ListIndex <> i Then
-            CmbMunsell1.ListIndex = i
-        End If
-    End If
+    Dim v As Byte 'ValValue
     Dim b As Byte
-    If HueValue_TryParse(sa(1), b) Then
-        i = b
-        i = i - 1
-        If CmbMunsell2.ListIndex <> i Then
-            CmbMunsell2.ListIndex = i
+    Dim E As EHuePrefix
+    
+    m_bUpdateView = False
+    Select Case CmbMunsell.ListIndex
+    Case 0
+        If MMunsell.EHuePrefixName_TryParse(sa(0), E) Then
+            i = E
+            i = i - 1
+            If CmbMunsell1.ListIndex <> i Then
+                CmbMunsell1.ListIndex = i
+            End If
         End If
-    End If
+        If MMunsell.HueValue_TryParse(sa(1), b) Then
+            i = b
+            i = i - 1
+            If CmbMunsell2.ListIndex <> i Then
+                CmbMunsell2.ListIndex = i
+            End If
+        End If
+    Case 1
+        If MMunsell.ValValue_TryParse(sa(0), v) Then
+            i = v
+            i = i - 1
+            If CmbMunsell1.ListIndex <> i Then
+                CmbMunsell1.ListIndex = i
+            End If
+        End If
+        If MMunsell.HueValue_TryParse(sa(1), b) Then
+            i = b
+            i = i - 1
+            If CmbMunsell2.ListIndex <> i Then
+                CmbMunsell2.ListIndex = i
+            End If
+        End If
+    Case 2
+        If MMunsell.EHuePrefixName_TryParse(sa(0), E) Then
+            i = E
+            i = i - 1
+            If CmbMunsell1.ListIndex <> i Then
+                CmbMunsell1.ListIndex = i
+            End If
+        End If
+        If MMunsell.ValValue_TryParse(sa(1), v) Then
+            i = v
+            i = i - 1
+            If CmbMunsell2.ListIndex <> i Then
+                CmbMunsell2.ListIndex = i
+            End If
+        End If
+    End Select
+
     m_bUpdateView = True
     UpdateView
 End Sub
 
 Private Sub CmbMunsell3_KeyDown(KeyCode As Integer, Shift As Integer)
+    'm_bUpdateView = False
+    'Dim NewSelIndex As Long
     Select Case KeyCode
     Case KeyCodeConstants.vbKeyDown
-        If CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 Then
-            CmbMunsell3.ListIndex = 0
+        If m_LastSelIndex = CmbMunsell3.ListCount - 1 Then
+            'NewSelIndex = 0
+            CmbMunsell3.ListIndex = 0 'NewSelIndex
         End If
+        'If CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 Then
+        '    CmbMunsell3.ListIndex = 0
+        'End If
     Case KeyCodeConstants.vbKeyUp
-        If CmbMunsell3.ListIndex = 0 Then
-            CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1
+        If m_LastSelIndex = 0 Then
+            'NewSelIndex = CmbMunsell3.ListCount - 1
+            CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 'NewSelIndex
         End If
+        'If CmbMunsell3.ListIndex = 0 Then
+        '    CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1
+        'End If
     End Select
+    'm_bUpdateView = True
+    'UpdateView
 End Sub
 
-Function GetHuePrefix() As EHuePrefix
+Function GetHuePrefixCV() As EHuePrefix
     Dim i As Long: i = CmbMunsell1.ListIndex
     If i < 0 Then i = 0
-    GetHuePrefix = i + 1
+    GetHuePrefixCV = i + 1
 End Function
-
-Function GetHueValue() As Byte
+Function GetHueValueCV() As Byte
     Dim i As Long: i = CmbMunsell2.ListIndex
     If i < 0 Then i = 0
-    GetHueValue = i + 1
+    GetHueValueCV = i + 1
 End Function
+
+Function GetValValueCHP() As Byte
+    Dim i As Long: i = CmbMunsell1.ListIndex
+    If i < 0 Then i = 0
+    GetValValueCHP = i + 1
+End Function
+Function GetHueValueCHP() As Byte
+    Dim i As Long: i = CmbMunsell2.ListIndex
+    If i < 0 Then i = 0
+    GetHueValueCHP = i + 1
+End Function
+
+Function GetHuePrefixCH() As EHuePrefix
+    Dim i As Long: i = CmbMunsell1.ListIndex
+    If i < 0 Then i = 0
+    GetHuePrefixCH = i + 1
+End Function
+Function GetValValueCH() As Byte
+    Dim i As Long: i = CmbMunsell2.ListIndex
+    If i < 0 Then i = 0
+    GetValValueCH = i + 1
+End Function
+
 
 Sub View_Init(ByVal aColor As Long)
     'm_ColorInput = Value
@@ -403,17 +499,32 @@ End Sub
 
 Sub UpdateView()
     If Not m_bUpdateView Then Exit Sub
-    Dim HuePrefix As EHuePrefix: HuePrefix = GetHuePrefix
-    Dim HueValue  As Byte:        HueValue = GetHueValue
-    m_ChromaValue = MMunsell.MunsellColors_ChromaValue(HuePrefix, HueValue)
-    'PBSelColor.BackColor = MColor.RGBA_ToLngColor(m_ChromaValue.ValValues(3).Chromas(3).RGBA).Value
-    ChromaValue_Draw
+    Dim HuePrefix As EHuePrefix
+    Dim HueValue  As Byte
+    Dim ValValue  As Byte
+    Select Case CmbMunsell.ListIndex
+    Case 0
+        HuePrefix = GetHuePrefixCV
+        HueValue = GetHueValueCV
+        m_ChromaValue = MMunsell.MunsellColors_ChromaValue(HuePrefix, HueValue)
+        ChromaValue_Draw
+    Case 1
+        ValValue = GetValValueCHP
+        HueValue = GetHueValueCHP
+        m_ChromaHuePrefix = MMunsell.MunsellColors_ChromaHuePrefix(ValValue, HueValue)
+        ChromaHuePrefix_Draw
+    Case 2
+        HuePrefix = GetHuePrefixCH
+        ValValue = GetValValueCH
+        m_ChromaHue = MMunsell.MunsellColors_ChromaHue(HuePrefix, ValValue)
+        ChromaHue_Draw
+    End Select
 End Sub
 
 Sub ChromaValue_Draw()
-    Dim i As Long, ui As Long: ui = MMunsell.Count_ValValue ' UBound(m_ChromaValue.ValValues)
-    Dim j As Long, uj As Long: uj = Count_ChromaMax
-    Dim x As Single: m_Wb = PBColors.ScaleWidth / ui
+    Dim i As Long, ui As Long: ui = MMunsell.Count_ValValue
+    Dim j As Long, uj As Long: uj = MMunsell.Count_ChromaMax
+    Dim X As Single: m_Wb = PBColors.ScaleWidth / ui
     Dim Y As Single: m_Hb = PBColors.ScaleHeight / uj
     Dim c As Long
     PBColors.Cls
@@ -421,10 +532,48 @@ Sub ChromaValue_Draw()
         uj = UBound(m_ChromaValue.ValValues(i).Chromas)
         For j = 1 To uj
             c = MColor.RGBA_ToLngColor(m_ChromaValue.ValValues(i).Chromas(j).RGBA).Value
-            PBColors.Line (x, Y)-(x + m_Wb, Y + m_Hb), c, BF
+            PBColors.Line (X, Y)-(X + m_Wb, Y + m_Hb), c, BF
             Y = Y + m_Hb
         Next
-        x = x + m_Wb
+        X = X + m_Wb
+        Y = 0
+    Next
+End Sub
+
+Sub ChromaHuePrefix_Draw()
+    Dim i As Long, ui As Long: ui = MMunsell.Count_HuePrefix
+    Dim j As Long, uj As Long: uj = MMunsell.Count_ChromaMax
+    Dim X As Single: m_Wb = PBColors.ScaleWidth / ui
+    Dim Y As Single: m_Hb = PBColors.ScaleHeight / uj
+    Dim c As Long
+    PBColors.Cls
+    For i = 1 To ui
+        uj = UBound(m_ChromaHuePrefix.HuePrefixes(i).Chromas)
+        For j = 1 To uj
+            c = MColor.RGBA_ToLngColor(m_ChromaHuePrefix.HuePrefixes(i).Chromas(j).RGBA).Value
+            PBColors.Line (X, Y)-(X + m_Wb, Y + m_Hb), c, BF
+            Y = Y + m_Hb
+        Next
+        X = X + m_Wb
+        Y = 0
+    Next
+End Sub
+
+Sub ChromaHue_Draw()
+    Dim i As Long, ui As Long: ui = MMunsell.Count_HueValue
+    Dim j As Long, uj As Long: uj = MMunsell.Count_ChromaMax
+    Dim X As Single: m_Wb = PBColors.ScaleWidth / ui
+    Dim Y As Single: m_Hb = PBColors.ScaleHeight / uj
+    Dim c As Long
+    PBColors.Cls
+    For i = 1 To ui
+        uj = UBound(m_ChromaHue.HueValues(i).Chromas)
+        For j = 1 To uj
+            c = MColor.RGBA_ToLngColor(m_ChromaHue.HueValues(i).Chromas(j).RGBA).Value
+            PBColors.Line (X, Y)-(X + m_Wb, Y + m_Hb), c, BF
+            Y = Y + m_Hb
+        Next
+        X = X + m_Wb
         Y = 0
     Next
 End Sub
@@ -437,10 +586,10 @@ Private Sub PBColors_DblClick()
     m_bSelected = True
 End Sub
 
-Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, x As Single, Y As Single)
+Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If m_bSelected Then Exit Sub
-    Dim i As Long: i = Floor(x / m_Wb) + 1
-    Dim j As Long: j = Floor(Y / m_Hb) + 1
+    Dim i As Long: i = MMath.Floor(X / m_Wb) + 1
+    Dim j As Long: j = MMath.Floor(Y / m_Hb) + 1
     If i <= UBound(m_ChromaValue.ValValues) Then
         If j <= UBound(m_ChromaValue.ValValues(i).Chromas) Then
             m_ColorSelected = m_ChromaValue.ValValues(i).Chromas(j)

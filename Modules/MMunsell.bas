@@ -19,7 +19,7 @@ Public Enum EHuePrefix
     Hue_P  '=9
     Hue_RP '=10
 End Enum
-
+'no need for a
 Public Type TMunsellColor
     HuePrefix As Byte ' 1 ' As EHuePrefix
     HueValue  As Byte ' 1 ' Hue Values are 2.5, 5.0, 7.5, 10.0 = 1 (*2,5), 2 (*2,5), 3 (*2,5), 4 (*2,5)
@@ -28,65 +28,77 @@ Public Type TMunsellColor
     RGBA      As RGBA ' 4
 End Type          'Sum: 8
 Private MunsellColorZero  As TMunsellColor
-Private m_MunsellColors() As TMunsellColor
+Private m_MunsellColors() As TMunsellColor 'in file sorted to Chroma-Value
 
-'Private Type Chroma
-
-'
-'nö Type Chroma sollte wohl besser TMunsellColor sein
-'
-
-    'Count     As Long
-'    RGBA    As RGBA
-'End Type
-Public Type ValValue
-    'Count     As Long
+'Chroma-Value-Types:
+Public Type ValValueCV
     Chromas() As TMunsellColor 'Chroma
 End Type
-Public Type HueValue
-    'Count         As Long
-    ValValues()   As ValValue
+Public Type HueValueCV
+    ValValues()   As ValValueCV
 End Type
-Public Type HuePrefix
-    'Count         As Long
-    HueValues() As HueValue
+Public Type HuePrefixCV
+    HueValues() As HueValueCV
 End Type
-Private m_HuePrefixes() As HuePrefix
+Private m_HuePrefixesCV() As HuePrefixCV
 
-Public Sub FilterChromaValues()
-    Dim i As Long, j As Long, K As Long, L As Long
-    ReDim m_HuePrefixes(1 To Count_HuePrefix)
+'Chroma-HuePrefrix-Types:
+Public Type HuePrefixCHP
+    Chromas() As TMunsellColor
+End Type
+Public Type HueValueCHP
+    HuePrefixes() As HuePrefixCHP
+End Type
+Public Type ValValueCHP
+    HueValues() As HueValueCHP
+End Type
+Private m_ValValuesCHP() As ValValueCHP
+
+'Chroma-Hue-Types:
+Public Type HueValueCH
+    Chromas() As TMunsellColor
+End Type
+Public Type ValValueCH
+    HueValues() As HueValueCH
+End Type
+Public Type HuePrefixCH
+    ValValues() As ValValueCH
+End Type
+Private m_HuePrefixesCH() As HuePrefixCH
+
+Private Sub Filter()
+    FilterChromaValues
+    FilterChromaHuePrefixes
+    FilterChromaHues
+End Sub
+
+Private Sub FilterChromaValues()
+    Dim i As Long, j As Long, k As Long, L As Long
+    ReDim m_HuePrefixesCV(1 To Count_HuePrefix)
     For i = 1 To Count_HuePrefix
-        ReDim m_HuePrefixes(i).HueValues(1 To Count_HueValue)
+        ReDim m_HuePrefixesCV(i).HueValues(1 To Count_HueValue)
         For j = 1 To Count_HueValue
-            ReDim m_HuePrefixes(i).HueValues(j).ValValues(1 To Count_ValValue)
-            For K = 1 To Count_ValValue
-                ReDim m_HuePrefixes(i).HueValues(j).ValValues(K).Chromas(1 To Count_ChromaMax)
+            ReDim m_HuePrefixesCV(i).HueValues(j).ValValues(1 To Count_ValValue)
+            For k = 1 To Count_ValValue
+                ReDim m_HuePrefixesCV(i).HueValues(j).ValValues(k).Chromas(1 To Count_ChromaMax)
             Next
         Next
     Next
-    i = 1: j = 1: K = 1: L = 1
+    i = 1: j = 1: k = 1: L = 1
     Dim c As Long, u As Long: u = UBound(m_MunsellColors)
     Dim mc0 As TMunsellColor, mc1 As TMunsellColor
-    'Dim cr_old As Long
-    'Dim cr As Chroma ', va As ValValue, hu As HueValue, hp As HuePrefixe
-    'Dim v As ValValue
     For c = 0 To u - 1
         mc0 = m_MunsellColors(c)
         mc1 = m_MunsellColors(c + 1)
-        m_HuePrefixes(i).HueValues(j).ValValues(K).Chromas(L) = mc0
+        m_HuePrefixesCV(i).HueValues(j).ValValues(k).Chromas(L) = mc0
         If mc1.Chroma = 2 Then
-            'Debug.Print "l= " & L
-            ReDim Preserve m_HuePrefixes(i).HueValues(j).ValValues(K).Chromas(1 To L)
+            ReDim Preserve m_HuePrefixesCV(i).HueValues(j).ValValues(k).Chromas(1 To L)
             L = 1
             If mc1.ValValue = 1 Then
-                'Debug.Print "k= " & K
-                K = 1
+                k = 1
                 If mc1.HueValue = 1 Then
-                    'Debug.Print "j= " & j
                     j = 1
                     If mc1.HuePrefix = 1 Then
-                        'Debug.Print "i= " & i
                         i = 1
                     Else
                         i = i + 1
@@ -95,14 +107,64 @@ Public Sub FilterChromaValues()
                     j = j + 1
                 End If
             Else
-                K = K + 1
+                k = k + 1
             End If
         Else
             L = L + 1
         End If
     Next
-    m_HuePrefixes(i).HueValues(j).ValValues(K).Chromas(L) = mc1
-    ReDim Preserve m_HuePrefixes(i).HueValues(j).ValValues(K).Chromas(1 To L)
+    m_HuePrefixesCV(i).HueValues(j).ValValues(k).Chromas(L) = mc1
+    ReDim Preserve m_HuePrefixesCV(i).HueValues(j).ValValues(k).Chromas(1 To L)
+End Sub
+
+Private Sub FilterChromaHuePrefixes()
+    Dim i As Long, j As Long, k As Long, L As Long
+    ReDim m_ValValuesCHP(1 To Count_ValValue)
+    For i = 1 To Count_ValValue
+        ReDim m_ValValuesCHP(i).HueValues(1 To Count_HueValue)
+        For j = 1 To Count_HueValue
+            ReDim m_ValValuesCHP(i).HueValues(j).HuePrefixes(1 To Count_HuePrefix)
+            For k = 1 To Count_HuePrefix
+                ReDim m_ValValuesCHP(i).HueValues(j).HuePrefixes(k).Chromas(1 To Count_ChromaMax)
+            Next
+        Next
+    Next
+    Dim ucm As Long
+    For i = 1 To Count_ValValue
+        For j = 1 To Count_HueValue
+            For k = 1 To Count_HuePrefix
+                ucm = UBound(m_HuePrefixesCV(k).HueValues(j).ValValues(i).Chromas)
+                For L = 1 To ucm
+                    m_ValValuesCHP(i).HueValues(j).HuePrefixes(k).Chromas(L) = m_HuePrefixesCV(k).HueValues(j).ValValues(i).Chromas(L)
+                Next
+            Next
+        Next
+    Next
+End Sub
+
+Private Sub FilterChromaHues()
+    Dim i As Long, j As Long, k As Long, L As Long
+    ReDim m_HuePrefixesCH(1 To Count_HuePrefix)
+    For i = 1 To Count_HuePrefix
+        ReDim m_HuePrefixesCH(i).ValValues(1 To Count_ValValue)
+        For j = 1 To Count_ValValue
+            ReDim m_HuePrefixesCH(i).ValValues(j).HueValues(1 To Count_HueValue)
+            For k = 1 To Count_HueValue
+                ReDim m_HuePrefixesCH(i).ValValues(j).HueValues(k).Chromas(1 To Count_ChromaMax)
+            Next
+        Next
+    Next
+    Dim ucm As Long
+    For i = 1 To Count_HuePrefix
+        For j = 1 To Count_ValValue
+            For k = 1 To Count_HueValue
+                ucm = UBound(m_HuePrefixesCV(i).HueValues(k).ValValues(j).Chromas)
+                For L = 1 To ucm
+                    m_HuePrefixesCH(i).ValValues(j).HueValues(k).Chromas(L) = m_HuePrefixesCV(i).HueValues(k).ValValues(j).Chromas(L)
+                Next
+            Next
+        Next
+    Next
 End Sub
 
 Public Sub Init()
@@ -119,6 +181,7 @@ Public Sub Init()
             If Not TryWriteToPFN(ba, TmpPFN) Then
                 'could not write file, data
                 If MMunsell.ReadFromMemoryStream(ba) Then
+                    Filter
                     Exit Sub
                 Else
                     MsgBox "Could not read file, could not write file, could not read from resource, maybe try again later."
@@ -133,6 +196,7 @@ Public Sub Init()
     Else
         PFN.ReadAllBuffer ba
         If MMunsell.ReadFromMemoryStream(ba) Then
+            Filter
             Exit Sub
         Else
             MsgBox "Could not read file, could not write file, could not read from resource, maybe try again later!"
@@ -144,7 +208,6 @@ Public Sub Init()
     'ReadFromFile PFN.Value ' App.Path & "\Munsell.bin"
     
     'Debug.Print LBound(m_MunsellColors) & " - " & UBound(m_MunsellColors)
-        
 End Sub
 
 Private Function TryWriteToPFN(ba() As Byte, PFN As PathFileName) As Boolean
@@ -155,9 +218,10 @@ Try: On Error GoTo Catch
 Catch:
 End Function
 
-Public Property Get EHuePrefix_Name(ByVal e As EHuePrefix) As String
+' v ' ############################## ' v '    EHuePrefix    ' v ' ############################## ' v '
+Public Property Get EHuePrefix_Name(ByVal E As EHuePrefix) As String
     Dim s As String
-    Select Case e
+    Select Case E
     Case EHuePrefix.Hue_R:  s = "Red"
     Case EHuePrefix.Hue_YR: s = "Yellow-Red"
     Case EHuePrefix.Hue_Y:  s = "Yellow"
@@ -205,7 +269,9 @@ Public Function EHuePrefix_ToStr(ByVal ehp As EHuePrefix) As String
     End Select
     EHuePrefix_ToStr = s
 End Function
+' ^ ' ############################## ' ^ '    EHuePrefix    ' ^ ' ############################## ' ^ '
 
+' v ' ############################## ' v '     HueValue     ' v ' ############################## ' v '
 Public Function HueValue_TryParse(ByVal s As String, hv_out As Byte) As Boolean
     HueValue_TryParse = True
     Select Case s
@@ -227,10 +293,28 @@ Public Function HueValue_ToStr(ByVal hv As Byte) As String
     End Select
     HueValue_ToStr = s 'Trim(Str(hv * 2.5))
 End Function
+' ^ ' ############################## ' ^ '     HueValue     ' ^ ' ############################## ' ^ '
+
+' v ' ############################## ' v '     ValValue     ' v ' ############################## ' v '
+Public Function ValValue_TryParse(ByVal s As String, vv_out As Byte) As Boolean
+    ValValue_TryParse = MString.Byte_TryParse(s, vv_out)
+    If ValValue_TryParse Then ValValue_TryParse = 1 <= vv_out And vv_out <= 9
+End Function
+
+' ^ ' ############################## ' ^ '     ValValue     ' ^ ' ############################## ' ^ '
 
 Public Sub EHuePrefix_ToCmb(aCmb As ComboBox)
     Dim i As Long:   aCmb.Clear
     For i = 1 To 10: aCmb.AddItem EHuePrefix_Name(i): Next
+End Sub
+Public Sub HueValue_ToCmb(aCmb As ComboBox)
+    Dim i As Long:  aCmb.Clear
+    For i = 1 To 4: aCmb.AddItem HueValue_ToStr(i): Next
+End Sub
+
+Public Sub ValValue_ToCmb(aCmb As ComboBox)
+    Dim i As Long:  aCmb.Clear
+    For i = 1 To 9: aCmb.AddItem CStr(i): Next
 End Sub
 
 Public Sub EHuePrefixHueValue_ToCmb(aCmb As ComboBox)
@@ -244,16 +328,27 @@ Public Sub EHuePrefixHueValue_ToCmb(aCmb As ComboBox)
     Next
 End Sub
 
-Public Sub HueValue_ToCmb(aCmb As ComboBox)
-    Dim i As Long:  aCmb.Clear
-    For i = 1 To 4: aCmb.AddItem HueValue_ToStr(i): Next
+Public Sub ValValueHueValue_ToCmb(aCmb As ComboBox)
+    Dim i As Long, j As Long:   aCmb.Clear
+    Dim s As String
+    For i = 1 To Count_ValValue
+        s = i 'ValValue_Name(i)
+        For j = 1 To Count_HueValue
+            aCmb.AddItem s & " - " & HueValue_ToStr(j)
+        Next
+    Next
 End Sub
 
-Public Sub ValValue_ToCmb(aCmb As ComboBox)
-    Dim i As Long:  aCmb.Clear
-    For i = 1 To 9: aCmb.AddItem CStr(i): Next
+Public Sub EHuePrefixValValue_ToCmb(aCmb As ComboBox)
+    Dim i As Long, j As Long:   aCmb.Clear
+    Dim s As String
+    For i = 1 To Count_HuePrefix
+        s = EHuePrefix_Name(i)
+        For j = 1 To Count_ValValue
+            aCmb.AddItem s & " - " & CStr(j) 'ValValue_ToStr(j)
+        Next
+    Next
 End Sub
-
 'Public Sub Chroma_ToCmb(aCmb As ComboBox)
 '    Dim i As Long:          aCmb.Clear
 '    For i = 2 To 38 Step 2: aCmb.AddItem CStr(i): Next
@@ -281,11 +376,15 @@ End Sub
 '    RGBA_ToStr = RGBA.R & "," & RGBA.G & "," & RGBA.B
 'End Function
 
-
-Public Property Get MunsellColors_ChromaValue(ByVal HuePrefix As EHuePrefix, ByVal Hue As Byte) As HueValue ' TMunsellColor()
-    MunsellColors_ChromaValue = m_HuePrefixes(HuePrefix).HueValues(Hue)
+Public Property Get MunsellColors_ChromaValue(ByVal HuePrefix As EHuePrefix, ByVal HueValue As Byte) As HueValueCV ' TMunsellColor()
+    MunsellColors_ChromaValue = m_HuePrefixesCV(HuePrefix).HueValues(HueValue)
 End Property
-
+Public Property Get MunsellColors_ChromaHuePrefix(ByVal ValValue As Byte, ByVal HueValue As Byte) As HueValueCHP 'HuePrefixCHP ' TMunsellColor()
+    MunsellColors_ChromaHuePrefix = m_ValValuesCHP(ValValue).HueValues(HueValue)
+End Property
+Public Property Get MunsellColors_ChromaHue(ByVal HuePrefix As EHuePrefix, ByVal ValValue As Byte) As ValValueCH
+    MunsellColors_ChromaHue = m_HuePrefixesCH(HuePrefix).ValValues(ValValue)
+End Property
 
 Public Property Get TMunsellColor_Key(this As TMunsellColor) As String
     'e.g. 5.0BG-5-22
