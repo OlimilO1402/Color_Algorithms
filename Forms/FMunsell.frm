@@ -178,12 +178,13 @@ Begin VB.Form FMunsell
    End
    Begin VB.Label LblColorSelectedKey 
       Alignment       =   2  'Zentriert
+      AutoSize        =   -1  'True
       Caption         =   "-- | --"
       Height          =   255
-      Left            =   6480
+      Left            =   7080
       TabIndex        =   11
       Top             =   1320
-      Width           =   1695
+      Width           =   495
    End
    Begin VB.Label Label3 
       AutoSize        =   -1  'True
@@ -424,28 +425,22 @@ Private Sub CmbMunsell3_Click()
 End Sub
 
 Private Sub CmbMunsell3_KeyDown(KeyCode As Integer, Shift As Integer)
-    'm_bUpdateView = False
-    'Dim NewSelIndex As Long
     Select Case KeyCode
     Case KeyCodeConstants.vbKeyDown
-        If m_LastSelIndex = CmbMunsell3.ListCount - 1 Then
-            'NewSelIndex = 0
-            CmbMunsell3.ListIndex = 0 'NewSelIndex
+        If CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 Then
+            CmbMunsell3.ListIndex = 0
+        Else
+            CmbMunsell3.ListIndex = CmbMunsell3.ListIndex + 1
         End If
-        'If CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 Then
-        '    CmbMunsell3.ListIndex = 0
-        'End If
+        'KeyCode = 0
     Case KeyCodeConstants.vbKeyUp
         If m_LastSelIndex = 0 Then
-            'NewSelIndex = CmbMunsell3.ListCount - 1
-            CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 'NewSelIndex
+            CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1
+        Else
+            CmbMunsell3.ListIndex = CmbMunsell3.ListIndex - 1
         End If
-        'If CmbMunsell3.ListIndex = 0 Then
-        '    CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1
-        'End If
     End Select
-    'm_bUpdateView = True
-    'UpdateView
+    KeyCode = 0
 End Sub
 
 Function GetHuePrefixCV() As EHuePrefix
@@ -590,17 +585,50 @@ Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, X As Single,
     If m_bSelected Then Exit Sub
     Dim i As Long: i = MMath.Floor(X / m_Wb) + 1
     Dim j As Long: j = MMath.Floor(Y / m_Hb) + 1
-    If i <= UBound(m_ChromaValue.ValValues) Then
-        If j <= UBound(m_ChromaValue.ValValues(i).Chromas) Then
-            m_ColorSelected = m_ChromaValue.ValValues(i).Chromas(j)
-            LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected) & " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
-            PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
+    Select Case CmbMunsell.ListIndex
+    Case 0
+        If i <= UBound(m_ChromaValue.ValValues) Then
+            If j <= UBound(m_ChromaValue.ValValues(i).Chromas) Then
+                m_ColorSelected = m_ChromaValue.ValValues(i).Chromas(j)
+                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected) '
+                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
+                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
+                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
+            Else
+                LblColorSelectedKey.Caption = "--|--"
+            End If
         Else
             LblColorSelectedKey.Caption = "--|--"
         End If
-    Else
-        LblColorSelectedKey.Caption = "--|--"
-    End If
+    Case 1
+        If i <= UBound(m_ChromaHuePrefix.HuePrefixes) Then
+            If j <= UBound(m_ChromaHuePrefix.HuePrefixes(i).Chromas) Then
+                m_ColorSelected = m_ChromaHuePrefix.HuePrefixes(i).Chromas(j)
+                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected)
+                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
+                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
+                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
+            Else
+                LblColorSelectedKey.Caption = "--|--"
+            End If
+        Else
+            LblColorSelectedKey.Caption = "--|--"
+        End If
+    Case 2
+        If i <= UBound(m_ChromaHue.HueValues) Then
+            If j <= UBound(m_ChromaHue.HueValues(i).Chromas) Then
+                m_ColorSelected = m_ChromaHue.HueValues(i).Chromas(j)
+                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected)
+                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
+                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
+                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
+            Else
+                LblColorSelectedKey.Caption = "--|--"
+            End If
+        Else
+            LblColorSelectedKey.Caption = "--|--"
+        End If
+    End Select
 End Sub
 
 Private Sub BtnOK_Click()
