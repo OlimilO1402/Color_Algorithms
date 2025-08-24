@@ -1566,19 +1566,38 @@ Private Sub LblClosestKnownColor_DblClick()
     If Len(sc) = 0 Then Exit Sub
     Dim i As Long: i = X11KnownColor_IndexFromName(sc)
     CmbColorNames.ListIndex = i
-    'CmbColorNames.Text = sc
 End Sub
 
-Private Sub LblClosestRALColor_Click()
+Private Sub LblClosestRALColor_DblClick()
     Dim sc As String: sc = LblClosestRALColor.Caption
     If Len(sc) = 0 Then Exit Sub
     Dim i As Long: i = MRALColors.TNamedRALColor_IndexFromName(sc)
     CmbRALClassic.ListIndex = i
 End Sub
 
+Private Sub LblClosestMunsColor_DblClick()
+    Dim sc As String: sc = LblClosestMunsColor.Caption
+    If Len(sc) = 0 Then Exit Sub
+    Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ParseColorFromKey(sc)
+    Dim lc As LngColor: lc = MColor.RGBA_ToLngColor(mc.RGBA)
+    m_CMYK = MColor.LngColor_ToCMYK(lc)
+    UpdateView
+    'Dim i As Long: i = MMunsell.TNamedRALColor_IndexFromName(sc)
+    'CmbRALClassic.ListIndex = i
+End Sub
+'Private Sub BtnMunsell_Click()
+'    'FMunsell.Show
+'    Dim Color As Long: Color = PBColor.BackColor
+'    If FMunsell.ShowDialog(Me, Color) = vbCancel Then Exit Sub
+'    'PBColor.BackColor = Color
+'    Dim lc As LngColor: lc.Value = Color
+'    m_CMYK = LngColor_ToCMYK(lc)
+'    UpdateView
+'End Sub
+
 Private Sub TBLngColor_LostFocus()
     Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.Text)
-    m_CMYK = LngColor_ToCMYK(lc)
+    m_CMYK = MColor.LngColor_ToCMYK(lc)
     UpdateView
 End Sub
 
@@ -1588,22 +1607,6 @@ Private Sub Timer1_Timer()
     PBColor.BackColor = c
     m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
-    
-'    'get closest color from knowncolors list:
-'    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
-'    LblClosestKnownColor.Caption = nc.Name
-'    PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
-'
-'    'get closest color from RAL-colors list:
-'    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(c)
-'    LblClosestRALColor.Caption = "RAL_" & rc.RALNr & "_" & rc.Name
-'    PBClosestRALColor.BackColor = rc.RALCol
-'
-'    'get closest color from munsell-colors-list
-'    Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ClosestColorTo(c)
-'    LblClosestMunsColor.Caption = MMunsell.TMunsellColor_Key(mc)
-'    PBClosestMunsColor.BackColor = RGBA_ToLngColor(mc.RGBA).Value
-
 End Sub
 
 Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long

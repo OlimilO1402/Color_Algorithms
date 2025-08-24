@@ -238,18 +238,33 @@ End Property
 
 Public Function EHuePrefixName_TryParse(ByVal s As String, e_out As EHuePrefix) As Boolean
     EHuePrefixName_TryParse = True
-    Select Case s
-    Case "Red":          e_out = EHuePrefix.Hue_R
-    Case "Yellow-Red":   e_out = EHuePrefix.Hue_YR
-    Case "Yellow":       e_out = EHuePrefix.Hue_Y
-    Case "Green-Yellow": e_out = EHuePrefix.Hue_GY
-    Case "Green":        e_out = EHuePrefix.Hue_G
-    Case "Blue-Green":   e_out = EHuePrefix.Hue_BG
-    Case "Blue":         e_out = EHuePrefix.Hue_B
-    Case "Purple-Blue":  e_out = EHuePrefix.Hue_PB
-    Case "Purple":       e_out = EHuePrefix.Hue_P
-    Case "Red-Purple":   e_out = EHuePrefix.Hue_RP
-    Case Else: EHuePrefixName_TryParse = False
+    Select Case UCase(s)
+    Case "R", "RED":           e_out = EHuePrefix.Hue_R
+    Case "YR", "YELLOW-RED":   e_out = EHuePrefix.Hue_YR
+    Case "Y", "YELLOW":        e_out = EHuePrefix.Hue_Y
+    Case "GY", "GREEN-YELLOW": e_out = EHuePrefix.Hue_GY
+    Case "G", "GREEN":         e_out = EHuePrefix.Hue_G
+    Case "BG", "BLUE-GREEN":   e_out = EHuePrefix.Hue_BG
+    Case "B", "BLUE":          e_out = EHuePrefix.Hue_B
+    Case "PB", "PURPLE-BLUE":  e_out = EHuePrefix.Hue_PB
+    Case "P", "PURPLE":        e_out = EHuePrefix.Hue_P
+    Case "RP", "RED-PURPLE":   e_out = EHuePrefix.Hue_RP
+    Case Else
+        Dim i As Long, ci As String, c1 As String
+        For i = 1 To Len(s) '- 1
+            ci = Mid(s, i, 1)
+            If i < Len(s) Then c1 = Mid(s, i + 1, 1)
+            Select Case ci
+            Case "R": If c1 = "P" Then e_out = EHuePrefix.Hue_RP Else e_out = EHuePrefix.Hue_R
+            Case "Y": If c1 = "R" Then e_out = EHuePrefix.Hue_YR Else e_out = EHuePrefix.Hue_Y
+            Case "G": If c1 = "Y" Then e_out = EHuePrefix.Hue_GY Else e_out = EHuePrefix.Hue_G
+            Case "B": If c1 = "G" Then e_out = EHuePrefix.Hue_BG Else e_out = EHuePrefix.Hue_B
+            Case "P": If c1 = "B" Then e_out = EHuePrefix.Hue_PB Else e_out = EHuePrefix.Hue_P
+            Case Else
+                'go ahead until eofstr
+            End Select
+        Next
+        If e_out = 0 Then EHuePrefixName_TryParse = False
     End Select
 End Function
 
@@ -275,10 +290,10 @@ End Function
 Public Function HueValue_TryParse(ByVal s As String, hv_out As Byte) As Boolean
     HueValue_TryParse = True
     Select Case s
-    Case "2.5":  hv_out = 1
-    Case "5.0":  hv_out = 2
-    Case "7.5":  hv_out = 3
-    Case "10.0": hv_out = 4
+    Case "2", "2.", "2.5":         hv_out = 1
+    Case "5", "5.", "5.0":         hv_out = 2
+    Case "7", "7.", "7.5":         hv_out = 3
+    Case "1", "10", "10.", "10.0": hv_out = 4
     Case Else:   HueValue_TryParse = False
     End Select
 End Function
@@ -394,6 +409,45 @@ Public Property Get TMunsellColor_Key(this As TMunsellColor) As String
     ' 22 : Chroma
     TMunsellColor_Key = MMunsell.HueValue_ToStr(this.HueValue) & MMunsell.EHuePrefix_ToStr(this.HuePrefix) & "-" & CStr(this.ValValue) & "-" & CStr(this.Chroma)
 End Property
+
+Public Function MunsellColors_ParseColorFromKey(ByVal aKey As String) As TMunsellColor
+    'aKey could look like: "5.0BG-5-22"
+    Dim mc As TMunsellColor
+    Dim s  As String: s = Left(aKey, 1)
+    Dim hv As Byte: If Not HueValue_TryParse(s, hv) Then Exit Function
+    mc.HueValue = hv
+    Dim hp As EHuePrefix: If Not EHuePrefixName_TryParse(aKey, hp) Then Exit Function
+    mc.HuePrefix = hp
+    Dim sa() As String: sa = Split(aKey, "-")
+    s = sa(1)
+    If IsNumeric(s) Then
+        mc.ValValue = CByte(s)
+    End If
+    s = sa(2)
+    If IsNumeric(s) Then
+        mc.Chroma = CByte(s)
+    End If
+    MunsellColors_ParseColorFromKey = MunsellColors_GetItemByParams(mc)
+    'wow we've done it really complicated, code could be so much shorter by using just a hashed Collection
+End Function
+
+Public Function MunsellColors_GetItemByParams(mc As TMunsellColor) As TMunsellColor
+    Dim i As Long
+    For i = 0 To UBound(m_MunsellColors)
+        If TMunsellColor_EqualParams(m_MunsellColors(i), mc) Then
+            MunsellColors_GetItemByParams = m_MunsellColors(i)
+            Exit Function
+        End If
+    Next
+End Function
+
+Public Function TMunsellColor_EqualParams(mc1 As TMunsellColor, mc2 As TMunsellColor) As Boolean
+    If mc1.HuePrefix <> mc2.HuePrefix Then Exit Function
+    If mc1.HueValue <> mc2.HueValue Then Exit Function
+    If mc1.ValValue <> mc2.ValValue Then Exit Function
+    If mc1.Chroma <> mc2.Chroma Then Exit Function
+    TMunsellColor_EqualParams = True
+End Function
 
 Public Function MunsellColors_ClosestColorTo(ByVal aColor As Long) As TMunsellColor
     Dim i As Long, i_minEd As Long, edi As Double
