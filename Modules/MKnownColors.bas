@@ -224,14 +224,26 @@ Public Property Get NameFromColor(ByVal aColor As Long) As String
         End If
     Next
 End Property
-Public Sub X11KnownColor_ToCB(CB As ComboBox)
+
+Public Sub X11KnownColor_ToCB(cb As ComboBox)
     If m_Count = 0 Then X11KnownColor_Init
     Dim i As Long
-    CB.Clear
+    cb.Clear
     For i = LBound(m_Arr) To m_Count - 1
-        CB.AddItem m_Arr(i).Name
+        cb.AddItem m_Arr(i).Name
     Next
 End Sub
+
+Public Property Get X11KnownColor_IndexFromName(ByVal ColorName As String) As Long
+    Dim i As Long
+    For i = LBound(m_Arr) To UBound(m_Arr)
+        'If m_Arr(i).Name Like ColorName Then
+        If m_Arr(i).Name = ColorName Then
+            X11KnownColor_IndexFromName = i
+            Exit Property
+        End If
+    Next
+End Property
 'Public Function X11KnownColor_IsClose(toColor As Color) As Boolean
 '    Dim i As Long
 '    For i = LBound(m_Arr) To UBound(m_Arr)

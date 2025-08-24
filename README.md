@@ -9,10 +9,10 @@
 Project started around mid.2017.  
 This is a collection of different algorithms for encoding color-values.  
 RGB, RGB-float, CMYK, HSL, HSV, XYZ, CieLab, YCbCr and alpha channel for transparency.  
-all X11-knowncolors, all RAL-classic colors and Systemcolors are also included.  
+all X11-knowncolors, all RAL-classic-colors, all Systemcolors and all Munsell-colors are included.  
 How to select a color from your screen:
-* click the button on/off and move your mouse over the screen (don't click)  
+* click the button on/off and move your mouse across the screen (don't click)  
 * now pressing the enter-key on your keyboard activates the on/off-button again and gets the color selected.  
-* you get the nearest x11-known- or ral-color below the drop-down-boxes
+* you get the nearest x11-knowncolor, ral-color or munsell-color below the drop-down-boxes
 
 ![ColorAlgos Image](Resources/ColorAlgos.png "ColorAlgos Image")

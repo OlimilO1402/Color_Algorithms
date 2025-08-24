@@ -19,6 +19,16 @@ Begin VB.Form FMain
    ScaleHeight     =   3375
    ScaleWidth      =   18495
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.PictureBox PBClosestMunsColor 
+      Height          =   375
+      Left            =   10800
+      ScaleHeight     =   315
+      ScaleWidth      =   315
+      TabIndex        =   110
+      ToolTipText     =   "Cick and move your mouse over your screen to view the color below. It shows the nearest color, now hit Enter to switch off. "
+      Top             =   2880
+      Width           =   375
+   End
    Begin VB.CommandButton BtnMunsell 
       Caption         =   "Munsell"
       Height          =   375
@@ -30,10 +40,10 @@ Begin VB.Form FMain
    Begin VB.CommandButton BtnInfo 
       Caption         =   "Info"
       Height          =   375
-      Left            =   11400
+      Left            =   12120
       TabIndex        =   38
       Top             =   2520
-      Width           =   1575
+      Width           =   855
    End
    Begin VB.PictureBox PnlYCbCr 
       Appearance      =   0  '2D
@@ -310,7 +320,7 @@ Begin VB.Form FMain
    End
    Begin VB.PictureBox PBClosestRALColor 
       Height          =   375
-      Left            =   5520
+      Left            =   5400
       ScaleHeight     =   315
       ScaleWidth      =   315
       TabIndex        =   99
@@ -320,7 +330,7 @@ Begin VB.Form FMain
    End
    Begin VB.PictureBox PBClosestKnownColor 
       Height          =   375
-      Left            =   1920
+      Left            =   1800
       ScaleHeight     =   315
       ScaleWidth      =   315
       TabIndex        =   98
@@ -1404,7 +1414,7 @@ Begin VB.Form FMain
       EndProperty
       Height          =   1575
       Left            =   360
-      Picture         =   "FMain.frx":1782
+      Picture         =   "FMain.frx":0CCA
       ScaleHeight     =   101
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   101
@@ -1412,13 +1422,21 @@ Begin VB.Form FMain
       Top             =   120
       Width           =   1575
    End
+   Begin VB.Label LblClosestMunsColor 
+      Caption         =   " "
+      Height          =   375
+      Left            =   9600
+      TabIndex        =   111
+      Top             =   2880
+      Width           =   1215
+   End
    Begin VB.Label LblClosestRALColor 
       Caption         =   " "
       Height          =   375
       Left            =   2880
       TabIndex        =   97
       Top             =   2880
-      Width           =   2655
+      Width           =   2535
    End
    Begin VB.Label LblClosestKnownColor 
       Caption         =   " "
@@ -1426,7 +1444,7 @@ Begin VB.Form FMain
       Left            =   120
       TabIndex        =   96
       Top             =   2880
-      Width           =   1815
+      Width           =   1695
    End
    Begin VB.Label LblSysColors 
       AutoSize        =   -1  'True
@@ -1455,15 +1473,23 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type POINTAPI
-    x As Long
+    X As Long
     Y As Long
 End Type
 
 Private Declare Function SetParent Lib "user32" (ByVal hWndChild As LongPtr, ByVal hWndNewParent As LongPtr) As LongPtr
 Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 Private Declare Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
-Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal x As Long, ByVal Y As Long) As Long
+Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal X As Long, ByVal Y As Long) As Long
 Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+
+'HWND SetCapture([in] HWND hWnd);
+Private Declare Function SetCapture Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+'[in] hWnd Type: HWND 'A handle to the window in the current thread that is to capture the mouse.
+
+'BOOL ReleaseCapture();
+Private Declare Function ReleaseCapture Lib "user32" () As Long
+Private m_OldHwnd As LongPtr
 
 Private CurMousePos As POINTAPI
 
@@ -1476,6 +1502,11 @@ Private m_Max     As Single
 Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
 Private m_IsInit  As Boolean
+
+
+'Private Sub Form_Activate()
+'    Debug.Print "Activate "
+'End Sub
 
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
@@ -1496,6 +1527,17 @@ Private Sub Form_Load()
     SetToolTipText GetControls("TextBox")
     UpdateView
 End Sub
+
+'does not work
+'Private Sub Form_LostFocus()
+'    Me.Caption = "Form_LostFocus "
+'    If Timer1.Enabled Then BtnOnOff_Click
+'End Sub
+'does not work
+'Private Sub Form_Deactivate()
+'    Me.Caption = "Form_Deactivate "
+'    If Timer1.Enabled Then BtnOnOff_Click
+'End Sub
 
 Private Sub BtnMunsell_Click()
     'FMunsell.Show
@@ -1519,6 +1561,21 @@ Private Sub CmbCIELabLight_Click()
     UpdateView
 End Sub
 
+Private Sub LblClosestKnownColor_DblClick()
+    Dim sc As String: sc = LblClosestKnownColor.Caption
+    If Len(sc) = 0 Then Exit Sub
+    Dim i As Long: i = X11KnownColor_IndexFromName(sc)
+    CmbColorNames.ListIndex = i
+    'CmbColorNames.Text = sc
+End Sub
+
+Private Sub LblClosestRALColor_Click()
+    Dim sc As String: sc = LblClosestRALColor.Caption
+    If Len(sc) = 0 Then Exit Sub
+    Dim i As Long: i = MRALColors.TNamedRALColor_IndexFromName(sc)
+    CmbRALClassic.ListIndex = i
+End Sub
+
 Private Sub TBLngColor_LostFocus()
     Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.Text)
     m_CMYK = LngColor_ToCMYK(lc)
@@ -1527,24 +1584,30 @@ End Sub
 
 Private Sub Timer1_Timer()
     GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.x, CurMousePos.Y)
+    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
     PBColor.BackColor = c
     m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
     UpdateView
     
-    'get closest color from knowncolors list:
-    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
-    LblClosestKnownColor.Caption = nc.Name
-    PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
-    
-    'get closest color from RAL-colors list:
-    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(c)
-    LblClosestRALColor.Caption = "RAL_" & rc.RALNr & "_" & rc.Name
-    PBClosestRALColor.BackColor = rc.RALCol
+'    'get closest color from knowncolors list:
+'    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
+'    LblClosestKnownColor.Caption = nc.Name
+'    PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
+'
+'    'get closest color from RAL-colors list:
+'    Dim rc As TNamedRALColor: rc = MRALColors.RALClassic_ClosestColorTo(c)
+'    LblClosestRALColor.Caption = "RAL_" & rc.RALNr & "_" & rc.Name
+'    PBClosestRALColor.BackColor = rc.RALCol
+'
+'    'get closest color from munsell-colors-list
+'    Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ClosestColorTo(c)
+'    LblClosestMunsColor.Caption = MMunsell.TMunsellColor_Key(mc)
+'    PBClosestMunsColor.BackColor = RGBA_ToLngColor(mc.RGBA).Value
+
 End Sub
 
-Private Function ColorUnderMouse(ByVal x As Long, ByVal Y As Long) As Long
-    ColorUnderMouse = GetPixel(GetDC(0), x, Y)
+Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long
+    ColorUnderMouse = GetPixel(GetDC(0), X, Y)
 End Function
 
 Private Sub BtnOnOff_Click()
@@ -1552,7 +1615,7 @@ Private Sub BtnOnOff_Click()
     BtnOnOff.Caption = IIf(Timer1.Enabled, "on", "off")
 End Sub
 
-Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
+Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
     
     MColor.CMYK_ToView TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, m_CMYK
     
@@ -1591,77 +1654,93 @@ Sub UpdateView(Optional bNoUpdataColorName As Boolean = False)
     Dim YCbCr As YCbCr: YCbCr = RGBA_ToYCbCr(RGBA)
     MColor.YCbCr_ToView TBYCbCr_L, TBYCbCr_Cb, TBYCbCr_Cr, TBYCbCr_A, YCbCr
     
-    If Not bNoUpdataColorName Then
+    If Not bNoUpdateColorName Then
         Dim xn As String: xn = MKnownColors.NameFromColor(LCol.Value)
         If Len(xn) Then CmbColorNames.Text = xn
     End If
     
     m_APB.Alpha = 255 - alp
     
+    Dim c As Long: c = LCol.Value
+    'get closest color from knowncolors list:
+    Dim nc As TNamedColor: nc = MKnownColors.X11KnownColor_ClosestColorTo(c)
+    LblClosestKnownColor.Caption = nc.Name
+    PBClosestKnownColor.BackColor = (&HFFFFFF And nc.X11Col)
+    
+    'get closest color from RAL-colors list:
+    Dim rc As TNamedRALColor: rc = MRALColors.TNamedRALColor_ClosestColorTo(c)
+    LblClosestRALColor.Caption = MRALColors.TNamedRALColor_ToStr(rc) ' "RAL_" & rc.RALNr & "_" & rc.Name
+    PBClosestRALColor.BackColor = rc.RALCol
+    
+    'get closest color from munsell-colors-list
+    Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ClosestColorTo(c)
+    LblClosestMunsColor.Caption = MMunsell.TMunsellColor_Key(mc)
+    PBClosestMunsColor.BackColor = RGBA_ToLngColor(mc.RGBA).Value
+    
 End Sub
 
-Private Sub ErrMsg(sErr As String)
-    ErrHandler "Invalid numeric value: " & sErr & vbCrLf & "please try again"
-End Sub
+'Private Sub ErrMsg(sErr As String)
+'    ErrHandler "Invalid numeric value: " & sErr & vbCrLf & "please try again"
+'End Sub
 
 Private Sub BtnSetCMYK_Click()
     Dim sErr As String
-    If Not MColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.CMYK_Read(m_CMYK, TBCMYK_C, TBCMYK_M, TBCMYK_Y, TBCMYK_K, TBCMYK_A, sErr) Then ErrHandler sErr: Exit Sub
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBAf_Click()
     Dim RGBAf As RGBAf, sErr As String
-    If Not MColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.RGBAf_Read(RGBAf, TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(RGBAf)
     UpdateView
 End Sub
 
 Private Sub BtnSetRGBA_Click()
     Dim RGBA As RGBA, sErr As String
-    If Not MColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.RGBA_Read(RGBA, TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(RGBA))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSLAf_Click()
     Dim HSLAf As HSLAf, sErr As String
-    If Not MColor.HSLAf_Read(HSLAf, TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.HSLAf_Read(HSLAf, TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.HSLAf_ToRGBAf(HSLAf))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSLA_Click()
     Dim HSLA As HSLA, sErr As String
-    If Not MColor.HSLA_Read(HSLA, TBHSLA_H, TBHSLA_S, TBHSLA_L, TBHSLA_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.HSLA_Read(HSLA, TBHSLA_H, TBHSLA_S, TBHSLA_L, TBHSLA_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(RGBA_ToRGBAf(MColor.HSLA_ToRGBA(HSLA)))
     UpdateView
 End Sub
 
 Private Sub BtnSetHSV_Click()
     Dim HSV As HSV, sErr As String
-    If Not MColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.HSV_Read(HSV, TBHSV_H, TBHSV_S, TBHSV_V, TBHSV_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.HSV_ToRGBAf(HSV))
     UpdateView
 End Sub
 
 Private Sub BtnSetXYZ_Click()
     Dim XYZ As XYZ, sErr As String
-    If Not MColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.XYZ_Read(XYZ, TBXYZ_X, TBXYZ_Y, TBXYZ_Z, TBXYZ_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.XYZ_ToRGBAf(XYZ))
     UpdateView
 End Sub
 
 Private Sub BtnSetCIELab_Click()
     Dim Lab As CIELab, sErr As String
-    If Not MColor.CIELab_Read(Lab, TBCIELab_L, TBCIELab_aa, TBCIELab_bb, TBCIELab_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.CIELab_Read(Lab, TBCIELab_L, TBCIELab_aa, TBCIELab_bb, TBCIELab_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.XYZ_ToRGBAf(MColor.CIELab_ToXYZ(Lab)))
     UpdateView
 End Sub
 
 Private Sub BtnSetYCbCr_Click()
     Dim ycc As YCbCr, sErr As String
-    If Not MColor.YCbCr_Read(ycc, TBYCbCr_L, TBYCbCr_Cb, TBYCbCr_Cr, TBYCbCr_A, sErr) Then ErrMsg sErr: Exit Sub
+    If Not MColor.YCbCr_Read(ycc, TBYCbCr_L, TBYCbCr_Cb, TBYCbCr_Cr, TBYCbCr_A, sErr) Then ErrHandler sErr: Exit Sub
     m_CMYK = RGBAf_ToCMYK(MColor.YCbCr_ToRGBAf(ycc))
     UpdateView
 End Sub
@@ -1809,9 +1888,6 @@ Try: On Error GoTo Catch
 Catch:
     ErrHandler "SetTB"
 End Sub
-
-
-
 
 'Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub
 'Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, CBValuesf, BtnSetCMYK, PnlCMYK.hwnd, 256: End Sub

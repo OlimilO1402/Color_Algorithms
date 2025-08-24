@@ -256,6 +256,7 @@ End Type
 Private m_Arr() As TNamedRALColor
 Private m_Count As Long
 
+' v ' ############################## ' v '    Type TNamedRALColor    ' v ' ############################## ' v '
 Private Function TNamedRALColor(ByVal aName As String, ByVal aRALNr As Long, ByVal RALColor As RALClassic) As TNamedRALColor
     With TNamedRALColor
         .Name = aName
@@ -264,7 +265,21 @@ Private Function TNamedRALColor(ByVal aName As String, ByVal aRALNr As Long, ByV
     End With
 End Function
 
-Public Function RALClassic_ClosestColorTo(ByVal aColor As Long) As TNamedRALColor
+Public Function TNamedRALColor_ToStr(rc As TNamedRALColor) As String
+    TNamedRALColor_ToStr = "RAL_" & rc.RALNr & "_" & rc.Name
+End Function
+
+Public Property Get TNamedRALColor_IndexFromName(ByVal ColorName As String) As Long
+    Dim i As Long
+    For i = 0 To m_Count - 1
+        If TNamedRALColor_ToStr(m_Arr(i)) = ColorName Then
+            TNamedRALColor_IndexFromName = i
+            Exit Property
+        End If
+    Next
+End Property
+
+Public Function TNamedRALColor_ClosestColorTo(ByVal aColor As Long) As TNamedRALColor
     Dim i As Long, i_minEd As Long, edi As Double
     Dim lc As LngColor: lc = LngColor(aColor)
     Dim ed0 As Double: ed0 = LngColor_EuclidRMean(LngColor(m_Arr(0).RALCol), lc)
@@ -275,10 +290,14 @@ Public Function RALClassic_ClosestColorTo(ByVal aColor As Long) As TNamedRALColo
             ed0 = edi
         End If
     Next
-    RALClassic_ClosestColorTo = m_Arr(i_minEd)
+    TNamedRALColor_ClosestColorTo = m_Arr(i_minEd)
 End Function
 
-Public Sub RALClassicColor_Init()
+'Public Function TNamedRALColor_GetToStrByNum() As String
+'    TNamedRALColor_GetToStrByNum = TNamedRALColor_ToStr(RALClassic_NumToColor(num))
+'End Function
+
+Public Sub TNamedRALColor_Init()
     Dim i As Long: m_Count = 225
     ReDim m_Arr(0 To m_Count - 1)
     m_Arr(i) = TNamedRALColor("Grünbeige", 1000, RALClassic.RAL_1000_Grünbeige):             i = i + 1
@@ -517,12 +536,13 @@ Public Sub RALClassicColor_Init()
     m_Arr(i) = TNamedRALColor("Sandbraun", 8031, RALClassic.RAL_8031_Sandbraun):      i = i + 1
     'Debug.Print i
 End Sub
+' ^ ' ############################## ' ^ '    Type TNamedRALColor    ' ^ ' ############################## ' ^ '
 
-
-Public Function RALClassic_NameToStr(e As RALClassic) As String
-    If m_Count = 0 Then RALClassicColor_Init
+' v ' ############################## ' v '    Enum RALClassic    ' v ' ############################## ' v '
+Public Property Get RALClassic_Name(E As RALClassic) As String
+    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     Dim s As String
-    Select Case e
+    Select Case E
     
     Case RAL_1000_Grünbeige:        s = "Grünbeige"
     Case RAL_1001_Beige:            s = "Beige"
@@ -760,13 +780,13 @@ Public Function RALClassic_NameToStr(e As RALClassic) As String
     Case RAL_8031_Sandbraun:        s = "Sandbraun"
     
     End Select
-    RALClassic_NameToStr = s
-End Function
+    RALClassic_Name = s
+End Property
 
-Public Function RALClassic_ToNum(e As RALClassic) As Long
-    If m_Count = 0 Then RALClassicColor_Init
+Public Function RALClassic_ToNum(E As RALClassic) As Long
+    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     Dim n As Long
-    Select Case e
+    Select Case E
     
     Case RAL_1000_Grünbeige:        n = 1000
     Case RAL_1001_Beige:            n = 1001
@@ -1007,8 +1027,8 @@ Public Function RALClassic_ToNum(e As RALClassic) As Long
     RALClassic_ToNum = n
 End Function
 
-Public Function RALClassic_NumToColor(ByVal num As Long) As RALClassic
-    If m_Count = 0 Then RALClassicColor_Init
+Public Function RALClassic_FromNum(ByVal num As Long) As RALClassic
+    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     Dim c As RALClassic
     Select Case num
     
@@ -1248,91 +1268,104 @@ Public Function RALClassic_NumToColor(ByVal num As Long) As RALClassic
     Case 8031: c = RAL_8031_Sandbraun
     
     End Select
-    RALClassic_NumToColor = c
+    RALClassic_FromNum = c
 End Function
 
-Public Function RALClassic_NumToColorname(num As Long) As String
-    If m_Count = 0 Then RALClassicColor_Init
-    Dim s As String: s = RALClassic_NameToStr(RALClassic_NumToColor(num))
+'Public Function RALClassic_NumToColorname(ByVal num As Long) As String
+'    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
+'    'RALClassic_NumToColorname = TNamedRALColor_ToStr(RALClassic_NumToColor(num))
+'    Dim i As Long
+'    For i = 0 To m_Count - 1
+'        If m_Arr(i).RALNr = num Then
+'            RALClassic_NumToColorname = m_Arr(i).Name
+'            Exit Function
+'        End If
+'    Next
+'End Function
+'
+
+Public Function RALClassic_NumToTNamedColorStr(num As Long) As String
+    If m_Count = 0 Then TNamedRALColor_Init
+    Dim s As String: s = RALClassic_Name(RALClassic_FromNum(num))
     If Len(s) = 0 Then Exit Function
-    RALClassic_NumToColorname = "RAL_" & CStr(num) & "_" & s
+    RALClassic_NumToTNamedColorStr = "RAL_" & CStr(num) & "_" & s
 End Function
 
 Public Sub RALClassic_ToListBox(aCBLB)
-    If m_Count = 0 Then RALClassicColor_Init
+    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     aCBLB.Clear
     
     Dim i As Long, j As Long
     Dim num As Long, s As String
     i = 1000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
     Loop While i <= 1037
     
     i = 2000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
     Loop While i <= 2017
     
     i = 3000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
     Loop While i <= 3033
     
     i = 4000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
     Loop While i <= 4012
     
     i = 5000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
     Loop While i <= 5026
     
     i = 6000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
         If i = 6031 Then i = i + 1
         If i = 6040 Then i = i + 1
     Loop While i <= 6039
     
     For i = 7000 To 7048
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
     Next
     
     i = 8000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
         If i = 8027 Then i = i + 1
     Loop While i <= 8029
     
     i = 9000
     Do
-        s = RALClassic_NumToColorname(i): If Len(s) Then aCBLB.AddItem s
+        s = RALClassic_NumToTNamedColorStr(i): If Len(s) Then aCBLB.AddItem s
         i = i + 1
         If i = 9021 Then i = i + 1
     Loop While i <= 9023
     
-    s = RALClassic_NumToColorname(6031): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(8027): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(9021): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(1039): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(1040): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(6040): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(7050): If Len(s) Then aCBLB.AddItem s
-    s = RALClassic_NumToColorname(8031): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(6031): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(8027): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(9021): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(1039): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(1040): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(6040): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(7050): If Len(s) Then aCBLB.AddItem s
+    s = RALClassic_NumToTNamedColorStr(8031): If Len(s) Then aCBLB.AddItem s
     
 End Sub
 
 Public Function RALClassic_Parse(ByVal s As String) As RALClassic
-    If m_Count = 0 Then RALClassicColor_Init
+    If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     'bsp: RAL_9001_Cremeweiß
     'read the number
     If Left(s, 4) = "RAL_" Then
@@ -1342,7 +1375,7 @@ Public Function RALClassic_Parse(ByVal s As String) As RALClassic
         If Not IsNumeric(s) Then s = Left(s, 4)
         If Not IsNumeric(s) Then Exit Function
         Dim num As Long: num = CLng(s)
-        RALClassic_Parse = RALClassic_NumToColor(num)
+        RALClassic_Parse = RALClassic_FromNum(num)
     End If
 End Function
 

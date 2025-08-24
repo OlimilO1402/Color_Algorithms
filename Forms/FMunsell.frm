@@ -1,6 +1,5 @@
 VERSION 5.00
 Begin VB.Form FMunsell 
-   BorderStyle     =   5  'Änderbares Werkzeugfenster
    Caption         =   "Munsell-Colors"
    ClientHeight    =   7770
    ClientLeft      =   120
@@ -15,26 +14,24 @@ Begin VB.Form FMunsell
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
+   Icon            =   "FMunsell.frx":0000
    LinkTopic       =   "Form1"
-   MaxButton       =   0   'False
-   MinButton       =   0   'False
    ScaleHeight     =   7770
    ScaleWidth      =   8295
-   ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows-Standard
    Begin VB.PictureBox PBColorNearest 
-      Height          =   615
+      Height          =   495
       Left            =   5640
-      ScaleHeight     =   555
+      ScaleHeight     =   435
       ScaleWidth      =   675
       TabIndex        =   19
       Top             =   720
       Width           =   735
    End
    Begin VB.PictureBox PBColorInput 
-      Height          =   615
+      Height          =   495
       Left            =   5640
-      ScaleHeight     =   555
+      ScaleHeight     =   435
       ScaleWidth      =   675
       TabIndex        =   15
       Top             =   120
@@ -78,9 +75,9 @@ Begin VB.Form FMunsell
       Width           =   2175
    End
    Begin VB.PictureBox PBColorSelected 
-      Height          =   615
+      Height          =   495
       Left            =   5640
-      ScaleHeight     =   555
+      ScaleHeight     =   435
       ScaleWidth      =   675
       TabIndex        =   7
       Top             =   1320
@@ -155,7 +152,7 @@ Begin VB.Form FMunsell
       Height          =   255
       Left            =   4080
       TabIndex        =   18
-      Top             =   720
+      Top             =   840
       Width           =   1275
    End
    Begin VB.Label LblColorInputRGB 
@@ -164,7 +161,7 @@ Begin VB.Form FMunsell
       Height          =   255
       Left            =   6480
       TabIndex        =   17
-      Top             =   240
+      Top             =   120
       Width           =   1770
    End
    Begin VB.Label LblInputColor 
@@ -173,7 +170,7 @@ Begin VB.Form FMunsell
       Height          =   255
       Left            =   4080
       TabIndex        =   16
-      Top             =   120
+      Top             =   240
       Width           =   1320
    End
    Begin VB.Label LblColorSelectedKey 
@@ -201,7 +198,7 @@ Begin VB.Form FMunsell
       Height          =   255
       Left            =   4080
       TabIndex        =   8
-      Top             =   1320
+      Top             =   1440
       Width           =   1320
    End
    Begin VB.Label Label2 
@@ -249,8 +246,6 @@ Private m_Wb As Single
 Private m_Hb As Single
 Private m_Result As VbMsgBoxResult
 
-'Private m_ColorInput    As Long
-'Private m_ColorNearest  As TMunsellColor
 Private m_ColorSelected As TMunsellColor
 
 Private m_LastSelIndex As Long
@@ -295,30 +290,6 @@ Public Function ShowDialog(Owner As Form, Color_inout As Long) As VbMsgBoxResult
     Color_inout = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
 End Function
 
-'Friend Property Get ColorInput() As Long
-'    ColorInput = m_ColorInput
-'End Property
-
-'Friend Property Get ColorNearest() As TMunsellColor
-'    ColorNearest = m_ColorNearest
-'End Property
-'
-'Friend Property Let ColorNearest(ByVal Value As TMunsellColor)
-'
-'End Property
-'
-'Friend Property Get ColorSelected() As TMunsellColor
-'    ColorSelected = m_ColorSelected
-'End Property
-
-'Friend Property Let ColorSelected(Value As TMunsellColor)
-'    m_ColorSelected = Value
-'
-'    PBSelColor.BackColor = RGBA_ToLngColor(m_Color.RGBA).Value
-'
-'End Property
-
-
 Private Sub CmbMunsell_Click()
     Dim i As Long: i = CmbMunsell.ListIndex
     Dim s1 As String: s1 = IIf(i = 1, "Value", "Hue-Prefix")
@@ -341,13 +312,6 @@ Private Sub CmbMunsell_Click()
             MMunsell.EHuePrefixValValue_ToCmb CmbMunsell3
             
     End Select
-    'If i = 0 Or i = 1 Then MMunsell.HueValue_ToCmb CmbMunsell2
-    'If i = 1 Or i = 2 Then MMunsell.ValValue_ToCmb CmbMunsell1: MMunsell.HueValue_ToCmb CmbMunsell2 ': CmbMunsell3.Clear: CmbMunsell3.Enabled = False
-    'If i = 2 Or i = 0 Then MMunsell.EHuePrefix_ToCmb CmbMunsell1: MMunsell.ValValue_ToCmb CmbMunsell2
-    
-    'If i = 0 Then MMunsell.EHuePrefixHueValue_ToCmb CmbMunsell3 ': CmbMunsell3.Enabled = True
-    'If i = 1 Then MMunsell.ValValueHueValue_ToCmb CmbMunsell3
-    'If i = 2 Then MMunsell.EHuePrefixValValue_ToCmb CmbMunsell3
     CmbMunsell1.ListIndex = 0
     CmbMunsell2.ListIndex = 0
     UpdateView
@@ -425,20 +389,11 @@ Private Sub CmbMunsell3_Click()
 End Sub
 
 Private Sub CmbMunsell3_KeyDown(KeyCode As Integer, Shift As Integer)
+    Dim li As Long: li = CmbMunsell3.ListIndex
+    Dim lu As Long: lu = CmbMunsell3.ListCount - 1
     Select Case KeyCode
-    Case KeyCodeConstants.vbKeyDown
-        If CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1 Then
-            CmbMunsell3.ListIndex = 0
-        Else
-            CmbMunsell3.ListIndex = CmbMunsell3.ListIndex + 1
-        End If
-        'KeyCode = 0
-    Case KeyCodeConstants.vbKeyUp
-        If m_LastSelIndex = 0 Then
-            CmbMunsell3.ListIndex = CmbMunsell3.ListCount - 1
-        Else
-            CmbMunsell3.ListIndex = CmbMunsell3.ListIndex - 1
-        End If
+    Case KeyCodeConstants.vbKeyDown:      CmbMunsell3.ListIndex = IIf(li = lu, 0, li + 1)
+    Case KeyCodeConstants.vbKeyUp:        CmbMunsell3.ListIndex = IIf(li = 0, lu, li - 1)
     End Select
     KeyCode = 0
 End Sub
@@ -476,20 +431,25 @@ Function GetValValueCH() As Byte
     GetValValueCH = i + 1
 End Function
 
-
 Sub View_Init(ByVal aColor As Long)
-    'm_ColorInput = Value
     PBColorInput.BackColor = aColor
-    Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(LngColor(aColor))
-    LblColorInputRGB.Caption = RGBA_ToStr(RGBA)
-    Dim nc As TMunsellColor: nc = MMunsell.MunsellColors_ClosestColorTo(aColor)
-    PBColorNearest.BackColor = RGBA_ToLngColor(nc.RGBA).Value
-    LblColorNearestKey.Caption = MMunsell.TMunsellColor_Key(nc)
-    LblColorNearestRGB.Caption = MColor.RGBA_ToStr(nc.RGBA)
+    Dim RGBA As RGBA: RGBA = MColor.LngColor_ToRGBA(LngColor(aColor))
+    LblColorInputRGB.Caption = MColor.RGBA_ToStr(RGBA)
+    Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ClosestColorTo(aColor)
+    
+    'maybe we should jump to the page with selected color?
+    PBColorNearest.BackColor = MColor.RGBA_ToLngColor(mc.RGBA).Value
+    LblColorNearestKey.Caption = MMunsell.TMunsellColor_Key(mc)
+    LblColorNearestRGB.Caption = MColor.RGBA_ToStr(mc.RGBA)
     
     PBColorSelected.BackColor = PBColorNearest.BackColor
     LblColorSelectedKey.Caption = LblColorNearestKey.Caption
     LblColorSelectedRGB.Caption = LblColorNearestRGB.Caption
+    
+    'CmbMunsell1.Text = MMunsell.EHuePrefix_Name(mc.HuePrefix)
+    CmbMunsell1.ListIndex = mc.HuePrefix - 1
+    'CmbMunsell2.Text = MMunsell.HueValue_ToStr(mc.HueValue)
+    CmbMunsell2.ListIndex = mc.HueValue - 1 '
 End Sub
 
 Sub UpdateView()
@@ -590,54 +550,41 @@ Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, X As Single,
         If i <= UBound(m_ChromaValue.ValValues) Then
             If j <= UBound(m_ChromaValue.ValValues(i).Chromas) Then
                 m_ColorSelected = m_ChromaValue.ValValues(i).Chromas(j)
-                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected) '
-                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
-                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
-                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
-            Else
-                LblColorSelectedKey.Caption = "--|--"
             End If
-        Else
-            LblColorSelectedKey.Caption = "--|--"
         End If
     Case 1
         If i <= UBound(m_ChromaHuePrefix.HuePrefixes) Then
             If j <= UBound(m_ChromaHuePrefix.HuePrefixes(i).Chromas) Then
                 m_ColorSelected = m_ChromaHuePrefix.HuePrefixes(i).Chromas(j)
-                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected)
-                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
-                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
-                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
-            Else
-                LblColorSelectedKey.Caption = "--|--"
             End If
-        Else
-            LblColorSelectedKey.Caption = "--|--"
         End If
     Case 2
         If i <= UBound(m_ChromaHue.HueValues) Then
             If j <= UBound(m_ChromaHue.HueValues(i).Chromas) Then
                 m_ColorSelected = m_ChromaHue.HueValues(i).Chromas(j)
-                LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected)
-                '& " rgb=" & RGBA_ToStr(m_ColorSelected.RGBA)
-                LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
-                PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
-            Else
-                LblColorSelectedKey.Caption = "--|--"
             End If
+        End If
+    End Select
+    If i <= UBound(m_ChromaValue.ValValues) Then
+        If j <= UBound(m_ChromaValue.ValValues(i).Chromas) Then
+            LblColorSelectedKey.Caption = MMunsell.TMunsellColor_Key(m_ColorSelected) '
+            LblColorSelectedRGB.Caption = RGBA_ToStr(m_ColorSelected.RGBA)
+            PBColorSelected.BackColor = MColor.RGBA_ToLngColor(m_ColorSelected.RGBA).Value
         Else
             LblColorSelectedKey.Caption = "--|--"
         End If
-    End Select
+    Else
+        LblColorSelectedKey.Caption = "--|--"
+    End If
 End Sub
 
 Private Sub BtnOK_Click()
-    m_Result = vbOK
+    m_Result = VbMsgBoxResult.vbOK
     Unload Me
 End Sub
 
 Private Sub BtnCancel_Click()
-    m_Result = vbCancel
+    m_Result = VbMsgBoxResult.vbCancel
     Unload Me
 End Sub
 

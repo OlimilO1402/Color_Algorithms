@@ -392,15 +392,15 @@ Public Property Get TMunsellColor_Key(this As TMunsellColor) As String
     ' BG : Hue-Prefix (=Blue-Green)
     '  5 : Value
     ' 22 : Chroma
-    TMunsellColor_Key = HueValue_ToStr(this.HueValue) & EHuePrefix_ToStr(this.HuePrefix) & "-" & CStr(this.ValValue) & "-" & CStr(this.Chroma)
+    TMunsellColor_Key = MMunsell.HueValue_ToStr(this.HueValue) & MMunsell.EHuePrefix_ToStr(this.HuePrefix) & "-" & CStr(this.ValValue) & "-" & CStr(this.Chroma)
 End Property
 
 Public Function MunsellColors_ClosestColorTo(ByVal aColor As Long) As TMunsellColor
     Dim i As Long, i_minEd As Long, edi As Double
-    Dim lc As LngColor: lc = LngColor(aColor)
-    Dim ed0 As Double: ed0 = LngColor_EuclidRMean(LngColor((&HFFFFFF And RGBA_ToLngColor(m_MunsellColors(0).RGBA).Value)), lc)
+    Dim lc As LngColor: lc = MColor.LngColor(aColor)
+    Dim ed0 As Double: ed0 = MColor.LngColor_EuclidRMean(LngColor((&HFFFFFF And MColor.RGBA_ToLngColor(m_MunsellColors(0).RGBA).Value)), lc)
     For i = 1 To UBound(m_MunsellColors) 'm_Count - 1
-        edi = LngColor_EuclidRMean(LngColor((&HFFFFFF And RGBA_ToLngColor(m_MunsellColors(i).RGBA).Value)), lc)
+        edi = MColor.LngColor_EuclidRMean(LngColor((&HFFFFFF And MColor.RGBA_ToLngColor(m_MunsellColors(i).RGBA).Value)), lc)
         If edi < ed0 Then
             i_minEd = i
             ed0 = edi
