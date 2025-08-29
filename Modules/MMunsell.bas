@@ -168,46 +168,48 @@ Private Sub FilterChromaHues()
 End Sub
 
 Public Sub Init()
+    
+    'OK at first program launch there normally is no file "Munsell.bin"
+    'so we want to read from resource and then write the data to a file
+    'Once there is a file, we read from the file.
+    'Why do we need a file?
+    'Because the user should have the ability to change the data
+    'If User makes any mistake, he should just delete the file.
+    
     Dim FN As String: FN = "Munsell.bin"
     Dim AppPFN As PathFileName: Set AppPFN = MNew.PathFileName(App.Path, FN)
     Dim TmpPFN As PathFileName: Set TmpPFN = MNew.PathFileName(AppPFN.TempPath, FN)
     Dim PFN    As PathFileName
     Set PFN = IIf(AppPFN.Exists, AppPFN, IIf(TmpPFN.Exists, TmpPFN, Nothing))
+    'Set PFN = IIf(TmpPFN.Exists, TmpPFN, IIf(AppPFN.Exists, AppPFN, Nothing))
     Dim ba() As Byte
     If PFN Is Nothing Then
         ba = LoadResData(10, "CUSTOM")
-        If Not TryWriteToPFN(ba, AppPFN) Then
+        Set PFN = AppPFN
+        'Set PFN = TmpPFN
+        If Not TryWriteToPFN(ba, PFN) Then
+        
+            MsgBox "Data read from resource, but could not write to file, maybe try again later." & vbCrLf & _
+                    PFN.Value
+            'Set PFN = AppPFN
             Set PFN = TmpPFN
-            If Not TryWriteToPFN(ba, TmpPFN) Then
-                'could not write file, data
-                If MMunsell.ReadFromMemoryStream(ba) Then
-                    Filter
-                    Exit Sub
-                Else
-                    MsgBox "Could not read file, could not write file, could not read from resource, maybe try again later."
-                End If
+            'Debug.Print PFN.Value
+            If Not TryWriteToPFN(ba, PFN) Then
+                'could not write data to file
+                MsgBox "Data read from resource, but could not write to file, maybe try again later." & vbCrLf & _
+                       PFN.Value
             End If
-        Else
-
         End If
-        'PFN.WriteBytes ba
-        'PFN.CloseFile
-        'Exit Sub
     Else
+        'Debug.Print PFN.Value
         PFN.ReadAllBuffer ba
-        If MMunsell.ReadFromMemoryStream(ba) Then
-            Filter
-            Exit Sub
-        Else
-            MsgBox "Could not read file, could not write file, could not read from resource, maybe try again later!"
-        End If
     End If
-    
-    'If ReadFromMemoryStream(ba) Then Exit Sub
-    
-    'ReadFromFile PFN.Value ' App.Path & "\Munsell.bin"
-    
-    'Debug.Print LBound(m_MunsellColors) & " - " & UBound(m_MunsellColors)
+    If MMunsell.ReadFromMemoryStream(ba) Then
+        Filter
+        Exit Sub
+    Else
+        MsgBox "Could not read data, maybe try again later!"
+    End If
 End Sub
 
 Private Function TryWriteToPFN(ba() As Byte, PFN As PathFileName) As Boolean
