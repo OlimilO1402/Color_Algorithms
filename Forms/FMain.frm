@@ -19,6 +19,14 @@ Begin VB.Form FMain
    ScaleHeight     =   3375
    ScaleWidth      =   18495
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.CommandButton BtnInfoGColor 
+      Caption         =   "InfoCad Colors"
+      Height          =   375
+      Left            =   11400
+      TabIndex        =   112
+      Top             =   2520
+      Width           =   1575
+   End
    Begin VB.PictureBox PBClosestMunsColor 
       Height          =   375
       Left            =   10800
@@ -40,7 +48,7 @@ Begin VB.Form FMain
    Begin VB.CommandButton BtnInfo 
       Caption         =   "Info"
       Height          =   375
-      Left            =   12120
+      Left            =   13920
       TabIndex        =   38
       Top             =   2520
       Width           =   855
@@ -1503,7 +1511,6 @@ Private m_CPicker As ColorDialog
 Private m_APB     As AlphaPB
 Private m_IsInit  As Boolean
 
-
 'Private Sub Form_Activate()
 '    Debug.Print "Activate "
 'End Sub
@@ -1528,6 +1535,15 @@ Private Sub Form_Load()
     UpdateView
 End Sub
 
+Private Sub BtnInfoGColor_Click()
+    Dim Color As Long: Color = PBColor.BackColor
+    If FInfoGColors.ShowDialog(Me, Color) = VbMsgBoxResult.vbCancel Then Exit Sub
+    Dim lc As LngColor: lc.Value = Color
+    m_CMYK = LngColor_ToCMYK(lc)
+    UpdateView
+End Sub
+
+
 'does not work
 'Private Sub Form_LostFocus()
 '    Me.Caption = "Form_LostFocus "
@@ -1542,8 +1558,7 @@ End Sub
 Private Sub BtnMunsell_Click()
     'FMunsell.Show
     Dim Color As Long: Color = PBColor.BackColor
-    If FMunsell.ShowDialog(Me, Color) = vbCancel Then Exit Sub
-    'PBColor.BackColor = Color
+    If FMunsell.ShowDialog(Me, Color) = VbMsgBoxResult.vbCancel Then Exit Sub
     Dim lc As LngColor: lc.Value = Color
     m_CMYK = LngColor_ToCMYK(lc)
     UpdateView
@@ -2025,11 +2040,11 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
     Dim sa() As String: sa = Split(nam, "_")
     Dim u As Long: u = UBound(sa)
     If u = 1 Then
-        Dim s As String ': s = "Change the "
+        Dim S As String ': s = "Change the "
         Dim c_1 As String: c_1 = sa(0)
         Dim c_2 As String: c_2 = sa(1)
         If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
-        s = s & ttt.Item(c_2) & "-value of "
+        S = S & ttt.Item(c_2) & "-value of "
         Dim c11 As String
         Dim c12 As String
         Dim c13 As String
@@ -2040,12 +2055,12 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
             c11 = Mid(c_1, 1, 1): c12 = Mid(c_1, 2, 1): c13 = Mid(c_1, 3, 1)
             If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
         End If
-        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        S = S & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
         If c_1 <> "YCbCr" And Len(c_1) > 3 Then
             Dim c14 As String: c14 = Mid(c_1, 4, 1)
-            s = s & ", " & ttt.Item(c14)
+            S = S & ", " & ttt.Item(c14)
         End If
-        CreateToolTipText = s & ")"
+        CreateToolTipText = S & ")"
     End If
     'Debug.Print FncCallCounter
 End Function
