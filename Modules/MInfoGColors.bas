@@ -4,7 +4,7 @@ Option Explicit
 Private m_InfoGColors(0 To 255) As Long
 
 Public Sub Init()
-    Dim i As Long
+    Dim i As Byte
     'ReDim m_InfoGColors(0 To 255)
     m_InfoGColors(i) = RGB(&HFF, &HFF, &HFF): i = i + 1
     m_InfoGColors(i) = RGB(&H0, &H0, &H0):    i = i + 1
@@ -265,24 +265,24 @@ Public Sub Init()
     
 End Sub
 
-Public Function Color(ByVal Index As Byte) As Long
+Public Property Get Color(ByVal Index As Byte) As Long
     If m_InfoGColors(0) = 0 Then Init
     Color = m_InfoGColors(Index)
-End Function
+End Property
 
-Public Function IndexFromColor(ByVal aColor As Long) As Integer
+Public Property Get IndexFromColor(ByVal aColor As Long) As Integer
     Dim i As Integer, c As Long
     For i = 0 To 255
         Debug.Print i
         c = m_InfoGColors(i)
         If c = aColor Then
-            IndexFromColor = i: Exit Function
+            IndexFromColor = i: Exit Property
         End If
     Next
     IndexFromColor = IndexOfClosestColorTo(aColor)
-End Function
+End Property
 
-Public Function IndexOfClosestColorTo(ByVal aColor As Long) As Integer
+Public Property Get IndexOfClosestColorTo(ByVal aColor As Long) As Integer
     Dim i As Integer, i_minEd As Long, edi As Double
     Dim c As Long, lc As LngColor: lc = LngColor(aColor)
     Dim ed0 As Double: ed0 = LngColor_EuclidRMean(LngColor((&HFFFFFF And m_InfoGColors(0))), lc)
@@ -295,10 +295,14 @@ Public Function IndexOfClosestColorTo(ByVal aColor As Long) As Integer
         End If
     Next
     IndexOfClosestColorTo = i_minEd
-End Function
+End Property
 
-Public Function ClosestColorTo(ByVal aColor As Long) As Long
+Public Property Get ClosestColorTo(ByVal aColor As Long) As Long
     Dim i As Byte: i = IndexOfClosestColorTo(aColor)
     ClosestColorTo = m_InfoGColors(i)
-End Function
+End Property
 
+Public Property Get ColorArray() As Long()
+    If m_InfoGColors(0) = 0 Then Init
+    ColorArray = m_InfoGColors
+End Property

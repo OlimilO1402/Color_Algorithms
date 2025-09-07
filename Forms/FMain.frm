@@ -1827,61 +1827,61 @@ Private Sub HideCBValues()
     'CBValuesf.ZOrder 1
 End Sub
 
-Private Sub PnlCMYK_DblClick():   HideCBValues:  End Sub
-Private Sub PnlRGBAf_DblClick():  HideCBValues:  End Sub
-Private Sub PnlRGBA_DblClick():   HideCBValues:  End Sub
-Private Sub PnlHSLAf_DblClick():  HideCBValues:  End Sub
-Private Sub PnlHSLA_DblClick():   HideCBValues:  End Sub
-Private Sub PnlHSV_DblClick():    HideCBValues:  End Sub
-Private Sub PnlXYZ_DblClick():    HideCBValues:  End Sub
-Private Sub PnlCIELab_DblClick(): HideCBValues:  End Sub
-Private Sub PnlYCbCr_DblClick():  HideCBValues:  End Sub
-
-Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_C: End Sub
-Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_M: End Sub
-Private Sub TBCMYK_Y_DblClick():  SetTB TBCMYK_Y, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_Y: End Sub
-Private Sub TBCMYK_K_DblClick():  SetTB TBCMYK_K, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_K: End Sub
-Private Sub TBCMYK_A_DblClick():  SetTB TBCMYK_A, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_A: End Sub
-
-Private Sub TBRGBAf_R_DblClick(): SetTB TBRGBAf_R, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_R: End Sub
-Private Sub TBRGBAf_G_DblClick(): SetTB TBRGBAf_G, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_G: End Sub
-Private Sub TBRGBAf_B_DblClick(): SetTB TBRGBAf_B, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_B: End Sub
-Private Sub TBRGBAf_A_DblClick(): SetTB TBRGBAf_A, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_A: End Sub
-
-Private Sub TBRGBA_R_DblClick():  SetTB TBRGBA_R, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_R: End Sub
-Private Sub TBRGBA_G_DblClick():  SetTB TBRGBA_G, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_G: End Sub
-Private Sub TBRGBA_B_DblClick():  SetTB TBRGBA_B, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_B: End Sub
-Private Sub TBRGBA_A_DblClick():  SetTB TBRGBA_A, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_A: End Sub
-
-Private Sub TBHSLAf_H_DblClick():  SetTB TBHSLAf_H, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_H: End Sub
-Private Sub TBHSLAf_S_DblClick():  SetTB TBHSLAf_S, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_S: End Sub
-Private Sub TBHSLAf_L_DblClick():  SetTB TBHSLAf_L, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_L: End Sub
-Private Sub TBHSLAf_A_DblClick():  SetTB TBHSLAf_A, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_A: End Sub
-
-Private Sub TBHSLA_H_DblClick():  SetTB TBHSLA_H, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_H: End Sub
-Private Sub TBHSLA_S_DblClick():  SetTB TBHSLA_S, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_S: End Sub
-Private Sub TBHSLA_L_DblClick():  SetTB TBHSLA_L, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_L: End Sub
-Private Sub TBHSLA_A_DblClick():  SetTB TBHSLA_A, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_A: End Sub
+'Private Sub PnlCMYK_DblClick():   HideCBValues:  End Sub
+'Private Sub PnlRGBAf_DblClick():  HideCBValues:  End Sub
+'Private Sub PnlRGBA_DblClick():   HideCBValues:  End Sub
+'Private Sub PnlHSLAf_DblClick():  HideCBValues:  End Sub
+'Private Sub PnlHSLA_DblClick():   HideCBValues:  End Sub
+'Private Sub PnlHSV_DblClick():    HideCBValues:  End Sub
+'Private Sub PnlXYZ_DblClick():    HideCBValues:  End Sub
+'Private Sub PnlCIELab_DblClick(): HideCBValues:  End Sub
+'Private Sub PnlYCbCr_DblClick():  HideCBValues:  End Sub
 '
-Private Sub TBHSV_H_DblClick():  SetTB TBHSV_H, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_H: End Sub
-Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_S: End Sub
-Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_V: End Sub
-Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_A: End Sub
-
-Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_X: End Sub
-Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Y: End Sub
-Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Z: End Sub
-Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_A: End Sub
-
-Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_L: End Sub
-Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_aa: End Sub
-Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_bb: End Sub
-Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_A: End Sub
-
-Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Y: End Sub
-Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cb: End Sub
-Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cr: End Sub
-Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_A: End Sub
+'Private Sub TBCMYK_C_DblClick():  SetTB TBCMYK_C, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_C: End Sub
+'Private Sub TBCMYK_M_DblClick():  SetTB TBCMYK_M, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_M: End Sub
+'Private Sub TBCMYK_Y_DblClick():  SetTB TBCMYK_Y, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_Y: End Sub
+'Private Sub TBCMYK_K_DblClick():  SetTB TBCMYK_K, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_K: End Sub
+'Private Sub TBCMYK_A_DblClick():  SetTB TBCMYK_A, BtnSetCMYK, PnlCMYK.hwnd, MColor.CVR_CMYK_A: End Sub
+'
+'Private Sub TBRGBAf_R_DblClick(): SetTB TBRGBAf_R, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_R: End Sub
+'Private Sub TBRGBAf_G_DblClick(): SetTB TBRGBAf_G, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_G: End Sub
+'Private Sub TBRGBAf_B_DblClick(): SetTB TBRGBAf_B, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_B: End Sub
+'Private Sub TBRGBAf_A_DblClick(): SetTB TBRGBAf_A, BtnSetRGBAf, PnlRGBAf.hwnd, MColor.CVR_RGBAf_A: End Sub
+'
+'Private Sub TBRGBA_R_DblClick():  SetTB TBRGBA_R, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_R: End Sub
+'Private Sub TBRGBA_G_DblClick():  SetTB TBRGBA_G, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_G: End Sub
+'Private Sub TBRGBA_B_DblClick():  SetTB TBRGBA_B, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_B: End Sub
+'Private Sub TBRGBA_A_DblClick():  SetTB TBRGBA_A, BtnSetRGBA, PnlRGBA.hwnd, MColor.CVR_RGBA_A: End Sub
+'
+'Private Sub TBHSLAf_H_DblClick():  SetTB TBHSLAf_H, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_H: End Sub
+'Private Sub TBHSLAf_S_DblClick():  SetTB TBHSLAf_S, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_S: End Sub
+'Private Sub TBHSLAf_L_DblClick():  SetTB TBHSLAf_L, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_L: End Sub
+'Private Sub TBHSLAf_A_DblClick():  SetTB TBHSLAf_A, BtnSetHSLAf, PnlHSLAf.hwnd, MColor.CVR_HSLAf_A: End Sub
+'
+'Private Sub TBHSLA_H_DblClick():  SetTB TBHSLA_H, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_H: End Sub
+'Private Sub TBHSLA_S_DblClick():  SetTB TBHSLA_S, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_S: End Sub
+'Private Sub TBHSLA_L_DblClick():  SetTB TBHSLA_L, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_L: End Sub
+'Private Sub TBHSLA_A_DblClick():  SetTB TBHSLA_A, BtnSetHSLA, PnlHSLA.hwnd, MColor.CVR_HSL_A: End Sub
+'
+'Private Sub TBHSV_H_DblClick():  SetTB TBHSV_H, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_H: End Sub
+'Private Sub TBHSV_S_DblClick():  SetTB TBHSV_S, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_S: End Sub
+'Private Sub TBHSV_V_DblClick():  SetTB TBHSV_V, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_V: End Sub
+'Private Sub TBHSV_A_DblClick():  SetTB TBHSV_A, BtnSetHSV, PnlHSV.hwnd, MColor.CVR_HSV_A: End Sub
+'
+'Private Sub TBXYZ_X_DblClick():  SetTB TBXYZ_X, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_X: End Sub
+'Private Sub TBXYZ_Y_DblClick():  SetTB TBXYZ_Y, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Y: End Sub
+'Private Sub TBXYZ_Z_DblClick():  SetTB TBXYZ_Z, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_Z: End Sub
+'Private Sub TBXYZ_A_DblClick():  SetTB TBXYZ_A, BtnSetXYZ, PnlXYZ.hwnd, MColor.CVR_XYZ_A: End Sub
+'
+'Private Sub TBCIELab_L_DblClick():  SetTB TBCIELab_L, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_L: End Sub
+'Private Sub TBCIELab_aa_DblClick(): SetTB TBCIELab_aa, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_aa: End Sub
+'Private Sub TBCIELab_bb_DblClick(): SetTB TBCIELab_bb, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_bb: End Sub
+'Private Sub TBCIELab_A_DblClick():  SetTB TBCIELab_A, BtnSetCIELab, PnlCIELab.hwnd, MColor.CVR_CIELab_A: End Sub
+'
+'Private Sub TBYCbCr_L_DblClick():  SetTB TBYCbCr_L, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Y: End Sub
+'Private Sub TBYCbCr_Cb_DblClick(): SetTB TBYCbCr_Cb, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cb: End Sub
+'Private Sub TBYCbCr_Cr_DblClick(): SetTB TBYCbCr_Cr, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_Cr: End Sub
+'Private Sub TBYCbCr_A_DblClick():  SetTB TBYCbCr_A, BtnSetYCbCr, PnlYCbCr.hwnd, MColor.CVR_YCbCr_A: End Sub
 
 Private Sub SetTB(TB As TextBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr, CVR As ColorValueRange)
 Try: On Error GoTo Catch
@@ -2040,11 +2040,11 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
     Dim sa() As String: sa = Split(nam, "_")
     Dim u As Long: u = UBound(sa)
     If u = 1 Then
-        Dim S As String ': s = "Change the "
+        Dim s As String ': s = "Change the "
         Dim c_1 As String: c_1 = sa(0)
         Dim c_2 As String: c_2 = sa(1)
         If Len(c_1) > 3 And c_2 = "Y" Then c_2 = "YL" 'tiny optimization for CMYK-text
-        S = S & ttt.Item(c_2) & "-value of "
+        s = s & ttt.Item(c_2) & "-value of "
         Dim c11 As String
         Dim c12 As String
         Dim c13 As String
@@ -2055,12 +2055,12 @@ Function CreateToolTipText(ByVal nam As String, ttt As Collection) As String
             c11 = Mid(c_1, 1, 1): c12 = Mid(c_1, 2, 1): c13 = Mid(c_1, 3, 1)
             If Len(c_1) > 3 And c13 = "Y" Then c13 = "YL" 'tiny optimization for CMYK-text
         End If
-        S = S & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
+        s = s & c_1 & " (=" & ttt.Item(c11) & ", " & ttt.Item(c12) & ", " & ttt.Item(c13)
         If c_1 <> "YCbCr" And Len(c_1) > 3 Then
             Dim c14 As String: c14 = Mid(c_1, 4, 1)
-            S = S & ", " & ttt.Item(c14)
+            s = s & ", " & ttt.Item(c14)
         End If
-        CreateToolTipText = S & ")"
+        CreateToolTipText = s & ")"
     End If
     'Debug.Print FncCallCounter
 End Function

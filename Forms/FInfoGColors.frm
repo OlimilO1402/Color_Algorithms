@@ -60,7 +60,7 @@ Begin VB.Form FInfoGColors
    Begin VB.TextBox TxtPrevIndex 
       Alignment       =   1  'Rechts
       Height          =   375
-      Left            =   1680
+      Left            =   1800
       TabIndex        =   6
       Text            =   "0"
       Top             =   120
@@ -71,17 +71,17 @@ Begin VB.Form FInfoGColors
       BackColor       =   &H80000005&
       ForeColor       =   &H80000008&
       Height          =   495
-      Left            =   2280
+      Left            =   2400
       ScaleHeight     =   465
-      ScaleWidth      =   585
+      ScaleWidth      =   465
       TabIndex        =   4
       Top             =   120
-      Width           =   615
+      Width           =   495
    End
    Begin VB.TextBox TxtNewIndex 
       Alignment       =   1  'Rechts
       Height          =   375
-      Left            =   1680
+      Left            =   1800
       TabIndex        =   3
       Text            =   "0"
       Top             =   600
@@ -92,12 +92,12 @@ Begin VB.Form FInfoGColors
       BackColor       =   &H80000005&
       ForeColor       =   &H80000008&
       Height          =   495
-      Left            =   2280
+      Left            =   2400
       ScaleHeight     =   465
-      ScaleWidth      =   585
+      ScaleWidth      =   465
       TabIndex        =   1
       Top             =   600
-      Width           =   615
+      Width           =   495
    End
    Begin VB.CommandButton BtnCancel 
       Caption         =   "Cancel"
@@ -164,25 +164,10 @@ Private Sub LoadShpColors()
         Dim L0 As Single: L0 = .Left: m_Cw = .Width
         Dim T0 As Single: T0 = .Top:  m_Ch = .Height
     End With
-    Dim L As Single: L = L0 '0
-    Dim T As Single: T = T0 '0
-    Dim i As Long
-    For i = 1 To 255
-        Load ShpColors(i)
-        With ShpColors(i)
-            .Move L, T, m_Cw, m_Ch
-            .Visible = True
-            .BorderStyle = BorderStyleConstants.vbTransparent '0
-            .BorderWidth = 3
-            .BackColor = MInfoGColors.Color(i)
-        End With
-        L = L + m_Cw
-        If ((i + 1) Mod 16) = 0 Then
-            L = L0: T = T + m_Ch
-        End If
-    Next
+    ControlArrayOfShapes_Load ShpColors(), 16, 16
+    ControlArrayOfShapes_BackColor(ShpColors()) = MInfoGColors.ColorArray
 End Sub
-    
+
 Private Sub BtnCancel_Click()
     m_Result = VbMsgBoxResult.vbCancel
     Unload Me
@@ -200,7 +185,8 @@ End Sub
 Private Sub PBColors_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If Button = MouseButtonConstants.vbLeftButton Then
         m_isSelected = Not m_isSelected
-        Dim i As Integer: i = GetShapeIndex(X, Y)
+        Dim i As Integer: i = ControlArrayOfShapes_GetIndex(ShpColors, X, Y)
+        If i < 0 Then Exit Sub
         m_NewColor = ShpColors(i).BackColor
         PBNewColor.BackColor = m_NewColor
         TxtNewIndex.Text = i
@@ -209,8 +195,8 @@ End Sub
 
 Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     If m_isSelected Then Exit Sub
-    Dim i As Integer: i = GetShapeIndex(X, Y)
-    If -1 < m_oldI Then
+    Dim i As Integer: i = ControlArrayOfShapes_GetIndex(ShpColors, X, Y)
+    If -1 < m_oldI And m_oldI <> m_PrevIndex Then
         ShpColors(m_oldI).BorderStyle = BorderStyleConstants.vbTransparent
     End If
     If -1 < i Then
@@ -221,16 +207,44 @@ Private Sub PBColors_MouseMove(Button As Integer, Shift As Integer, X As Single,
     If i <> m_oldI Then m_oldI = i
 End Sub
 
-Private Function GetShapeIndex(ByVal X As Long, ByVal Y As Long) As Integer
-    Dim i As Long: GetShapeIndex = -1
+' v ' ############################## ' v '    Shapes    ' v ' ############################## ' v '
+Private Sub ControlArrayOfShapes_Load(ControlArrayOfShapes, ByVal nw As Byte, ByVal nh As Byte)
+    Dim L As Single, T As Single
+    Dim W As Single: W = ControlArrayOfShapes(0).Width
+    Dim H As Single: H = ControlArrayOfShapes(0).Height
+    Dim i As Long
+    For i = 0 To CLng(nw) * CLng(nh) - 1
+        If i > 0 Then Load ControlArrayOfShapes(i)
+        With ControlArrayOfShapes(i)
+            .Move L, T, W, H
+            .Visible = True
+            .BorderStyle = BorderStyleConstants.vbTransparent '0
+            .BorderWidth = 3
+        End With
+        L = L + W
+        If ((i + 1) Mod nw) = 0 Then
+            L = 0: T = T + H
+        End If
+    Next
+End Sub
+
+Private Function ControlArrayOfShapes_GetIndex(ControlArrayOfShapes, ByVal X As Single, ByVal Y As Single) As Integer
+    Dim i As Long: ControlArrayOfShapes_GetIndex = -1
     Dim q As Shape
-    For i = 0 To ShpColors.UBound
-        Set q = ShpColors(i)
+    For i = ControlArrayOfShapes.LBound To ControlArrayOfShapes.UBound
+        Set q = ControlArrayOfShapes(i)
         If (q.Left < X) And (X < q.Left + q.Width) And _
            (q.Top < Y) And (Y < q.Top + q.Height) Then
-            GetShapeIndex = i
+            ControlArrayOfShapes_GetIndex = i
             Exit Function
         End If
     Next
 End Function
+
+Private Property Let ControlArrayOfShapes_BackColor(ControlArrayOfShapes, Color() As Long)
+    Dim i As Long
+    For i = ControlArrayOfShapes.LBound To ControlArrayOfShapes.UBound
+        ControlArrayOfShapes(i).BackColor = Color(i)
+    Next
+End Property
 
