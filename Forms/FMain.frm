@@ -1480,16 +1480,16 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Type POINTAPI
-    X As Long
-    Y As Long
-End Type
+'Private Type POINTAPI
+'    X As Long
+'    Y As Long
+'End Type
 
 Private Declare Function SetParent Lib "user32" (ByVal hWndChild As LongPtr, ByVal hWndNewParent As LongPtr) As LongPtr
-Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
-Private Declare Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
-Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal X As Long, ByVal Y As Long) As Long
-Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+'Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+'Private Declare Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+'Private Declare Function GetPixel Lib "gdi32" (ByVal hDC As LongPtr, ByVal X As Long, ByVal Y As Long) As Long
+'Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
 
 'HWND SetCapture([in] HWND hWnd);
 Private Declare Function SetCapture Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
@@ -1499,7 +1499,7 @@ Private Declare Function SetCapture Lib "user32" (ByVal hwnd As LongPtr) As Long
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private m_OldHwnd As LongPtr
 
-Private CurMousePos As POINTAPI
+'Private CurMousePos As POINTAPI
 
 ' Everything will be converted to CMYK
 Private m_CMYK    As CMYK
@@ -1508,6 +1508,7 @@ Private m_PnlHwnd As Long
 Private m_Btn     As CommandButton
 Private m_Max     As Single
 Private m_CPicker As ColorDialog
+Private mColorSel As ColorSelector
 Private m_APB     As AlphaPB
 Private m_IsInit  As Boolean
 
@@ -1518,6 +1519,7 @@ Private m_IsInit  As Boolean
 Private Sub Form_Load()
     Set m_CPicker = New ColorDialog
     Set m_APB = MNew.AlphaPB(Me.PBColor, Me.PbPicture)
+    Set mColorSel = MNew.ColorSelector(Timer1, BtnOnOff, PBColor, Nothing)
     Me.Caption = "Color Algorithms v" & Me.Version
     Timer1.Interval = 50
     Timer1.Enabled = False
@@ -1542,18 +1544,6 @@ Private Sub BtnInfoGColor_Click()
     m_CMYK = LngColor_ToCMYK(lc)
     UpdateView
 End Sub
-
-
-'does not work
-'Private Sub Form_LostFocus()
-'    Me.Caption = "Form_LostFocus "
-'    If Timer1.Enabled Then BtnOnOff_Click
-'End Sub
-'does not work
-'Private Sub Form_Deactivate()
-'    Me.Caption = "Form_Deactivate "
-'    If Timer1.Enabled Then BtnOnOff_Click
-'End Sub
 
 Private Sub BtnMunsell_Click()
     'FMunsell.Show
@@ -1597,40 +1587,12 @@ Private Sub LblClosestMunsColor_DblClick()
     Dim lc As LngColor: lc = MColor.RGBA_ToLngColor(mc.RGBA)
     m_CMYK = MColor.LngColor_ToCMYK(lc)
     UpdateView
-    'Dim i As Long: i = MMunsell.TNamedRALColor_IndexFromName(sc)
-    'CmbRALClassic.ListIndex = i
 End Sub
-'Private Sub BtnMunsell_Click()
-'    'FMunsell.Show
-'    Dim Color As Long: Color = PBColor.BackColor
-'    If FMunsell.ShowDialog(Me, Color) = vbCancel Then Exit Sub
-'    'PBColor.BackColor = Color
-'    Dim lc As LngColor: lc.Value = Color
-'    m_CMYK = LngColor_ToCMYK(lc)
-'    UpdateView
-'End Sub
 
 Private Sub TBLngColor_LostFocus()
     Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.Text)
     m_CMYK = MColor.LngColor_ToCMYK(lc)
     UpdateView
-End Sub
-
-Private Sub Timer1_Timer()
-    GetCursorPos CurMousePos
-    Dim c As Long: c = ColorUnderMouse(CurMousePos.X, CurMousePos.Y)
-    PBColor.BackColor = c
-    m_CMYK = RGBAf_ToCMYK(MColor.LngColor_ToRGBAf(LngColor(c)))
-    UpdateView
-End Sub
-
-Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long
-    ColorUnderMouse = GetPixel(GetDC(0), X, Y)
-End Function
-
-Private Sub BtnOnOff_Click()
-    Timer1.Enabled = Not Timer1.Enabled
-    BtnOnOff.Caption = IIf(Timer1.Enabled, "on", "off")
 End Sub
 
 Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
@@ -1641,18 +1603,18 @@ Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
     MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
     Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
-    m_APB.Alpha = 255 - RGBA.a
+    m_APB.Alpha = 255 - RGBA.A
     MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
-    Dim alp As Single: alp = RGBA.a
+    Dim alp As Single: alp = RGBA.A
     
     Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
     TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
     
-    RGBA.a = 0
+    RGBA.A = 0
     LCol = MColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
-    RGBA.a = alp
+    RGBA.A = alp
     
     Dim HSLAf As HSLAf: HSLAf = RGBAf_ToHSLAf(RGBAf)
     MColor.HSLAf_ToView TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, HSLAf
@@ -1816,7 +1778,7 @@ Try: On Error GoTo Catch
     'jetzt BackColor
     Dim L As LngColor: L.Value = m_CPicker.Color
     Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(L)
-    RGBA.a = CByte(TBRGBA_A.Text)
+    RGBA.A = CByte(TBRGBA_A.Text)
     m_CMYK = RGBA_ToCMYK(RGBA)
     UpdateView
 Catch:
@@ -1887,13 +1849,11 @@ Private Sub SetTB(TB As TextBox, Btn As CommandButton, ByVal pnlHwnd As LongPtr,
 Try: On Error GoTo Catch
     Set m_TBBack = TB
     Set m_Btn = Btn
-    'm_Max = MaxVal
     SetParent Me.CBValues.hwnd, pnlHwnd
     Me.CBValues.Move m_TBBack.Left, m_TBBack.Top
     m_IsInit = True
     MColor.ColorValueRange_ToComboBox CVR, Me.CBValues, m_TBBack.Text
     m_IsInit = False
-    'CBValues.Text = m_TBBack.Text
     CBValues.ZOrder 0
     'Dim n As Single: n = 256
 '    If f = 1 Then n = 255
@@ -2072,17 +2032,17 @@ Private Function ErrHandler(ByVal FuncName As String, _
                             Optional bErrLog As Boolean = True, _
                             Optional vbDecor As VbMsgBoxStyle = vbOKCancel, _
                             Optional bRetry As Boolean) As VbMsgBoxResult
-
+    
     If bRetry Then
-
+        
         ErrHandler = MessErrorRetry(TypeName(Me), FuncName, AddInfo, WinApiError, bErrLog)
-
+        
     Else
-
+        
         ErrHandler = MessError(TypeName(Me), FuncName, AddInfo, WinApiError, bLoud, bErrLog, vbDecor)
-
+        
     End If
-
+    
 End Function
 
 
