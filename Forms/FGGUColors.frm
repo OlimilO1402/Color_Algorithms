@@ -1,7 +1,7 @@
 VERSION 5.00
-Begin VB.Form FInfoGColors 
+Begin VB.Form FGGUColors 
    BorderStyle     =   3  'Fester Dialog
-   Caption         =   "InfoGraph Colors"
+   Caption         =   "GGU-Colors"
    ClientHeight    =   5415
    ClientLeft      =   45
    ClientTop       =   390
@@ -22,14 +22,55 @@ Begin VB.Form FInfoGColors
    ScaleWidth      =   4335
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows-Standard
-   Begin VB.CommandButton BtnOK 
-      Caption         =   "OK"
-      Default         =   -1  'True
+   Begin VB.CommandButton BtnCancel 
+      Caption         =   "Cancel"
       Height          =   375
       Left            =   3000
-      TabIndex        =   8
-      Top             =   120
+      TabIndex        =   6
+      Top             =   600
       Width           =   1215
+   End
+   Begin VB.PictureBox PBNewColor 
+      Appearance      =   0  '2D
+      BackColor       =   &H80000005&
+      ForeColor       =   &H80000008&
+      Height          =   495
+      Left            =   2400
+      ScaleHeight     =   465
+      ScaleWidth      =   465
+      TabIndex        =   5
+      Top             =   600
+      Width           =   495
+   End
+   Begin VB.TextBox TxtNewIndex 
+      Alignment       =   1  'Rechts
+      Height          =   375
+      Left            =   1800
+      TabIndex        =   4
+      Text            =   "0"
+      Top             =   600
+      Width           =   495
+   End
+   Begin VB.PictureBox PBPrevColor 
+      Appearance      =   0  '2D
+      BackColor       =   &H80000005&
+      ForeColor       =   &H80000008&
+      Height          =   495
+      Left            =   2400
+      ScaleHeight     =   465
+      ScaleWidth      =   465
+      TabIndex        =   3
+      Top             =   120
+      Width           =   495
+   End
+   Begin VB.TextBox TxtPrevIndex 
+      Alignment       =   1  'Rechts
+      Height          =   375
+      Left            =   1800
+      TabIndex        =   2
+      Text            =   "0"
+      Top             =   120
+      Width           =   495
    End
    Begin VB.PictureBox PBColors 
       Appearance      =   0  '2D
@@ -41,7 +82,7 @@ Begin VB.Form FInfoGColors
       ScaleHeight     =   273
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   273
-      TabIndex        =   7
+      TabIndex        =   1
       Top             =   1200
       Width           =   4095
       Begin VB.Shape ShpColors 
@@ -49,82 +90,41 @@ Begin VB.Form FInfoGColors
          BackStyle       =   1  'Undurchsichtig
          BorderColor     =   &H8000000D&
          BorderWidth     =   2
-         Height          =   255
+         Height          =   495
          Index           =   0
          Left            =   0
          Shape           =   1  'Quadrat
          Top             =   0
-         Width           =   255
+         Width           =   495
       End
    End
-   Begin VB.TextBox TxtPrevIndex 
-      Alignment       =   1  'Rechts
-      Height          =   375
-      Left            =   1800
-      TabIndex        =   6
-      Text            =   "0"
-      Top             =   120
-      Width           =   495
-   End
-   Begin VB.PictureBox PBPrevColor 
-      Appearance      =   0  '2D
-      BackColor       =   &H80000005&
-      ForeColor       =   &H80000008&
-      Height          =   495
-      Left            =   2400
-      ScaleHeight     =   465
-      ScaleWidth      =   465
-      TabIndex        =   4
-      Top             =   120
-      Width           =   495
-   End
-   Begin VB.TextBox TxtNewIndex 
-      Alignment       =   1  'Rechts
-      Height          =   375
-      Left            =   1800
-      TabIndex        =   3
-      Text            =   "0"
-      Top             =   600
-      Width           =   495
-   End
-   Begin VB.PictureBox PBNewColor 
-      Appearance      =   0  '2D
-      BackColor       =   &H80000005&
-      ForeColor       =   &H80000008&
-      Height          =   495
-      Left            =   2400
-      ScaleHeight     =   465
-      ScaleWidth      =   465
-      TabIndex        =   1
-      Top             =   600
-      Width           =   495
-   End
-   Begin VB.CommandButton BtnCancel 
-      Caption         =   "Cancel"
+   Begin VB.CommandButton BtnOK 
+      Caption         =   "OK"
+      Default         =   -1  'True
       Height          =   375
       Left            =   3000
       TabIndex        =   0
-      Top             =   600
-      Width           =   1215
-   End
-   Begin VB.Label Label2 
-      Caption         =   "Previous Color:"
-      Height          =   255
-      Left            =   120
-      TabIndex        =   5
       Top             =   120
-      Width           =   1455
+      Width           =   1215
    End
    Begin VB.Label Label1 
       Caption         =   "Color Number:"
       Height          =   255
       Left            =   120
-      TabIndex        =   2
+      TabIndex        =   8
       Top             =   600
       Width           =   1455
    End
+   Begin VB.Label Label2 
+      Caption         =   "Previous Color:"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   7
+      Top             =   120
+      Width           =   1455
+   End
 End
-Attribute VB_Name = "FInfoGColors"
+Attribute VB_Name = "FGGUColors"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -143,7 +143,7 @@ Private m_isSelected As Boolean
 Public Function ShowDialog(Owner As Form, Color_inout As Long) As VbMsgBoxResult
     m_PrevColor = Color_inout
     PBPrevColor.BackColor = m_PrevColor
-    m_PrevIndex = MInfoGColors.IndexFromColor(Color_inout)
+    m_PrevIndex = MGGUColors.IndexFromColor(Color_inout)
     TxtPrevIndex.Text = m_PrevIndex
     'ShpColors(m_PrevIndex).BorderWidth =
     ShpColors(m_PrevIndex).BorderStyle = BorderStyleConstants.vbBSSolid
@@ -161,11 +161,11 @@ End Sub
 
 Private Sub LoadShpColors()
     With ShpColors(0)
-        Dim L0 As Single: L0 = .Left: m_Cw = .Width
-        Dim T0 As Single: T0 = .Top:  m_Ch = .Height
+        Dim L0 As Single: L0 = .Left: m_Cw = PBColors.ScaleWidth / 5 ' .Width
+        Dim T0 As Single: T0 = .Top:  m_Ch = PBColors.ScaleHeight / 5 '.Height
     End With
-    ControlArrayOfShapes_Load ShpColors(), 16, 16
-    ControlArrayOfShapes_BackColor(ShpColors()) = MInfoGColors.ColorArray
+    ControlArrayOfShapes_Load ShpColors(), 5, 5
+    ControlArrayOfShapes_BackColor(ShpColors()) = MGGUColors.ColorArray
 End Sub
 
 Private Sub BtnCancel_Click()
@@ -210,8 +210,8 @@ End Sub
 ' v ' ############################## ' v '    Shapes    ' v ' ############################## ' v '
 Private Sub ControlArrayOfShapes_Load(ControlArrayOfShapes, ByVal nw As Byte, ByVal nh As Byte)
     Dim L As Single, t As Single
-    Dim W As Single: W = ControlArrayOfShapes(0).Width
-    Dim H As Single: H = ControlArrayOfShapes(0).Height
+    Dim W As Single: W = m_Cw ' ControlArrayOfShapes(0).Width
+    Dim H As Single: H = m_Ch 'ControlArrayOfShapes(0).Height
     Dim i As Long
     For i = 0 To CLng(nw) * CLng(nh) - 1
         If i > 0 Then Load ControlArrayOfShapes(i)
@@ -247,4 +247,6 @@ Private Property Let ControlArrayOfShapes_BackColor(ControlArrayOfShapes, Color(
         ControlArrayOfShapes(i).BackColor = Color(i)
     Next
 End Property
+
+
 

@@ -19,6 +19,14 @@ Begin VB.Form FMain
    ScaleHeight     =   3375
    ScaleWidth      =   18495
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.CommandButton BtnGGUColor 
+      Caption         =   "GGU Colors"
+      Height          =   375
+      Left            =   13200
+      TabIndex        =   113
+      Top             =   2520
+      Width           =   1575
+   End
    Begin VB.CommandButton BtnInfoGColor 
       Caption         =   "InfoCad Colors"
       Height          =   375
@@ -48,7 +56,7 @@ Begin VB.Form FMain
    Begin VB.CommandButton BtnInfo 
       Caption         =   "Info"
       Height          =   375
-      Left            =   13920
+      Left            =   15720
       TabIndex        =   38
       Top             =   2520
       Width           =   855
@@ -1508,7 +1516,7 @@ Private m_PnlHwnd As Long
 Private m_Btn     As CommandButton
 Private m_Max     As Single
 Private m_CPicker As ColorDialog
-Private mColorSel As ColorSelector
+Private WithEvents mColorSel As ColorSelector
 Private m_APB     As AlphaPB
 Private m_IsInit  As Boolean
 
@@ -1540,6 +1548,14 @@ End Sub
 Private Sub BtnInfoGColor_Click()
     Dim Color As Long: Color = PBColor.BackColor
     If FInfoGColors.ShowDialog(Me, Color) = VbMsgBoxResult.vbCancel Then Exit Sub
+    Dim lc As LngColor: lc.Value = Color
+    m_CMYK = LngColor_ToCMYK(lc)
+    UpdateView
+End Sub
+
+Private Sub BtnGGUColor_Click()
+    Dim Color As Long: Color = PBColor.BackColor
+    If FGGUColors.ShowDialog(Me, Color) = VbMsgBoxResult.vbCancel Then Exit Sub
     Dim lc As LngColor: lc.Value = Color
     m_CMYK = LngColor_ToCMYK(lc)
     UpdateView
@@ -1585,6 +1601,12 @@ Private Sub LblClosestMunsColor_DblClick()
     If Len(sc) = 0 Then Exit Sub
     Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ParseColorFromKey(sc)
     Dim lc As LngColor: lc = MColor.RGBA_ToLngColor(mc.RGBA)
+    m_CMYK = MColor.LngColor_ToCMYK(lc)
+    UpdateView
+End Sub
+
+Private Sub mColorSel_ColorSelected(ByVal Color As Long)
+    Dim lc As LngColor: lc = MColor.LngColor(Color)
     m_CMYK = MColor.LngColor_ToCMYK(lc)
     UpdateView
 End Sub

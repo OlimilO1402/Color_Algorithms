@@ -32,7 +32,7 @@ Private m_LblCurColor As VB.Label
 Private m_CurMousePos As POINTAPI
 Private m_CurColor    As Long
 
-Public Event ColorSelected(Color As Long)
+Public Event ColorSelected(ByVal Color As Long)
 
 Friend Sub New_(aTimer As VB.Timer, aButton As CommandButton, aColorView As PictureBox, aLabel As Label)
     Set mTimer = aTimer: Set mButton = aButton: Set m_PBColorView = aColorView: Set m_LblCurColor = aLabel
@@ -58,9 +58,10 @@ End Sub
 
 Private Sub mTimer_Timer()
     GetCursorPos m_CurMousePos
-    Dim Color As Long: Color = ColorUnderMouse(m_CurMousePos.X, m_CurMousePos.Y)
-    If Not m_PBColorView Is Nothing Then m_PBColorView.BackColor = Color
-    If Not m_LblCurColor Is Nothing Then m_LblCurColor.Caption = MouseCoordsNColor_ToStr(m_CurMousePos.X, m_CurMousePos.Y, Color)
+    'Dim Color As Long: Color = ColorUnderMouse(m_CurMousePos.X, m_CurMousePos.Y)
+    m_CurColor = ColorUnderMouse(m_CurMousePos.X, m_CurMousePos.Y)
+    If Not m_PBColorView Is Nothing Then m_PBColorView.BackColor = m_CurColor
+    If Not m_LblCurColor Is Nothing Then m_LblCurColor.Caption = MouseCoordsNColor_ToStr(m_CurMousePos.X, m_CurMousePos.Y, m_CurColor)
 End Sub
 
 Private Function ColorUnderMouse(ByVal X As Long, ByVal Y As Long) As Long

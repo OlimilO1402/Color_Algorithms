@@ -4,7 +4,7 @@ Option Explicit
 Private m_InfoGColors(0 To 255) As Long
 
 Public Sub Init()
-    Dim i As Byte
+    Dim i As Integer
     'ReDim m_InfoGColors(0 To 255)
     m_InfoGColors(i) = RGB(&HFF, &HFF, &HFF): i = i + 1
     m_InfoGColors(i) = RGB(&H0, &H0, &H0):    i = i + 1
@@ -261,7 +261,7 @@ Public Sub Init()
     m_InfoGColors(i) = RGB(&HCC, &HCC, &HCC): i = i + 1
     m_InfoGColors(i) = RGB(&HDB, &HDB, &HDB): i = i + 1
     m_InfoGColors(i) = RGB(&HED, &HED, &HED): i = i + 1
-    m_InfoGColors(i) = RGB(&HFF, &HFF, &HFF): i = i + 1
+    m_InfoGColors(i) = RGB(&HFF, &HFF, &HFF) ': i = i + 1
     
 End Sub
 
