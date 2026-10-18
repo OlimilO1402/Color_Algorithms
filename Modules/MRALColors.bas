@@ -3,6 +3,8 @@ Option Explicit
 'https://de.wikipedia.org/wiki/RAL-Farbe
 Public Enum RALClassic
     'RAL-1X Gelb und Beige
+    'these hex values are the rgb values taken from wikipedia but are they really correct?
+    'we could also use the CIE-L*a*b-values from the wikipedia RAL-classic-color list
     RAL_1000_Grünbeige = &H88BACD
     RAL_1001_Beige = &H84B0D0
     RAL_1002_Sandgelb = &H6DAAD2
@@ -251,17 +253,19 @@ End Enum
 Public Type TNamedRALColor
     Name   As String
     RALNr  As Long
-    RALCol As Long
+    RALColRGB As Long
+    RalColLab As CIELab
 End Type
 Private m_Arr() As TNamedRALColor
 Private m_Count As Long
 
 ' v ' ############################## ' v '    Type TNamedRALColor    ' v ' ############################## ' v '
-Private Function TNamedRALColor(ByVal aName As String, ByVal aRALNr As Long, ByVal RALColor As RALClassic) As TNamedRALColor
+Private Function TNamedRALColor(ByVal aName As String, ByVal aRALNr As Long, ByVal RALColorRGB As RALClassic, RALColorLab As MColor.CIELab) As TNamedRALColor
     With TNamedRALColor
         .Name = aName
         .RALNr = aRALNr
-        .RALCol = RALColor
+        .RALColRGB = RALColorRGB
+        .RalColLab = RALColorLab
     End With
 End Function
 
@@ -280,11 +284,17 @@ Public Property Get TNamedRALColor_IndexFromName(ByVal ColorName As String) As L
 End Property
 
 Public Function TNamedRALColor_ClosestColorTo(ByVal aColor As Long) As TNamedRALColor
-    Dim i As Long, i_minEd As Long, edi As Double
+    Dim i As Long, i_minEd As Long, edi As Double, edi1 As Double, edi2 As Double
     Dim lc As LngColor: lc = LngColor(aColor)
-    Dim ed0 As Double: ed0 = LngColor_EuclidRMean(LngColor(m_Arr(0).RALCol), lc)
+    Dim ed0 As Double
+    'ed0 = LngColor_EuclidRMean(LngColor(m_Arr(0).RALColRGB), lc)
+    ed0 = LngColor_EuclidRMean(MColor.CIELab_ToLngColor(m_Arr(0).RalColLab, CIELabLight.D65_10), lc)
     For i = 1 To m_Count - 1
-        edi = LngColor_EuclidRMean(LngColor(m_Arr(i).RALCol), lc)
+        'edi1 = LngColor_EuclidRMean(MColor.LngColor(m_Arr(i).RALColRGB), lc)
+        edi2 = LngColor_EuclidRMean(MColor.CIELab_ToLngColor(m_Arr(i).RalColLab, CIELabLight.D65_10), lc)
+        ''MColor.RGBA_ToLngColor(MColor.RGBAf_ToRGBA(MColor.XYZ_ToRGBAf(MColor.CIELab_ToXYZ(Lab)))), lc)
+        'ed0 = IIf(UseWikipediaRGBValues, ed1, ed2)
+        edi = edi2
         If edi < ed0 Then
             i_minEd = i
             ed0 = edi
@@ -300,249 +310,249 @@ End Function
 Public Sub TNamedRALColor_Init()
     Dim i As Long: m_Count = 225
     ReDim m_Arr(0 To m_Count - 1)
-    m_Arr(i) = TNamedRALColor("Grünbeige", 1000, RALClassic.RAL_1000_Grünbeige):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Beige", 1001, RALClassic.RAL_1001_Beige):                     i = i + 1
-    m_Arr(i) = TNamedRALColor("Sandgelb", 1002, RALClassic.RAL_1002_Sandgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalgelb", 1003, RALClassic.RAL_1003_Signalgelb):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Goldgelb", 1004, RALClassic.RAL_1004_Goldgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Honiggelb", 1005, RALClassic.RAL_1005_Honiggelb):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Maisgelb", 1006, RALClassic.RAL_1006_Maisgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Narzissengelb", 1007, RALClassic.RAL_1007_Narzissengelb):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Braunbeige", 1011, RALClassic.RAL_1011_Braunbeige):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Zitronengelb", 1012, RALClassic.RAL_1012_Zitronengelb):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlweiß", 1013, RALClassic.RAL_1013_Perlweiß):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Elfenbein", 1014, RALClassic.RAL_1014_Elfenbein):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Hellelfenbein", 1015, RALClassic.RAL_1015_Hellelfenbein):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwefelgelb", 1016, RALClassic.RAL_1016_Schwefelgelb):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Safrangelb", 1017, RALClassic.RAL_1017_Safrangelb):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Zinkgelb", 1018, RALClassic.RAL_1018_Zinkgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Graubeige", 1019, RALClassic.RAL_1019_Graubeige):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Olivgelb", 1020, RALClassic.RAL_1020_Olivgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Rapsgelb", 1021, RALClassic.RAL_1021_Rapsgelb):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsgelb", 1023, RALClassic.RAL_1023_Verkehrsgelb):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Ockergelb", 1024, RALClassic.RAL_1024_Ockergelb):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchtgelb", 1026, RALClassic.RAL_1026_Leuchtgelb):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Currygelb", 1027, RALClassic.RAL_1027_Currygelb):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Melonengelb", 1028, RALClassic.RAL_1028_Melonengelb):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Ginstergelb", 1032, RALClassic.RAL_1032_Ginstergelb):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Dahliengelb", 1033, RALClassic.RAL_1033_Dahliengelb):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Pastellgelb", 1034, RALClassic.RAL_1034_Pastellgelb):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlbeige", 1035, RALClassic.RAL_1035_Perlbeige):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlgold", 1036, RALClassic.RAL_1036_Perlgold):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Sonnengelb", 1037, RALClassic.RAL_1037_Sonnengelb):           i = i + 1
+m_Arr(i) = TNamedRALColor("Grünbeige", 1000, RALClassic.RAL_1000_Grünbeige, MColor.CIELab(80, 1, 24)):                          i = i + 1
+m_Arr(i) = TNamedRALColor("Beige", 1001, RALClassic.RAL_1001_Beige, MColor.CIELab(78, 6, 23)):                                  i = i + 1
+m_Arr(i) = TNamedRALColor("Sandgelb", 1002, RALClassic.RAL_1002_Sandgelb, MColor.CIELab(77, 7, 33)):                            i = i + 1
+m_Arr(i) = TNamedRALColor("Signalgelb", 1003, RALClassic.RAL_1003_Signalgelb, MColor.CIELab(79, 17, 79)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Goldgelb", 1004, RALClassic.RAL_1004_Goldgelb, MColor.CIELab(71.42, 15.28, 69.28)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Honiggelb", 1005, RALClassic.RAL_1005_Honiggelb, MColor.CIELab(69, 13, 70)):                         i = i + 1
+m_Arr(i) = TNamedRALColor("Maisgelb", 1006, RALClassic.RAL_1006_Maisgelb, MColor.CIELab(72, 20, 74)):                           i = i + 1
+m_Arr(i) = TNamedRALColor("Narzissengelb", 1007, RALClassic.RAL_1007_Narzissengelb, MColor.CIELab(72, 24, 74)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Braunbeige", 1011, RALClassic.RAL_1011_Braunbeige, MColor.CIELab(59.92, 11.35, 29.17)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Zitronengelb", 1012, RALClassic.RAL_1012_Zitronengelb, MColor.CIELab(75.04, 4.64, 61.31)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Perlweiß", 1013, RALClassic.RAL_1013_Perlweiß, MColor.CIELab(90, 1, 9)):                             i = i + 1
+m_Arr(i) = TNamedRALColor("Elfenbein", 1014, RALClassic.RAL_1014_Elfenbein, MColor.CIELab(84, 4, 21)):                          i = i + 1
+m_Arr(i) = TNamedRALColor("Hellelfenbein", 1015, RALClassic.RAL_1015_Hellelfenbein, MColor.CIELab(88, 3, 14)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Schwefelgelb", 1016, RALClassic.RAL_1016_Schwefelgelb, MColor.CIELab(88.37, -9.78, 71.3)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Safrangelb", 1017, RALClassic.RAL_1017_Safrangelb, MColor.CIELab(76.32, 19.37, 51.02)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Zinkgelb", 1018, RALClassic.RAL_1018_Zinkgelb, MColor.CIELab(83.35, 3.46, 75.83)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Graubeige", 1019, RALClassic.RAL_1019_Graubeige, MColor.CIELab(62.62, 4.31, 12.94)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Olivgelb", 1020, RALClassic.RAL_1020_Olivgelb, MColor.CIELab(61.98, 0.39, 23.18)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Rapsgelb", 1021, RALClassic.RAL_1021_Rapsgelb, MColor.CIELab(82, 10, 80)):                           i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsgelb", 1023, RALClassic.RAL_1023_Verkehrsgelb, MColor.CIELab(82, 11, 80)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Ockergelb", 1024, RALClassic.RAL_1024_Ockergelb, MColor.CIELab(64.26, 8.49, 41.49)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchtgelb", 1026, RALClassic.RAL_1026_Leuchtgelb, MColor.CIELab(97, -15, 90)):                      i = i + 1
+m_Arr(i) = TNamedRALColor("Currygelb", 1027, RALClassic.RAL_1027_Currygelb, MColor.CIELab(58.15, 5.83, 47.68)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Melonengelb", 1028, RALClassic.RAL_1028_Melonengelb, MColor.CIELab(77, 25, 78)):                     i = i + 1
+m_Arr(i) = TNamedRALColor("Ginstergelb", 1032, RALClassic.RAL_1032_Ginstergelb, MColor.CIELab(76, 11, 76)):                     i = i + 1
+m_Arr(i) = TNamedRALColor("Dahliengelb", 1033, RALClassic.RAL_1033_Dahliengelb, MColor.CIELab(71.74, 27.78, 71.68)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Pastellgelb", 1034, RALClassic.RAL_1034_Pastellgelb, MColor.CIELab(72.73, 21.4, 45.09)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Perlbeige", 1035, RALClassic.RAL_1035_Perlbeige, MColor.CIELab(54.79, 0.35, 11.86)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Perlgold", 1036, RALClassic.RAL_1036_Perlgold, MColor.CIELab(48.95, 4.77, 26.69)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Sonnengelb", 1037, RALClassic.RAL_1037_Sonnengelb, MColor.CIELab(70.28, 26.19, 64.79)):              i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Gelborange", 2000, RALClassic.RAL_2000_Gelborange):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Rotorange", 2001, RALClassic.RAL_2001_Rotorange):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Blutorange", 2002, RALClassic.RAL_2002_Blutorange):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Pastellorange", 2003, RALClassic.RAL_2003_Pastellorange):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Reinorange", 2004, RALClassic.RAL_2004_Reinorange):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchtorange", 2005, RALClassic.RAL_2005_Leuchtorange):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchthellorange", 2007, RALClassic.RAL_2007_Leuchthellorange): i = i + 1
-    m_Arr(i) = TNamedRALColor("Hellrotorange", 2008, RALClassic.RAL_2008_Hellrotorange):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsorange", 2009, RALClassic.RAL_2009_Verkehrsorange):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalorange", 2010, RALClassic.RAL_2010_Signalorange):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Tieforange", 2011, RALClassic.RAL_2011_Tieforange):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Lachsorange", 2012, RALClassic.RAL_2012_Lachsorange):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlorange", 2013, RALClassic.RAL_2013_Perlorange):             i = i + 1
-    m_Arr(i) = TNamedRALColor("RALOrange", 2017, RALClassic.RAL_2017_RALOrange):               i = i + 1
+m_Arr(i) = TNamedRALColor("Gelborange", 2000, RALClassic.RAL_2000_Gelborange, MColor.CIELab(64, 33, 69)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Rotorange", 2001, RALClassic.RAL_2001_Rotorange, MColor.CIELab(53, 41, 51)):                         i = i + 1
+m_Arr(i) = TNamedRALColor("Blutorange", 2002, RALClassic.RAL_2002_Blutorange, MColor.CIELab(47.74, 47.87, 33.73)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Pastellorange", 2003, RALClassic.RAL_2003_Pastellorange, MColor.CIELab(66.02, 41.22, 52.36)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Reinorange", 2004, RALClassic.RAL_2004_Reinorange, MColor.CIELab(56.89, 50.34, 49.81)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchtorange", 2005, RALClassic.RAL_2005_Leuchtorange, MColor.CIELab(72.27, 87.78, 82.31)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchthellorange", 2007, RALClassic.RAL_2007_Leuchthellorange, MColor.CIELab(76.86, 47.87, 97.63)):  i = i + 1
+m_Arr(i) = TNamedRALColor("Hellrotorange", 2008, RALClassic.RAL_2008_Hellrotorange, MColor.CIELab(60.33, 46.91, 60.52)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsorange", 2009, RALClassic.RAL_2009_Verkehrsorange, MColor.CIELab(55.83, 47.79, 48.83)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Signalorange", 2010, RALClassic.RAL_2010_Signalorange, MColor.CIELab(55.39, 40.1, 42.42)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Tieforange", 2011, RALClassic.RAL_2011_Tieforange, MColor.CIELab(65, 35, 68)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Lachsorange", 2012, RALClassic.RAL_2012_Lachsorange, MColor.CIELab(57.75, 40.28, 30.66)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Perlorange", 2013, RALClassic.RAL_2013_Perlorange, MColor.CIELab(40.73, 32.14, 34.92)):              i = i + 1
+m_Arr(i) = TNamedRALColor("RALOrange", 2017, RALClassic.RAL_2017_RALOrange, MColor.CIELab(56.55, 66.92, 67.26)):                i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Feuerrot", 3000, RALClassic.RAL_3000_Feuerrot):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalrot", 3001, RALClassic.RAL_3001_Signalrot):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Karminrot", 3002, RALClassic.RAL_3002_Karminrot):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Rubinrot", 3003, RALClassic.RAL_3003_Rubinrot):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Purpurrot", 3004, RALClassic.RAL_3004_Purpurrot):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Weinrot", 3005, RALClassic.RAL_3005_Weinrot):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzrot", 3007, RALClassic.RAL_3007_Schwarzrot):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Oxidrot", 3009, RALClassic.RAL_3009_Oxidrot):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Braunrot", 3011, RALClassic.RAL_3011_Braunrot):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Beigerot", 3012, RALClassic.RAL_3012_Beigerot):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Tomatenrot", 3013, RALClassic.RAL_3013_Tomatenrot):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Altrosa", 3014, RALClassic.RAL_3014_Altrosa):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Hellrosa", 3015, RALClassic.RAL_3015_Hellrosa):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Korallenrot", 3016, RALClassic.RAL_3016_Korallenrot):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Rosé", 3017, RALClassic.RAL_3017_Rosé):                    i = i + 1
-    m_Arr(i) = TNamedRALColor("Erdbeerrot", 3018, RALClassic.RAL_3018_Erdbeerrot):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsrot", 3020, RALClassic.RAL_3020_Verkehrsrot):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Lachsrot", 3022, RALClassic.RAL_3022_Lachsrot):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchtrot", 3024, RALClassic.RAL_3024_Leuchtrot):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchthellrot", 3026, RALClassic.RAL_3026_Leuchthellrot):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Himbeerrot", 3027, RALClassic.RAL_3027_Himbeerrot):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Reinrot", 3028, RALClassic.RAL_3028_Reinrot):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Orientrot", 3031, RALClassic.RAL_3031_Orientrot):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlrubinrot", 3032, RALClassic.RAL_3032_Perlrubinrot):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlrosa", 3033, RALClassic.RAL_3033_Perlrosa):            i = i + 1
+m_Arr(i) = TNamedRALColor("Feuerrot", 3000, RALClassic.RAL_3000_Feuerrot, MColor.CIELab(44, 50, 39)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Signalrot", 3001, RALClassic.RAL_3001_Signalrot, MColor.CIELab(41, 49, 33)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Karminrot", 3002, RALClassic.RAL_3002_Karminrot, MColor.CIELab(41, 49, 35)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Rubinrot", 3003, RALClassic.RAL_3003_Rubinrot, MColor.CIELab(36, 47, 27)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Purpurrot", 3004, RALClassic.RAL_3004_Purpurrot, MColor.CIELab(31, 38, 18)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Weinrot", 3005, RALClassic.RAL_3005_Weinrot, MColor.CIELab(26, 33, 15)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzrot", 3007, RALClassic.RAL_3007_Schwarzrot, MColor.CIELab(23, 17, 7)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Oxidrot", 3009, RALClassic.RAL_3009_Oxidrot, MColor.CIELab(29.27, 24.59, 16.51)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Braunrot", 3011, RALClassic.RAL_3011_Braunrot, MColor.CIELab(34.52, 28.66, 13.44)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Beigerot", 3012, RALClassic.RAL_3012_Beigerot, MColor.CIELab(63.81, 20.79, 20.45)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Tomatenrot", 3013, RALClassic.RAL_3013_Tomatenrot, MColor.CIELab(40.7, 36.67, 21.37)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Altrosa", 3014, RALClassic.RAL_3014_Altrosa, MColor.CIELab(60.17, 32.49, 12.58)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Hellrosa", 3015, RALClassic.RAL_3015_Hellrosa, MColor.CIELab(71.23, 21.59, 4.98)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Korallenrot", 3016, RALClassic.RAL_3016_Korallenrot, MColor.CIELab(44.7, 37.92, 23.96)):   i = i + 1
+m_Arr(i) = TNamedRALColor("Rosé", 3017, RALClassic.RAL_3017_Rosé, MColor.CIELab(54.24, 44.26, 16.87)):                i = i + 1
+m_Arr(i) = TNamedRALColor("Erdbeerrot", 3018, RALClassic.RAL_3018_Erdbeerrot, MColor.CIELab(50.77, 49.15, 19.86)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsrot", 3020, RALClassic.RAL_3020_Verkehrsrot, MColor.CIELab(46, 59, 54)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Lachsrot", 3022, RALClassic.RAL_3022_Lachsrot, MColor.CIELab(56.06, 38.9, 29.7)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchtrot", 3024, RALClassic.RAL_3024_Leuchtrot, MColor.CIELab(51.32, 82.52, 71.62)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchthellrot", 3026, RALClassic.RAL_3026_Leuchthellrot, MColor.CIELab(59, 70, 59)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Himbeerrot", 3027, RALClassic.RAL_3027_Himbeerrot, MColor.CIELab(43.07, 46.96, 15.81)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Reinrot", 3028, RALClassic.RAL_3028_Reinrot, MColor.CIELab(51, 58, 46)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Orientrot", 3031, RALClassic.RAL_3031_Orientrot, MColor.CIELab(46, 45, 25)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Perlrubinrot", 3032, RALClassic.RAL_3032_Perlrubinrot, MColor.CIELab(26.88, 41.34, 19.4)): i = i + 1
+m_Arr(i) = TNamedRALColor("Perlrosa", 3033, RALClassic.RAL_3033_Perlrosa, MColor.CIELab(44.29, 45.11, 28.62)):        i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Rotlila", 4001, RALClassic.RAL_4001_Rotlila):                 i = i + 1
-    m_Arr(i) = TNamedRALColor("Rotviolett", 4002, RALClassic.RAL_4002_Rotviolett):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Erikaviolett", 4003, RALClassic.RAL_4003_Erikaviolett):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Bordeauxviolett", 4004, RALClassic.RAL_4004_Bordeauxviolett): i = i + 1
-    m_Arr(i) = TNamedRALColor("Blaulila", 4005, RALClassic.RAL_4005_Blaulila):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrspurpur", 4006, RALClassic.RAL_4006_Verkehrspurpur):   i = i + 1
-    m_Arr(i) = TNamedRALColor("Purpurviolett", 4007, RALClassic.RAL_4007_Purpurviolett):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalviolett", 4008, RALClassic.RAL_4008_Signalviolett):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Pastellviolett", 4009, RALClassic.RAL_4009_Pastellviolett):   i = i + 1
-    m_Arr(i) = TNamedRALColor("Telemagenta", 4010, RALClassic.RAL_4010_Telemagenta):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlviolett", 4011, RALClassic.RAL_4011_Perlviolett):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlbrombeer", 4012, RALClassic.RAL_4012_Perlbrombeer):       i = i + 1
+m_Arr(i) = TNamedRALColor("Rotlila", 4001, RALClassic.RAL_4001_Rotlila, MColor.CIELab(49.1, 17.35, -12.85)):                i = i + 1
+m_Arr(i) = TNamedRALColor("Rotviolett", 4002, RALClassic.RAL_4002_Rotviolett, MColor.CIELab(41.91, 30.05, 5.67)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Erikaviolett", 4003, RALClassic.RAL_4003_Erikaviolett, MColor.CIELab(54.25, 44.66, -5.02)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Bordeauxviolett", 4004, RALClassic.RAL_4004_Bordeauxviolett, MColor.CIELab(32.22, 24.83, 0.06)): i = i + 1
+m_Arr(i) = TNamedRALColor("Blaulila", 4005, RALClassic.RAL_4005_Blaulila, MColor.CIELab(50.92, 15.38, -23.06)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrspurpur", 4006, RALClassic.RAL_4006_Verkehrspurpur, MColor.CIELab(42.38, 39.48, -14.94)): i = i + 1
+m_Arr(i) = TNamedRALColor("Purpurviolett", 4007, RALClassic.RAL_4007_Purpurviolett, MColor.CIELab(30.05, 13.16, -5.1)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Signalviolett", 4008, RALClassic.RAL_4008_Signalviolett, MColor.CIELab(40.76, 32.53, -20.56)):   i = i + 1
+m_Arr(i) = TNamedRALColor("Pastellviolett", 4009, RALClassic.RAL_4009_Pastellviolett, MColor.CIELab(60.59, 10.38, -2.88)):  i = i + 1
+m_Arr(i) = TNamedRALColor("Telemagenta", 4010, RALClassic.RAL_4010_Telemagenta, MColor.CIELab(50.39, 48.95, -4.24)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Perlviolett", 4011, RALClassic.RAL_4011_Perlviolett, MColor.CIELab(47.92, 18.89, -20.83)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Perlbrombeer", 4012, RALClassic.RAL_4012_Perlbrombeer, MColor.CIELab(46.33, 7.27, -11.94)):      i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Violettblau", 5000, RALClassic.RAL_5000_Violettblau):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Grünblau", 5001, RALClassic.RAL_5001_Grünblau):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Ultramarinblau", 5002, RALClassic.RAL_5002_Ultramarinblau):   i = i + 1
-    m_Arr(i) = TNamedRALColor("Saphirblau", 5003, RALClassic.RAL_5003_Saphirblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzblau", 5004, RALClassic.RAL_5004_Schwarzblau):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalblau", 5005, RALClassic.RAL_5005_Signalblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Brillantblau", 5007, RALClassic.RAL_5007_Brillantblau):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Graublau", 5008, RALClassic.RAL_5008_Graublau):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Azurblau", 5009, RALClassic.RAL_5009_Azurblau):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Enzianblau", 5010, RALClassic.RAL_5010_Enzianblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Stahlblau", 5011, RALClassic.RAL_5011_Stahlblau):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Lichtblau", 5012, RALClassic.RAL_5012_Lichtblau):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Kobaltblau", 5013, RALClassic.RAL_5013_Kobaltblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Taubenblau", 5014, RALClassic.RAL_5014_Taubenblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Himmelblau", 5015, RALClassic.RAL_5015_Himmelblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsblau", 5017, RALClassic.RAL_5017_Verkehrsblau):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Türkisblau", 5018, RALClassic.RAL_5018_Türkisblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Capriblau", 5019, RALClassic.RAL_5019_Capriblau):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Ozeanblau", 5020, RALClassic.RAL_5020_Ozeanblau):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Wasserblau", 5021, RALClassic.RAL_5021_Wasserblau):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Nachtblau", 5022, RALClassic.RAL_5022_Nachtblau):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Fernblau", 5023, RALClassic.RAL_5023_Fernblau):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Pastellblau", 5024, RALClassic.RAL_5024_Pastellblau):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlenzian", 5025, RALClassic.RAL_5025_Perlenzian):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlnachtblau", 5026, RALClassic.RAL_5026_Perlnachtblau):     i = i + 1
+m_Arr(i) = TNamedRALColor("Violettblau", 5000, RALClassic.RAL_5000_Violettblau, MColor.CIELab(32.59, -1.28, -21.69)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Grünblau", 5001, RALClassic.RAL_5001_Grünblau, MColor.CIELab(37, -16, -21)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Ultramarinblau", 5002, RALClassic.RAL_5002_Ultramarinblau, MColor.CIELab(31, 2, -43)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Saphirblau", 5003, RALClassic.RAL_5003_Saphirblau, MColor.CIELab(30.53, -0.37, -16.68)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzblau", 5004, RALClassic.RAL_5004_Schwarzblau, MColor.CIELab(16, 0, -9)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Signalblau", 5005, RALClassic.RAL_5005_Signalblau, MColor.CIELab(40, -11, -35)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Brillantblau", 5007, RALClassic.RAL_5007_Brillantblau, MColor.CIELab(46.37, -6.24, -21.71)):  i = i + 1
+m_Arr(i) = TNamedRALColor("Graublau", 5008, RALClassic.RAL_5008_Graublau, MColor.CIELab(32, -2.09, -6.07)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Azurblau", 5009, RALClassic.RAL_5009_Azurblau, MColor.CIELab(41.22, -9.56, -18.34)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Enzianblau", 5010, RALClassic.RAL_5010_Enzianblau, MColor.CIELab(39, -12, -32)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Stahlblau", 5011, RALClassic.RAL_5011_Stahlblau, MColor.CIELab(23, -4, -15)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Lichtblau", 5012, RALClassic.RAL_5012_Lichtblau, MColor.CIELab(55.62, -13.84, -30.72)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Kobaltblau", 5013, RALClassic.RAL_5013_Kobaltblau, MColor.CIELab(26, -2, -26)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Taubenblau", 5014, RALClassic.RAL_5014_Taubenblau, MColor.CIELab(53.79, -2.64, -15.59)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Himmelblau", 5015, RALClassic.RAL_5015_Himmelblau, MColor.CIELab(51.13, -12.69, -34.21)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsblau", 5017, RALClassic.RAL_5017_Verkehrsblau, MColor.CIELab(34.82, -13.49, -36.36)): i = i + 1
+m_Arr(i) = TNamedRALColor("Türkisblau", 5018, RALClassic.RAL_5018_Türkisblau, MColor.CIELab(55.13, -27.27, -8.47)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Capriblau", 5019, RALClassic.RAL_5019_Capriblau, MColor.CIELab(41.18, -9.97, -25.87)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Ozeanblau", 5020, RALClassic.RAL_5020_Ozeanblau, MColor.CIELab(32.3, -13.01, -9.39)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Wasserblau", 5021, RALClassic.RAL_5021_Wasserblau, MColor.CIELab(47.15, -29.26, -9.32)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Nachtblau", 5022, RALClassic.RAL_5022_Nachtblau, MColor.CIELab(26, 6, -30)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Fernblau", 5023, RALClassic.RAL_5023_Fernblau, MColor.CIELab(47.64, -2.96, -21.18)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Pastellblau", 5024, RALClassic.RAL_5024_Pastellblau, MColor.CIELab(60.5, -9.53, -17.38)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Perlenzian", 5025, RALClassic.RAL_5025_Perlenzian, MColor.CIELab(35.93, -11.81, -16.28)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Perlnachtblau", 5026, RALClassic.RAL_5026_Perlnachtblau, MColor.CIELab(16, 7.84, -29.1)):     i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Patinagrün", 6000, RALClassic.RAL_6000_Patinagrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Smaragdgrün", 6001, RALClassic.RAL_6001_Smaragdgrün):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Laubgrün", 6002, RALClassic.RAL_6002_Laubgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Olivgrün", 6003, RALClassic.RAL_6003_Olivgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Blaugrün", 6004, RALClassic.RAL_6004_Blaugrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Moosgrün", 6005, RALClassic.RAL_6005_Moosgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Grauoliv", 6006, RALClassic.RAL_6006_Grauoliv):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Flaschengrün", 6007, RALClassic.RAL_6007_Flaschengrün):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Braungrün", 6008, RALClassic.RAL_6008_Braungrün):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Tannengrün", 6009, RALClassic.RAL_6009_Tannengrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Grasgrün", 6010, RALClassic.RAL_6010_Grasgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Resedagrün", 6011, RALClassic.RAL_6011_Resedagrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzgrün", 6012, RALClassic.RAL_6012_Schwarzgrün):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Schilfgrün", 6013, RALClassic.RAL_6013_Schilfgrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Gelboliv", 6014, RALClassic.RAL_6014_Gelboliv):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzoliv", 6015, RALClassic.RAL_6015_Schwarzoliv):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Türkisgrün", 6016, RALClassic.RAL_6016_Türkisgrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Maigrün", 6017, RALClassic.RAL_6017_Maigrün):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Gelbgrün", 6018, RALClassic.RAL_6018_Gelbgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Weißgrün", 6019, RALClassic.RAL_6019_Weißgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Chromoxidgrün", 6020, RALClassic.RAL_6020_Chromoxidgrün):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Blassgrün", 6021, RALClassic.RAL_6021_Blassgrün):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Braunoliv", 6022, RALClassic.RAL_6022_Braunoliv):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsgrün", 6024, RALClassic.RAL_6024_Verkehrsgrün):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Farngrün", 6025, RALClassic.RAL_6025_Farngrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Opalgrün", 6026, RALClassic.RAL_6026_Opalgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Lichtgrün", 6027, RALClassic.RAL_6027_Lichtgrün):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Kieferngrün", 6028, RALClassic.RAL_6028_Kieferngrün):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Minzgrün", 6029, RALClassic.RAL_6029_Minzgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalgrün", 6032, RALClassic.RAL_6032_Signalgrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Minttürkis", 6033, RALClassic.RAL_6033_Minttürkis):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Pastelltürkis", 6034, RALClassic.RAL_6034_Pastelltürkis):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlgrün", 6035, RALClassic.RAL_6035_Perlgrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlopalgrün", 6036, RALClassic.RAL_6036_Perlopalgrün):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Reingrün", 6037, RALClassic.RAL_6037_Reingrün):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Leuchtgrün", 6038, RALClassic.RAL_6038_Leuchtgrün):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Fasergrün", 6039, RALClassic.RAL_6039_Fasergrün):          i = i + 1
+m_Arr(i) = TNamedRALColor("Patinagrün", 6000, RALClassic.RAL_6000_Patinagrün, MColor.CIELab(51, -24, 3)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Smaragdgrün", 6001, RALClassic.RAL_6001_Smaragdgrün, MColor.CIELab(46, -27, 22)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Laubgrün", 6002, RALClassic.RAL_6002_Laubgrün, MColor.CIELab(41, -24, 24)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Olivgrün", 6003, RALClassic.RAL_6003_Olivgrün, MColor.CIELab(42, -5, 13)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Blaugrün", 6004, RALClassic.RAL_6004_Blaugrün, MColor.CIELab(32, -24, -6)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Moosgrün", 6005, RALClassic.RAL_6005_Moosgrün, MColor.CIELab(31, -25, 4)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Grauoliv", 6006, RALClassic.RAL_6006_Grauoliv, MColor.CIELab(31, 0, 8)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Flaschengrün", 6007, RALClassic.RAL_6007_Flaschengrün, MColor.CIELab(26, -6, 11)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Braungrün", 6008, RALClassic.RAL_6008_Braungrün, MColor.CIELab(29, 0, 8)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Tannengrün", 6009, RALClassic.RAL_6009_Tannengrün, MColor.CIELab(27, -9, 5)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Grasgrün", 6010, RALClassic.RAL_6010_Grasgrün, MColor.CIELab(50, -21, 25)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Resedagrün", 6011, RALClassic.RAL_6011_Resedagrün, MColor.CIELab(57, -11, 16)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzgrün", 6012, RALClassic.RAL_6012_Schwarzgrün, MColor.CIELab(32, -7, 0)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Schilfgrün", 6013, RALClassic.RAL_6013_Schilfgrün, MColor.CIELab(57, -1, 15)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Gelboliv", 6014, RALClassic.RAL_6014_Gelboliv, MColor.CIELab(35, 1, 9)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzoliv", 6015, RALClassic.RAL_6015_Schwarzoliv, MColor.CIELab(33, -1, 5)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Türkisgrün", 6016, RALClassic.RAL_6016_Türkisgrün, MColor.CIELab(45, -37, 6)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Maigrün", 6017, RALClassic.RAL_6017_Maigrün, MColor.CIELab(56, -23, 28)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Gelbgrün", 6018, RALClassic.RAL_6018_Gelbgrün, MColor.CIELab(63, -31, 39)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Weißgrün", 6019, RALClassic.RAL_6019_Weißgrün, MColor.CIELab(84, -10, 12)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Chromoxidgrün", 6020, RALClassic.RAL_6020_Chromoxidgrün, MColor.CIELab(34, -9, 11)):  i = i + 1
+m_Arr(i) = TNamedRALColor("Blassgrün", 6021, RALClassic.RAL_6021_Blassgrün, MColor.CIELab(67, -9, 14)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Braunoliv", 6022, RALClassic.RAL_6022_Braunoliv, MColor.CIELab(29, 2, 10)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsgrün", 6024, RALClassic.RAL_6024_Verkehrsgrün, MColor.CIELab(53, -45, 14)):   i = i + 1
+m_Arr(i) = TNamedRALColor("Farngrün", 6025, RALClassic.RAL_6025_Farngrün, MColor.CIELab(51, -13, 26)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Opalgrün", 6026, RALClassic.RAL_6026_Opalgrün, MColor.CIELab(42, -33, 0)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Lichtgrün", 6027, RALClassic.RAL_6027_Lichtgrün, MColor.CIELab(76, -19, -4)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Kieferngrün", 6028, RALClassic.RAL_6028_Kieferngrün, MColor.CIELab(40, -18, 6)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Minzgrün", 6029, RALClassic.RAL_6029_Minzgrün, MColor.CIELab(47, -43, 17)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Signalgrün", 6032, RALClassic.RAL_6032_Signalgrün, MColor.CIELab(53, -39, 13)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Minttürkis", 6033, RALClassic.RAL_6033_Minttürkis, MColor.CIELab(58, -23, -4)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Pastelltürkis", 6034, RALClassic.RAL_6034_Pastelltürkis, MColor.CIELab(72, -16, -6)): i = i + 1
+m_Arr(i) = TNamedRALColor("Perlgrün", 6035, RALClassic.RAL_6035_Perlgrün, MColor.CIELab(35, -30, 19)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Perlopalgrün", 6036, RALClassic.RAL_6036_Perlopalgrün, MColor.CIELab(39, -30, -2)):   i = i + 1
+m_Arr(i) = TNamedRALColor("Reingrün", 6037, RALClassic.RAL_6037_Reingrün, MColor.CIELab(55, -54, 39)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Leuchtgrün", 6038, RALClassic.RAL_6038_Leuchtgrün, MColor.CIELab(67, -66, 56)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Fasergrün", 6039, RALClassic.RAL_6039_Fasergrün, MColor.CIELab(76, -23.23, 61.59)):   i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Fehgrau", 7000, RALClassic.RAL_7000_Fehgrau):              i = i + 1
-    m_Arr(i) = TNamedRALColor("Silbergrau", 7001, RALClassic.RAL_7001_Silbergrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Olivgrau", 7002, RALClassic.RAL_7002_Olivgrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Moosgrau", 7003, RALClassic.RAL_7003_Moosgrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalgrau", 7004, RALClassic.RAL_7004_Signalgrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Mausgrau", 7005, RALClassic.RAL_7005_Mausgrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Beigegrau", 7006, RALClassic.RAL_7006_Beigegrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Khakigrau", 7008, RALClassic.RAL_7008_Khakigrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Grüngrau", 7009, RALClassic.RAL_7009_Grüngrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Zeltgrau", 7010, RALClassic.RAL_7010_Zeltgrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Eisengrau", 7011, RALClassic.RAL_7011_Eisengrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Basaltgrau", 7012, RALClassic.RAL_7012_Basaltgrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Braungrau", 7013, RALClassic.RAL_7013_Braungrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Schiefergrau", 7015, RALClassic.RAL_7015_Schiefergrau):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Anthrazitgrau", 7016, RALClassic.RAL_7016_Anthrazitgrau):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzgrau", 7021, RALClassic.RAL_7021_Schwarzgrau):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Umbragrau", 7022, RALClassic.RAL_7022_Umbragrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Betongrau", 7023, RALClassic.RAL_7023_Betongrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Graphitgrau", 7024, RALClassic.RAL_7024_Graphitgrau):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Granitgrau", 7026, RALClassic.RAL_7026_Granitgrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Steingrau", 7030, RALClassic.RAL_7030_Steingrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Blaugrau", 7031, RALClassic.RAL_7031_Blaugrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Kieselgrau", 7032, RALClassic.RAL_7032_Kieselgrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Zementgrau", 7033, RALClassic.RAL_7033_Zementgrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Gelbgrau", 7034, RALClassic.RAL_7034_Gelbgrau):            i = i + 1
-    m_Arr(i) = TNamedRALColor("Lichtgrau", 7035, RALClassic.RAL_7035_Lichtgrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Platingrau", 7036, RALClassic.RAL_7036_Platingrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Staubgrau", 7037, RALClassic.RAL_7037_Staubgrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Achatgrau", 7038, RALClassic.RAL_7038_Achatgrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Quarzgrau", 7039, RALClassic.RAL_7039_Quarzgrau):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Fenstergrau", 7040, RALClassic.RAL_7040_Fenstergrau):      i = i + 1
-    m_Arr(i) = TNamedRALColor("VerkehrsgrauA", 7042, RALClassic.RAL_7042_VerkehrsgrauA):  i = i + 1
-    m_Arr(i) = TNamedRALColor("VerkehrsgrauB", 7043, RALClassic.RAL_7043_VerkehrsgrauB):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Seidengrau", 7044, RALClassic.RAL_7044_Seidengrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Telegrau1", 7045, RALClassic.RAL_7045_Telegrau1):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Telegrau2", 7046, RALClassic.RAL_7046_Telegrau2):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Telegrau4", 7047, RALClassic.RAL_7047_Telegrau4):          i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlmausgrau", 7048, RALClassic.RAL_7048_Perlmausgrau):    i = i + 1
+m_Arr(i) = TNamedRALColor("Fehgrau", 7000, RALClassic.RAL_7000_Fehgrau, MColor.CIELab(63, -4, -5)):                        i = i + 1
+m_Arr(i) = TNamedRALColor("Silbergrau", 7001, RALClassic.RAL_7001_Silbergrau, MColor.CIELab(63.81, -2.22, -4.05)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Olivgrau", 7002, RALClassic.RAL_7002_Olivgrau, MColor.CIELab(58, 1, 12)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Moosgrau", 7003, RALClassic.RAL_7003_Moosgrau, MColor.CIELab(57, 0, 7)):                        i = i + 1
+m_Arr(i) = TNamedRALColor("Signalgrau", 7004, RALClassic.RAL_7004_Signalgrau, MColor.CIELab(63.83, 0.19, -0.44)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Mausgrau", 7005, RALClassic.RAL_7005_Mausgrau, MColor.CIELab(50, -1.55, 0.82)):                 i = i + 1
+m_Arr(i) = TNamedRALColor("Beigegrau", 7006, RALClassic.RAL_7006_Beigegrau, MColor.CIELab(48.53, 2.15, 7.57)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Khakigrau", 7008, RALClassic.RAL_7008_Khakigrau, MColor.CIELab(49, 5, 23)):                     i = i + 1
+m_Arr(i) = TNamedRALColor("Grüngrau", 7009, RALClassic.RAL_7009_Grüngrau, MColor.CIELab(48, -2, 4)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Zeltgrau", 7010, RALClassic.RAL_7010_Zeltgrau, MColor.CIELab(46, -3, 3)):                       i = i + 1
+m_Arr(i) = TNamedRALColor("Eisengrau", 7011, RALClassic.RAL_7011_Eisengrau, MColor.CIELab(41.52, -1.68, -2.72)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Basaltgrau", 7012, RALClassic.RAL_7012_Basaltgrau, MColor.CIELab(47, -2, -1)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Braungrau", 7013, RALClassic.RAL_7013_Braungrau, MColor.CIELab(42, 1, 8)):                      i = i + 1
+m_Arr(i) = TNamedRALColor("Schiefergrau", 7015, RALClassic.RAL_7015_Schiefergrau, MColor.CIELab(40.5, -0.25, -3.4)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Anthrazitgrau", 7016, RALClassic.RAL_7016_Anthrazitgrau, MColor.CIELab(33, -2, -4)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzgrau", 7021, RALClassic.RAL_7021_Schwarzgrau, MColor.CIELab(27, -1, -2)):                i = i + 1
+m_Arr(i) = TNamedRALColor("Umbragrau", 7022, RALClassic.RAL_7022_Umbragrau, MColor.CIELab(37.75, -0.07, 2.23)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Betongrau", 7023, RALClassic.RAL_7023_Betongrau, MColor.CIELab(55.6, -1.45, 4.52)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Graphitgrau", 7024, RALClassic.RAL_7024_Graphitgrau, MColor.CIELab(36.97, -0.13, -3.32)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Granitgrau", 7026, RALClassic.RAL_7026_Granitgrau, MColor.CIELab(34.71, -3.02, -2.48)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Steingrau", 7030, RALClassic.RAL_7030_Steingrau, MColor.CIELab(61.31, -0.26, 4.53)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Blaugrau", 7031, RALClassic.RAL_7031_Blaugrau, MColor.CIELab(51, -4, -4)):                      i = i + 1
+m_Arr(i) = TNamedRALColor("Kieselgrau", 7032, RALClassic.RAL_7032_Kieselgrau, MColor.CIELab(77, 0, 7)):                    i = i + 1
+m_Arr(i) = TNamedRALColor("Zementgrau", 7033, RALClassic.RAL_7033_Zementgrau, MColor.CIELab(56.78, -3.36, 6.32)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Gelbgrau", 7034, RALClassic.RAL_7034_Gelbgrau, MColor.CIELab(56.86, 0.03, 14.83)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Lichtgrau", 7035, RALClassic.RAL_7035_Lichtgrau, MColor.CIELab(81.29, -1.24, 0.79)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Platingrau", 7036, RALClassic.RAL_7036_Platingrau, MColor.CIELab(63.49, 1.27, 0.78)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Staubgrau", 7037, RALClassic.RAL_7037_Staubgrau, MColor.CIELab(59, 0, 0)):                      i = i + 1
+m_Arr(i) = TNamedRALColor("Achatgrau", 7038, RALClassic.RAL_7038_Achatgrau, MColor.CIELab(72.97, -1.5, 2.97)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Quarzgrau", 7039, RALClassic.RAL_7039_Quarzgrau, MColor.CIELab(43.5, 0.37, 5.56)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Fenstergrau", 7040, RALClassic.RAL_7040_Fenstergrau, MColor.CIELab(66.63, -1.17, -2.82)):       i = i + 1
+m_Arr(i) = TNamedRALColor("VerkehrsgrauA", 7042, RALClassic.RAL_7042_VerkehrsgrauA, MColor.CIELab(62.58, -1.51, -0.21)):   i = i + 1
+m_Arr(i) = TNamedRALColor("VerkehrsgrauB", 7043, RALClassic.RAL_7043_VerkehrsgrauB, MColor.CIELab(40.23, -1.28, 0)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Seidengrau", 7044, RALClassic.RAL_7044_Seidengrau, MColor.CIELab(74.66, -0.04, 5.08)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Telegrau1", 7045, RALClassic.RAL_7045_Telegrau1, MColor.CIELab(60.35, -1.43, -1.84)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Telegrau2", 7046, RALClassic.RAL_7046_Telegrau2, MColor.CIELab(57.75, -1.6, -3)):               i = i + 1
+m_Arr(i) = TNamedRALColor("Telegrau4", 7047, RALClassic.RAL_7047_Telegrau4, MColor.CIELab(81.43, 0.01, 0.1)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Perlmausgrau", 7048, RALClassic.RAL_7048_Perlmausgrau, MColor.CIELab(54.55, -0.45, 7.59)):      i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Grünbraun", 8000, RALClassic.RAL_8000_Grünbraun):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Ockerbraun", 8001, RALClassic.RAL_8001_Ockerbraun):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalbraun", 8002, RALClassic.RAL_8002_Signalbraun):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Lehmbraun", 8003, RALClassic.RAL_8003_Lehmbraun):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Kupferbraun", 8004, RALClassic.RAL_8004_Kupferbraun):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Rehbraun", 8007, RALClassic.RAL_8007_Rehbraun):                 i = i + 1
-    m_Arr(i) = TNamedRALColor("Olivbraun", 8008, RALClassic.RAL_8008_Olivbraun):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Nussbraun", 8011, RALClassic.RAL_8011_Nussbraun):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Rotbraun", 8012, RALClassic.RAL_8012_Rotbraun):                 i = i + 1
-    m_Arr(i) = TNamedRALColor("Sepiabraun", 8014, RALClassic.RAL_8014_Sepiabraun):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Kastanienbraun", 8015, RALClassic.RAL_8015_Kastanienbraun):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Mahagonibraun", 8016, RALClassic.RAL_8016_Mahagonibraun):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Schokoladenbraun", 8017, RALClassic.RAL_8017_Schokoladenbraun): i = i + 1
-    m_Arr(i) = TNamedRALColor("Graubraun", 8019, RALClassic.RAL_8019_Graubraun):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Schwarzbraun", 8022, RALClassic.RAL_8022_Schwarzbraun):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Orangebraun", 8023, RALClassic.RAL_8023_Orangebraun):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Beigebraun", 8024, RALClassic.RAL_8024_Beigebraun):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Blassbraun", 8025, RALClassic.RAL_8025_Blassbraun):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Terrabraun", 8028, RALClassic.RAL_8028_Terrabraun):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlkupfer", 8029, RALClassic.RAL_8029_Perlkupfer):             i = i + 1
+m_Arr(i) = TNamedRALColor("Grünbraun", 8000, RALClassic.RAL_8000_Grünbraun, MColor.CIELab(54, 8, 29)):                     i = i + 1
+m_Arr(i) = TNamedRALColor("Ockerbraun", 8001, RALClassic.RAL_8001_Ockerbraun, MColor.CIELab(47.08, 18.95, 39.87)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Signalbraun", 8002, RALClassic.RAL_8002_Signalbraun, MColor.CIELab(45, 17, 17)):                i = i + 1
+m_Arr(i) = TNamedRALColor("Lehmbraun", 8003, RALClassic.RAL_8003_Lehmbraun, MColor.CIELab(45, 18, 33)):                    i = i + 1
+m_Arr(i) = TNamedRALColor("Kupferbraun", 8004, RALClassic.RAL_8004_Kupferbraun, MColor.CIELab(43.78, 22.83, 20.22)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Rehbraun", 8007, RALClassic.RAL_8007_Rehbraun, MColor.CIELab(38.99, 12.62, 17.08)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Olivbraun", 8008, RALClassic.RAL_8008_Olivbraun, MColor.CIELab(35.15, 13.22, 28.5)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Nussbraun", 8011, RALClassic.RAL_8011_Nussbraun, MColor.CIELab(33.98, 10.04, 10.97)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Rotbraun", 8012, RALClassic.RAL_8012_Rotbraun, MColor.CIELab(35, 23, 17)):                      i = i + 1
+m_Arr(i) = TNamedRALColor("Sepiabraun", 8014, RALClassic.RAL_8014_Sepiabraun, MColor.CIELab(32, 8, 15)):                   i = i + 1
+m_Arr(i) = TNamedRALColor("Kastanienbraun", 8015, RALClassic.RAL_8015_Kastanienbraun, MColor.CIELab(33.52, 15.02, 9.25)):  i = i + 1
+m_Arr(i) = TNamedRALColor("Mahagonibraun", 8016, RALClassic.RAL_8016_Mahagonibraun, MColor.CIELab(21.4, 14.37, 13.84)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Schokoladenbraun", 8017, RALClassic.RAL_8017_Schokoladenbraun, MColor.CIELab(29, 10, 9)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Graubraun", 8019, RALClassic.RAL_8019_Graubraun, MColor.CIELab(31.46, 2.12, 1.1)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Schwarzbraun", 8022, RALClassic.RAL_8022_Schwarzbraun, MColor.CIELab(25.08, 1.18, 0.67)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Orangebraun", 8023, RALClassic.RAL_8023_Orangebraun, MColor.CIELab(49.37, 24.91, 30.25)):       i = i + 1
+m_Arr(i) = TNamedRALColor("Beigebraun", 8024, RALClassic.RAL_8024_Beigebraun, MColor.CIELab(38.04, 14.14, 20.82)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Blassbraun", 8025, RALClassic.RAL_8025_Blassbraun, MColor.CIELab(44, 7.95, 11.73)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Terrabraun", 8028, RALClassic.RAL_8028_Terrabraun, MColor.CIELab(34.19, 5.72, 8.58)):           i = i + 1
+m_Arr(i) = TNamedRALColor("Perlkupfer", 8029, RALClassic.RAL_8029_Perlkupfer, MColor.CIELab(35.06, 25.58, 27.32)):         i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Cremeweiß", 9001, RALClassic.RAL_9001_Cremeweiß):               i = i + 1
-    m_Arr(i) = TNamedRALColor("Grauweiß", 9002, RALClassic.RAL_9002_Grauweiß):                 i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalweiß", 9003, RALClassic.RAL_9003_Signalweiß):             i = i + 1
-    m_Arr(i) = TNamedRALColor("Signalschwarz", 9004, RALClassic.RAL_9004_Signalschwarz):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Tiefschwarz", 9005, RALClassic.RAL_9005_Tiefschwarz):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Weißaluminium", 9006, RALClassic.RAL_9006_Weißaluminium):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Graualuminium", 9007, RALClassic.RAL_9007_Graualuminium):       i = i + 1
-    m_Arr(i) = TNamedRALColor("Reinweiß", 9010, RALClassic.RAL_9010_Reinweiß):                 i = i + 1
-    m_Arr(i) = TNamedRALColor("Graphitschwarz", 9011, RALClassic.RAL_9011_Graphitschwarz):     i = i + 1
-    m_Arr(i) = TNamedRALColor("Reinraumweiß", 9012, RALClassic.RAL_9012_Reinraumweiß):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsweiß", 9016, RALClassic.RAL_9016_Verkehrsweiß):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Verkehrsschwarz", 9017, RALClassic.RAL_9017_Verkehrsschwarz):   i = i + 1
-    m_Arr(i) = TNamedRALColor("Papyrusweiß", 9018, RALClassic.RAL_9018_Papyrusweiß):           i = i + 1
-    m_Arr(i) = TNamedRALColor("Perlhellgrau", 9022, RALClassic.RAL_9022_Perlhellgrau):         i = i + 1
-    m_Arr(i) = TNamedRALColor("Perldunkelgrau", 9023, RALClassic.RAL_9023_Perldunkelgrau):     i = i + 1
-    m_Arr(i) = TNamedRALColor("SeidenmattWeiß", 9020, RALClassic.RAL_9020_SeidenmattWeiß):     i = i + 1
+m_Arr(i) = TNamedRALColor("Cremeweiß", 9001, RALClassic.RAL_9001_Cremeweiß, MColor.CIELab(92, 10, 9)):                     i = i + 1
+m_Arr(i) = TNamedRALColor("Grauweiß", 9002, RALClassic.RAL_9002_Grauweiß, MColor.CIELab(88, 0, 4)):                        i = i + 1
+m_Arr(i) = TNamedRALColor("Signalweiß", 9003, RALClassic.RAL_9003_Signalweiß, MColor.CIELab(94.13, -0.55, 0.81)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Signalschwarz", 9004, RALClassic.RAL_9004_Signalschwarz, MColor.CIELab(28.66, 0.24, -0.66)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Tiefschwarz", 9005, RALClassic.RAL_9005_Tiefschwarz, MColor.CIELab(5, 0, -2)):                  i = i + 1
+m_Arr(i) = TNamedRALColor("Weißaluminium", 9006, RALClassic.RAL_9006_Weißaluminium, MColor.CIELab(72, 0, 0)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Graualuminium", 9007, RALClassic.RAL_9007_Graualuminium, MColor.CIELab(55.55, -0.06, 2.14)):    i = i + 1
+m_Arr(i) = TNamedRALColor("Reinweiß", 9010, RALClassic.RAL_9010_Reinweiß, MColor.CIELab(94.57, -0.47, 4.14)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Graphitschwarz", 9011, RALClassic.RAL_9011_Graphitschwarz, MColor.CIELab(26.54, -0.05, -1.13)): i = i + 1
+m_Arr(i) = TNamedRALColor("Reinraumweiß", 9012, RALClassic.RAL_9012_Reinraumweiß, MColor.CIELab(98.92, -3.16, 11.24)):     i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsweiß", 9016, RALClassic.RAL_9016_Verkehrsweiß, MColor.CIELab(95.26, -0.76, 2.11)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Verkehrsschwarz", 9017, RALClassic.RAL_9017_Verkehrsschwarz, MColor.CIELab(27.25, 0.44, 0.51)): i = i + 1
+m_Arr(i) = TNamedRALColor("Papyrusweiß", 9018, RALClassic.RAL_9018_Papyrusweiß, MColor.CIELab(81.34, -2.29, 2.96)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Perlhellgrau", 9022, RALClassic.RAL_9022_Perlhellgrau, MColor.CIELab(65.38, -0.43, 0.34)):      i = i + 1
+m_Arr(i) = TNamedRALColor("Perldunkelgrau", 9023, RALClassic.RAL_9023_Perldunkelgrau, MColor.CIELab(57.32, -0.31, -0.98)): i = i + 1
+m_Arr(i) = TNamedRALColor("SeidenmattWeiß", 9020, RALClassic.RAL_9020_SeidenmattWeiß, MColor.CIELab(99.31, 0.412, -0.97)): i = i + 1
     
-    m_Arr(i) = TNamedRALColor("Bronzegrün", 6031, RALClassic.RAL_6031_Bronzegrün):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Lederbraun", 8027, RALClassic.RAL_8027_Lederbraun):    i = i + 1
-    m_Arr(i) = TNamedRALColor("Teerschwarz", 9021, RALClassic.RAL_9021_Teerschwarz):  i = i + 1
-    m_Arr(i) = TNamedRALColor("Sandbeige", 1039, RALClassic.RAL_1039_Sandbeige):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Lehmbeige", 1040, RALClassic.RAL_1040_Lehmbeige):      i = i + 1
-    m_Arr(i) = TNamedRALColor("Helloliv", 6040, RALClassic.RAL_6040_Helloliv):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Tarngrau", 7050, RALClassic.RAL_7050_Tarngrau):        i = i + 1
-    m_Arr(i) = TNamedRALColor("Sandbraun", 8031, RALClassic.RAL_8031_Sandbraun):      i = i + 1
+m_Arr(i) = TNamedRALColor("Bronzegrün", 6031, RALClassic.RAL_6031_Bronzegrün, MColor.CIELab(35.27, -9.41, 7.58)):          i = i + 1
+m_Arr(i) = TNamedRALColor("Lederbraun", 8027, RALClassic.RAL_8027_Lederbraun, MColor.CIELab(31.24, -0.01, 10.92)):         i = i + 1
+m_Arr(i) = TNamedRALColor("Teerschwarz", 9021, RALClassic.RAL_9021_Teerschwarz, MColor.CIELab(1.33, 0.285, -4.04)):        i = i + 1
+m_Arr(i) = TNamedRALColor("Sandbeige", 1039, RALClassic.RAL_1039_Sandbeige, MColor.CIELab(78.3, -0.66, 18.61)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Lehmbeige", 1040, RALClassic.RAL_1040_Lehmbeige, MColor.CIELab(70.63, -0.9, 23.51)):            i = i + 1
+m_Arr(i) = TNamedRALColor("Helloliv", 6040, RALClassic.RAL_6040_Helloliv, MColor.CIELab(52.26, -4.57, 20.81)):             i = i + 1
+m_Arr(i) = TNamedRALColor("Tarngrau", 7050, RALClassic.RAL_7050_Tarngrau, MColor.CIELab(55.85, -4.67, 6.19)):              i = i + 1
+m_Arr(i) = TNamedRALColor("Sandbraun", 8031, RALClassic.RAL_8031_Sandbraun, MColor.CIELab(65.94, 3.61, 20.34)):            i = i + 1
     'Debug.Print i
 End Sub
 ' ^ ' ############################## ' ^ '    Type TNamedRALColor    ' ^ ' ############################## ' ^ '
 
 ' v ' ############################## ' v '    Enum RALClassic    ' v ' ############################## ' v '
-Public Property Get RALClassic_Name(E As RALClassic) As String
+Public Property Get RALClassic_Name(e As RALClassic) As String
     If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     Dim s As String
-    Select Case E
+    Select Case e
     
     Case RAL_1000_Grünbeige:        s = "Grünbeige"
     Case RAL_1001_Beige:            s = "Beige"
@@ -783,10 +793,10 @@ Public Property Get RALClassic_Name(E As RALClassic) As String
     RALClassic_Name = s
 End Property
 
-Public Function RALClassic_ToNum(E As RALClassic) As Long
+Public Function RALClassic_ToNum(e As RALClassic) As Long
     If m_Count = 0 Then MRALColors.TNamedRALColor_Init
     Dim n As Long
-    Select Case E
+    Select Case e
     
     Case RAL_1000_Grünbeige:        n = 1000
     Case RAL_1001_Beige:            n = 1001

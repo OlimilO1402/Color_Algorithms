@@ -1517,6 +1517,7 @@ Private m_Btn     As CommandButton
 Private m_Max     As Single
 Private m_CPicker As ColorDialog
 Private WithEvents mColorSel As ColorSelector
+Attribute mColorSel.VB_VarHelpID = -1
 Private m_APB     As AlphaPB
 Private m_IsInit  As Boolean
 
@@ -1612,7 +1613,7 @@ Private Sub mColorSel_ColorSelected(ByVal Color As Long)
 End Sub
 
 Private Sub TBLngColor_LostFocus()
-    Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.Text)
+    Dim lc As LngColor: lc = MColor.LngColor_ParseWebHex(TBLngColor.text)
     m_CMYK = MColor.LngColor_ToCMYK(lc)
     UpdateView
 End Sub
@@ -1625,18 +1626,18 @@ Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
     MColor.RGBAf_ToView TBRGBAf_R, TBRGBAf_G, TBRGBAf_B, TBRGBAf_A, RGBAf
     
     Dim RGBA  As RGBA:     RGBA = MColor.RGBAf_ToRGBA(RGBAf)
-    m_APB.Alpha = 255 - RGBA.A
+    m_APB.Alpha = 255 - RGBA.a
     MColor.RGBA_ToView TBRGBA_R, TBRGBA_G, TBRGBA_B, TBRGBA_A, RGBA
     
-    Dim alp As Single: alp = RGBA.A
+    Dim alp As Single: alp = RGBA.a
     
     Dim LCol  As LngColor: LCol = MColor.RGBA_ToLngColor(RGBA)
-    TBLngColor.Text = MColor.LngColor_ToWebHex(LCol)
+    TBLngColor.text = MColor.LngColor_ToWebHex(LCol)
     
-    RGBA.A = 0
+    RGBA.a = 0
     LCol = MColor.RGBA_ToLngColor(RGBA)
     PBColor.BackColor = LCol.Value
-    RGBA.A = alp
+    RGBA.a = alp
     
     Dim HSLAf As HSLAf: HSLAf = RGBAf_ToHSLAf(RGBAf)
     MColor.HSLAf_ToView TBHSLAf_H, TBHSLAf_S, TBHSLAf_L, TBHSLAf_A, HSLAf
@@ -1658,7 +1659,7 @@ Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
     
     If Not bNoUpdateColorName Then
         Dim xn As String: xn = MKnownColors.NameFromColor(LCol.Value)
-        If Len(xn) Then CmbColorNames.Text = xn
+        If Len(xn) Then CmbColorNames.text = xn
     End If
     
     m_APB.Alpha = 255 - alp
@@ -1672,7 +1673,7 @@ Sub UpdateView(Optional bNoUpdateColorName As Boolean = False)
     'get closest color from RAL-colors list:
     Dim rc As TNamedRALColor: rc = MRALColors.TNamedRALColor_ClosestColorTo(c)
     LblClosestRALColor.Caption = MRALColors.TNamedRALColor_ToStr(rc) ' "RAL_" & rc.RALNr & "_" & rc.Name
-    PBClosestRALColor.BackColor = rc.RALCol
+    PBClosestRALColor.BackColor = rc.RALColRGB
     
     'get closest color from munsell-colors-list
     Dim mc As TMunsellColor: mc = MMunsell.MunsellColors_ClosestColorTo(c)
@@ -1748,16 +1749,16 @@ Private Sub BtnSetYCbCr_Click()
 End Sub
 
 Private Sub CmbColorNames_Click()
-    If CmbColorNames.Text = "" Then Exit Sub
-    PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.Text)
+    If CmbColorNames.text = "" Then Exit Sub
+    PBColor.BackColor = MKnownColors.ColorByName(CmbColorNames.text)
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
     m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
     UpdateView True
 End Sub
 
 Private Sub CmbRALClassic_Click()
-    If CmbRALClassic.Text = "" Then Exit Sub
-    Dim RALCol As Long: RALCol = MRALColors.RALClassic_Parse(CmbRALClassic.Text)
+    If CmbRALClassic.text = "" Then Exit Sub
+    Dim RALCol As Long: RALCol = MRALColors.RALClassic_Parse(CmbRALClassic.text)
     PBColor.BackColor = RALCol
     Dim LngColor As LngColor: LngColor.Value = PBColor.BackColor
     m_CMYK = MColor.RGBAf_ToCMYK(MColor.RGBA_ToRGBAf(MColor.LngColor_ToRGBA(LngColor)))
@@ -1800,7 +1801,7 @@ Try: On Error GoTo Catch
     'jetzt BackColor
     Dim L As LngColor: L.Value = m_CPicker.Color
     Dim RGBA As RGBA: RGBA = LngColor_ToRGBA(L)
-    RGBA.A = CByte(TBRGBA_A.Text)
+    RGBA.a = CByte(TBRGBA_A.text)
     m_CMYK = RGBA_ToCMYK(RGBA)
     UpdateView
 Catch:
@@ -1874,7 +1875,7 @@ Try: On Error GoTo Catch
     SetParent Me.CBValues.hwnd, pnlHwnd
     Me.CBValues.Move m_TBBack.Left, m_TBBack.Top
     m_IsInit = True
-    MColor.ColorValueRange_ToComboBox CVR, Me.CBValues, m_TBBack.Text
+    MColor.ColorValueRange_ToComboBox CVR, Me.CBValues, m_TBBack.text
     m_IsInit = False
     CBValues.ZOrder 0
     'Dim n As Single: n = 256
@@ -1972,7 +1973,7 @@ Private Sub CBValues_KeyDown(KeyCode As Integer, Shift As Integer)
 End Sub
 Private Sub CBValues_Click()
     If m_IsInit Then Exit Sub
-    m_TBBack.Text = CBValues.Text
+    m_TBBack.text = CBValues.text
     m_Btn.Value = True
 
 '    Dim b As Byte, s As String: s = CBValues.Text
@@ -2007,11 +2008,11 @@ Sub SetToolTipText(Ctrls As Collection)
     Next
 End Sub
 
-Function ColAddText(arr) As Collection
+Function ColAddText(Arr) As Collection
     Set ColAddText = New Collection
     Dim i As Long
-    For i = 0 To UBound(arr) Step 2
-        ColAddText.Add arr(i + 1), arr(i)
+    For i = 0 To UBound(Arr) Step 2
+        ColAddText.Add Arr(i + 1), Arr(i)
     Next
 End Function
 
