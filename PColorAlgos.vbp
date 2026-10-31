@@ -23,6 +23,7 @@ Class=AlphaPB; ..\_Core\Ctrl\AlphaPB.cls
 Class=ColorDialog; ..\_Core\Dlg\ColorDialog.cls
 Class=PathFileName; ..\_Core\IO\PathFileName.cls
 ResFile32="Resources\MyRes.res"
+Module=MFRILOColors; Modules\MFRILOColors.bas
 IconForm="FMain"
 Startup="Sub Main"
 HelpFile=""
